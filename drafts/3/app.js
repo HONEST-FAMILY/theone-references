@@ -233,6 +233,7 @@
     var f = ev.target.closest("[data-search]"); if (!f) return;
     ev.preventDefault(); var v = f.q.value.trim(); if (v) location.hash = "#/search?q=" + encodeURIComponent(v);
   });
+  window.addEventListener("scroll", function () { if (window.scrollY > 120) document.getElementById("bizTip").classList.add("off"); }, { passive: true });
   document.getElementById("notice").textContent = D.notice;
   document.getElementById("ftNotice").textContent = D.notice;
   document.getElementById("ftCredit").textContent = BG.credit;
