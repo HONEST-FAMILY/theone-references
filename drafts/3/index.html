@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#0F1A3C">
+<title>BUILDGO — 시안 3 · 현장 단위 플랫폼</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.3/packages/wanted-sans/fonts/webfonts/variable/split/WantedSansVariable.min.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="top" id="top">
+  <div class="strip">
+    <div class="wrap strip-in">
+      <a class="strip-back" href="../../"><span aria-hidden="true">←</span> <span class="lg">레퍼런스 보드</span><span class="sm">보드</span></a>
+      <span class="strip-tag">시안 3 · 우리가 권하는 안</span>
+      <p class="strip-notice" data-notice></p>
+    </div>
+  </div>
+  <header class="hdr">
+    <div class="wrap hdr-in">
+      <a class="logo" href="#/" aria-label="BUILDGO 홈">BUILDGO</a>
+      <nav class="nav" aria-label="주요 메뉴">
+        <a href="#/search?tab=expert" data-nav="search">시공 맡기기</a>
+        <a href="#/tiers" data-nav="tiers">등급·포인트</a>
+        <a href="#/join" data-nav="join">전문가 입점</a>
+        <a href="#/site" data-nav="site" data-fly-target="nav">내 현장 <b class="cnt" data-count-badge>0</b></a>
+      </nav>
+      <form class="hsearch" data-search role="search">
+        <label class="sr" for="q-top">통합 검색</label>
+        <input id="q-top" name="q" type="search" placeholder="필요한 시공 분야를 입력해 보세요" autocomplete="off" enterkeyhint="search">
+        <button type="submit" aria-label="검색"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg></button>
+      </form>
+      <a class="mall" href="#/search?tab=material"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6-5.6-6-11a6 6 0 0 1 12 0c0 5.4-6 11-6 11z"/><circle cx="12" cy="10" r="2.2"/></svg><span class="lg">회원전용 자재 도매몰</span><span class="sm">자재 도매몰</span></a>
+      <button class="who" type="button" data-who data-act="login">로그인</button>
+      <button class="menu-btn" type="button" data-act="menu" aria-expanded="false" aria-controls="mnav" aria-label="메뉴 열기"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    </div>
+  </header>
+  <div class="mnav" id="mnav" hidden>
+    <div class="wrap">
+      <form class="hsearch in-menu" data-search role="search">
+        <label class="sr" for="q-menu">통합 검색</label>
+        <input id="q-menu" name="q" type="search" placeholder="필요한 시공 분야를 입력해 보세요" autocomplete="off" enterkeyhint="search">
+        <button type="submit" aria-label="검색"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5"/><path d="m20 20-4.2-4.2"/></svg></button>
+      </form>
+      <a href="#/">홈</a>
+      <a href="#/search?tab=expert">시공 맡기기</a>
+      <a href="#/search?tab=material">회원전용 자재 도매몰</a>
+      <a href="#/site">내 현장</a>
+      <a href="#/tiers">회원 등급 · 포인트</a>
+      <a href="#/join">전문가 입점</a>
+    </div>
+  </div>
+</div>
+
+<div class="shell" id="shell">
+  <main id="view" class="view" tabindex="-1"></main>
+  <aside id="rail" class="rail" data-summary="rail" aria-label="내 현장 요약"></aside>
+</div>
+
+<footer class="foot">
+  <div class="wrap foot-in">
+    <div class="foot-brand">
+      <p class="logo">BUILDGO</p>
+      <p>건설 설계부터 시공까지 · 회원 전용 자재 도매몰<br><span data-company></span></p>
+    </div>
+    <nav class="foot-nav" aria-label="바닥 메뉴">
+      <a href="#/search?tab=expert">시공 맡기기</a>
+      <a href="#/search?tab=material">자재 도매몰</a>
+      <a href="#/site">내 현장</a>
+      <a href="#/tiers">등급·포인트</a>
+      <a href="#/join">전문가 입점</a>
+    </nav>
+    <div class="foot-demo">
+      <span class="strip-tag">시안 3 · 우리가 권하는 안</span>
+      <a href="../../">← 레퍼런스 보드</a>
+      <p data-notice></p>
+    </div>
+  </div>
+</footer>
+
+<button class="bar" id="bar" type="button" data-act="sheet-open" aria-haspopup="dialog" aria-controls="sheet"></button>
+
+<div class="sheet-wrap" id="sheet" hidden>
+  <div class="scrim" data-act="sheet-close"></div>
+  <section class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="sheet-h">
+      <span class="grab" aria-hidden="true"></span>
+      <strong id="sheetTitle">내 현장 요약</strong>
+      <button class="iconbtn sheet-x" type="button" data-act="sheet-close" aria-label="닫기"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+    <div class="sheet-b" data-summary="sheet"></div>
+  </section>
+</div>
+
+<div class="modal-wrap" id="login" hidden>
+  <div class="scrim" data-act="modal-close"></div>
+  <section class="modal" role="dialog" aria-modal="true" aria-labelledby="loginTitle">
+    <button class="iconbtn modal-x" type="button" data-act="modal-close" aria-label="닫기"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    <p class="eyebrow">회원 로그인</p>
+    <h2 id="loginTitle">회원이 되면 자재를<br>내 등급 가격으로 삽니다</h2>
+    <p class="modal-p">시안에서는 예시 회원으로 로그인합니다. 실제 서비스에서는 휴대폰·사업자 인증으로 가입합니다.</p>
+    <div class="modal-user" data-demo-user></div>
+    <button class="btn act lg block" type="button" data-act="demo-login">데모 로그인</button>
+    <button class="btn ghost block" type="button" data-act="modal-close">나중에 할게요</button>
+  </section>
+</div>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="../assets/data.js"></script>
+<script src="../assets/art.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
