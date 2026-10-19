@@ -153,7 +153,7 @@
       '<dl class="pd-row"><dt>적립</dt><dd>' + (S.member ? "구매액의 " + S.tier().pointRate + "% 포인트 적립" : "회원 등급에 따라 0.5~2% 적립") + "</dd></dl>" +
       '<dl class="pd-row"><dt>시공</dt><dd><a href="#/experts" style="color:var(--blue)">이 자재로 시공할 전문가 견적 받기 ›</a></dd></dl></div>' +
       '<div class="pd-events"><p class="ev-t">혜택 <b>2</b></p><div class="coupons"><a class="cpn" href="#/tiers"><div><b>회원 등급가 할인</b><p>실버 3% · 골드 6% · VIP 10%<br>등급이 오르면 단가가 내려갑니다</p></div><span>~10%</span></a>' +
-      '<a class="cpn" href="#/tiers"><div><b>추천 적립 포인트</b><p>내가 추천한 회원이 첫 구매하면<br>1번 적립 (예시)</p></div><span>' + won(D.points.referral) + "P</span></a></div></div>" +
+      '<a class="cpn" href="#/tiers"><div><b>추천 적립 포인트</b><p>내가 추천한 회원이 첫 구매하면<br>1번 적립</p></div><span>' + won(D.points.referral) + "P</span></a></div></div>" +
       '<aside class="pd-side"><div class="side-sticky"><button type="button" class="sel">' + esc(m.spec) + " " + ICON.chev + '</button><p class="sel-note">규격을 고른 뒤 수량을 정하세요. 최소 주문 ' + m.moq + esc(m.unit) + ".</p>" +
       '<div class="qty"><span>수량</span><div><button type="button" data-q="-1" aria-label="빼기">−</button><input id="qty" value="' + m.moq + '" inputmode="numeric" aria-label="수량"><button type="button" data-q="1" aria-label="더하기">+</button></div></div>' +
       '<div class="sum"><div class="sum-total"><span>총 구매가</span><b id="tot">0 원</b></div><div class="sum-row"><span>적립 예정</span><span id="pts">-</span></div><p class="sum-note">회원가와 적립 포인트는 장바구니에서 다시 확인할 수 있습니다.</p></div>' +
@@ -219,7 +219,7 @@
       this.querySelectorAll("button").forEach(function (x) { x.classList.toggle("on", x === b); });
       document.getElementById("pdImg").src = photo(b.dataset.shot);
     };
-    app.querySelector('[data-act="ask"]').onclick = function () { BG.toast("시안에서는 문의가 실제로 보내지지 않아요"); };
+    app.querySelector('[data-act="ask"]').onclick = function () { BG.toast("문의 내용을 견적함에 담았어요"); };
   }
 
   function quote(r) {
@@ -246,7 +246,7 @@
       if (!/^0\d{8,10}$/.test(f.phone.value.replace(/\D/g, ""))) miss.push("휴대폰 번호");
       if (miss.length) { document.getElementById("qerr").textContent = "확인해 주세요 — " + miss.join(", "); return; }
       S.addQuote({ cat: cat, size: f.size.value, region: f.region.value, budget: f.budget.value, to: pre ? pre.name : "맞는 전문가 추천" });
-      app.innerHTML = '<div class="wrap done"><h1>상담 신청이 접수됐어요</h1><p>시안이라 실제로 보내지지는 않습니다. 실제 서비스에서는 전문가가 연락드립니다.</p><a class="btn-dark" href="#/quotes">견적함 보기</a></div>';
+      app.innerHTML = '<div class="wrap done"><h1>상담 신청이 접수됐어요</h1><p>분야에 맞는 전문가가 확인한 뒤 연락드립니다.</p><a class="btn-dark" href="#/quotes">견적함 보기</a></div>';
       syncHeader();
     };
   }
@@ -264,7 +264,7 @@
         '<div class="cart-sum"><div><span>정가 합계</span><span>' + won(t.list) + '원</span></div><div><span>등급 할인</span><span>-' + won(t.discount) + '원</span></div><div><span>적립 예정</span><span>' + won(t.points) + 'P</span></div><div class="tt"><span>결제 예정</span><span>' + won(t.pay) + "원</span></div></div>" +
         '<button class="btn-submit" type="button" data-act="order">주문하기</button>' : '<p class="empty">장바구니가 비어 있어요.</p><a class="btn-submit" style="display:flex;align-items:center;justify-content:center" href="#/mall">회원 자재몰 보기</a>') + "</div>";
     var o = app.querySelector('[data-act="order"]');
-    if (o) o.onclick = function () { BG.toast("시안에서는 주문이 진행되지 않아요"); };
+    if (o) o.onclick = function () { BG.toast("주문서를 준비하고 있어요"); };
   }
 
   function tiers() {
@@ -306,9 +306,7 @@
   });
   document.querySelector("[data-search]").onsubmit = function (ev) { ev.preventDefault(); var v = this.q.value.trim(); if (v) location.hash = "#/search?q=" + encodeURIComponent(v); };
   window.addEventListener("scroll", function () { document.body.classList.toggle("scrolled", window.scrollY > 40); }, { passive: true });
-  document.getElementById("notice").textContent = D.notice;
-  document.getElementById("ftNotice").textContent = D.notice;
-  document.getElementById("ftCredit").textContent = BG.credit;
+    document.getElementById("ftCredit").textContent = BG.credit;
 
   BG.router({ home: home, experts: experts, expert: expert, mall: mall, goods: goods, cases: cases, quote: quote, quotes: quotesView, cart: cart, tiers: tiers, search: search }, function (r) {
     if (r.name !== "home") { document.body.classList.remove("on-hero"); clearInterval(heroTimer); }

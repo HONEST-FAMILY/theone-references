@@ -244,6 +244,102 @@ window.BGPhotos = {
   "alt": "A large room with a lot of white paint on the walls",
   "page": "https://unsplash.com/photos/a-large-room-with-a-lot-of-white-paint-on-the-walls-2ZMe-E2NBZ0",
   "kb": 114
+ },
+ "f_hero": {
+  "src": "../assets/photos/f_hero.jpg",
+  "alt": "A modern house with a swimming pool and green lawn",
+  "page": "https://unsplash.com/photos/a-modern-house-with-a-swimming-pool-and-green-lawn-ylzGfY-xzBY",
+  "kb": 467
+ },
+ "f_hero2": {
+  "src": "../assets/photos/f_hero2.jpg",
+  "alt": "Modern white house, two garage doors, and concrete driveway",
+  "page": "https://unsplash.com/photos/modern-white-house-two-garage-doors-and-concrete-driveway-mledaZ8XtVM",
+  "kb": 545
+ },
+ "f_house2": {
+  "src": "../assets/photos/f_house2.jpg",
+  "alt": "A modern white villa with a swimming pool and outdoor lounge area",
+  "page": "https://unsplash.com/photos/modern-white-villa-with-swimming-pool-Id7u0EkTjBE",
+  "kb": 102
+ },
+ "f_house3": {
+  "src": "../assets/photos/f_house3.jpg",
+  "alt": "Modern white house with glass garage doors and plants",
+  "page": "https://unsplash.com/photos/modern-white-house-with-glass-garage-doors-and-plants-MUiv6OcHoto",
+  "kb": 177
+ },
+ "f_kitchen": {
+  "src": "../assets/photos/f_kitchen.jpg",
+  "alt": "white wooden kitchen cabinet with black pendant lamp",
+  "page": "https://unsplash.com/photos/white-wooden-kitchen-cabinet-with-black-pendant-lamp-KiUg-4xmTwo",
+  "kb": 107
+ },
+ "f_kitchen2": {
+  "src": "../assets/photos/f_kitchen2.jpg",
+  "alt": "Modern white kitchen with island and bar stools",
+  "page": "https://unsplash.com/photos/modern-white-kitchen-with-island-and-bar-stools-zAvzWN6CE5w",
+  "kb": 100
+ },
+ "f_bath": {
+  "src": "../assets/photos/f_bath.jpg",
+  "alt": "A bathroom with a tub, sink, and large window",
+  "page": "https://unsplash.com/photos/a-bathroom-with-a-tub-sink-and-large-window-N03PjHWOEFA",
+  "kb": 139
+ },
+ "f_bath2": {
+  "src": "../assets/photos/f_bath2.jpg",
+  "alt": "a bathroom with a sink and a mirror",
+  "page": "https://unsplash.com/photos/a-bathroom-with-a-sink-and-a-mirror-f61KO4nDeJA",
+  "kb": 217
+ },
+ "f_living": {
+  "src": "../assets/photos/f_living.jpg",
+  "alt": "a living room filled with furniture and a fire place",
+  "page": "https://unsplash.com/photos/a-living-room-filled-with-furniture-and-a-fire-place-pkIJXMezi_E",
+  "kb": 83
+ },
+ "f_living2": {
+  "src": "../assets/photos/f_living2.jpg",
+  "alt": "a living room filled with furniture and a kitchen",
+  "page": "https://unsplash.com/photos/a-living-room-filled-with-furniture-and-a-kitchen-PE4pFgcYzoQ",
+  "kb": 91
+ },
+ "f_draw1": {
+  "src": "../assets/photos/f_draw1.jpg",
+  "alt": "black pen on white printer paper",
+  "page": "https://unsplash.com/photos/black-pen-on-white-printer-paper-o776uI1UtuQ",
+  "kb": 90
+ },
+ "f_draw2": {
+  "src": "../assets/photos/f_draw2.jpg",
+  "alt": "a person sitting at a desk with a pen and calculator",
+  "page": "https://unsplash.com/photos/a-person-sitting-at-a-desk-with-a-pen-and-calculator-ZGkckENa2MQ",
+  "kb": 83
+ },
+ "f_draw3": {
+  "src": "../assets/photos/f_draw3.jpg",
+  "alt": "Architectural blueprints with drafting pencils, a metal ruler, and a storage tube",
+  "page": "https://unsplash.com/photos/architectural-blueprints-with-drafting-tools-Yn8D5B8C-eY",
+  "kb": 121
+ },
+ "f_pipe": {
+  "src": "../assets/photos/f_pipe.jpg",
+  "alt": "gold and silver round coins",
+  "page": "https://unsplash.com/photos/gold-and-silver-round-coins-2jftyBtoqzQ",
+  "kb": 69
+ },
+ "f_valve": {
+  "src": "../assets/photos/f_valve.jpg",
+  "alt": "a close-up of a camera",
+  "page": "https://unsplash.com/photos/a-close-up-of-a-camera-Qhy7Jdd20ns",
+  "kb": 45
+ },
+ "f_brick": {
+  "src": "../assets/photos/f_brick.jpg",
+  "alt": "person holding brown wooden cube",
+  "page": "https://unsplash.com/photos/person-holding-brown-wooden-cube-0uw3Ojx-4Cw",
+  "kb": 31
  }
 };
-window.BGPhotosCredit = "사진: Unsplash (무료 사용 허가 사진, 시안용)";
+window.BGPhotosCredit = "사진: Unsplash";

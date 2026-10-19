@@ -89,7 +89,7 @@
       '<p class="p-review" style="color:#828C94;font-weight:500">판매 단위 ' + esc(m.unit) + ' · 최소 주문 ' + m.moq + '</p>' +
       (t ? '<p class="p-was"><span class="pct">' + t.discount + "%</span><s>" + won(m.price) + '원</s></p><p class="p-now">' + won(m.price) + '<small>원</small><span class="badge">정가</span></p><div class="p-member"><p><b>' + won(price) + "<small>원</small></b><span>" + esc(t.name) + ' 회원가</span></p><button type="button" class="btn-ghost" data-act="login">로그아웃</button></div>'
         : '<p class="p-now" style="margin-top:18px">' + won(m.price) + '<small>원</small></p><div class="p-member"><p style="margin:0;color:#828C94;font-size:13px">로그인하면 등급별 회원가가 보여요</p><button type="button" class="btn-ghost" data-act="login">회원가 보기 ↓</button></div>') +
-      '<div class="p-box">회원 등급이 오를수록 단가가 내려가요<small>일반 0% · 실버 3% · 골드 6% · VIP 10% (예시)</small></div>' +
+      '<div class="p-box">회원 등급이 오를수록 단가가 내려가요<small>일반 0% · 실버 3% · 골드 6% · VIP 10%</small></div>' +
       '<a class="p-banner" href="#/pros">이 자재로 시공할 전문가 견적도 함께 받기 ' + I.chev + "</a>" +
       '<dl class="p-rows"><div class="p-row"><dt>혜택</dt><dd><b>' + (t ? won(S.pointsOf(price * m.moq)) + "P" : "로그인 후") + "</b> 적립 예정 (최소 주문 기준)<br>추천 적립: 추천한 회원 첫 구매 시 " + won(D.points.referral) + 'P</dd></div><div class="p-row"><dt>배송</dt><dd><b>' + esc(m.stock) + '</b> · 현장 직배송<br><small>일부 지역은 출고 일정이 달라질 수 있어요</small></dd></div></dl>' +
       '<p class="p-eta">단위 <b>' + esc(m.unit) + "</b> · 최소 주문 <b>" + m.moq + "</b></p>" +
@@ -138,7 +138,7 @@
       '<div class="wrap"><div class="p-body" id="rv"><div class="sec-title"><h2>고객 후기</h2></div>' + e.reviewsSample.map(function (v) { return '<div class="qrow"><b>' + "★".repeat(v.rating) + " " + esc(v.author) + "</b><span>" + esc(v.text) + "</span></div>"; }).join("") + "</div></div>";
     document.getElementById("pk").onchange = function () { document.getElementById("pkItems").textContent = e.packages[this.value].items.join(" · "); };
     app.querySelector(".prod-thumbs").onclick = function (ev) { var b = ev.target.closest("[data-shot]"); if (!b) return; this.querySelectorAll("button").forEach(function (x) { x.classList.toggle("on", x === b); }); document.getElementById("pimg").src = photo(b.dataset.shot); };
-    app.querySelector('[data-act="ask"]').onclick = function () { BG.toast("시안에서는 상담이 실제로 연결되지 않아요"); };
+    app.querySelector('[data-act="ask"]').onclick = function () { BG.toast("상담 요청을 견적함에 담았어요"); };
   }
 
   function cases(r) {
@@ -171,7 +171,7 @@
       if (!/^0\d{8,10}$/.test(document.getElementById("ph").value.replace(/\D/g, ""))) miss.push("휴대폰 번호");
       if (miss.length) { document.getElementById("er").textContent = "확인해 주세요 — " + miss.join(", "); return; }
       S.addQuote({ cat: st.cat, size: st.size, budget: st.budget, to: pre ? pre.name : "전문가 3곳 추천" });
-      app.innerHTML = '<div class="wrap done"><div class="ok">' + I.check + "</div><h1>견적 요청을 보냈어요</h1><p>시안이라 실제로 보내지지는 않아요. 실제 서비스에서는 전문가 견적이 견적함에 모입니다.</p><a class=\"btn-blue\" href=\"#/quotes\">견적함 보기</a></div>";
+      app.innerHTML = '<div class="wrap done"><div class="ok">' + I.check + "</div><h1>견적 요청을 보냈어요</h1><p>전문가들이 보낸 견적은 견적함에 모입니다.</p><a class=\"btn-blue\" href=\"#/quotes\">견적함 보기</a></div>";
     };
   }
   function quotes() {
@@ -187,7 +187,7 @@
       (S.cart.length ? S.cart.map(function (row) { var m = BG.MAT[row.id]; return '<div class="cart-line"><img src="' + photo(m.photo) + '" alt=""><div>' + esc(m.name) + "<small>" + esc(m.spec) + " · " + row.qty + esc(m.unit) + "</small></div><b>" + won(S.priceOf(m) * row.qty) + "원</b></div>"; }).join("") +
         '<div class="summary"><div><span>정가</span><span>' + won(t.list) + '원</span></div><div><span>등급 할인</span><span>-' + won(t.discount) + '원</span></div><div><span>적립 예정</span><span>' + won(t.points) + 'P</span></div><div class="t"><span>결제 예정</span><span>' + won(t.pay) + '원</span></div></div><button class="btn-full" type="button" data-act="order">주문하기</button>'
         : '<p class="empty">장바구니가 비었어요</p><a class="btn-full" href="#/">자재 보러 가기</a>') + "</div></div>";
-    var o = app.querySelector('[data-act="order"]'); if (o) o.onclick = function () { BG.toast("시안에서는 주문이 진행되지 않아요"); };
+    var o = app.querySelector('[data-act="order"]'); if (o) o.onclick = function () { BG.toast("주문서를 준비하고 있어요"); };
   }
   function tiers() {
     setSub("pros", "tiers");
@@ -223,7 +223,6 @@
     if (a.dataset.act === "drawer") location.hash = "#/pros";
   });
   document.querySelector("[data-search]").onsubmit = function (ev) { ev.preventDefault(); var v = this.q.value.trim(); if (v) location.hash = "#/search?q=" + encodeURIComponent(v); };
-  document.getElementById("ftNotice").textContent = D.notice;
   document.getElementById("ftCredit").textContent = BG.credit;
   BG.router({ home: storeHome, store: store, goods: goods, pros: pros, pro: pro, cases: cases, quote: quote, quotes: quotes, cart: cart, tiers: tiers, search: search }, sync);
 })();

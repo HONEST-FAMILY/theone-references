@@ -153,5 +153,5 @@ window.BUILDGO = {
     referralRule: "내가 추천한 회원이 첫 구매를 하면 1번만 적립 (추천의 추천에는 적립하지 않음)",
     use: "자재 결제 시 1포인트 = 1원, 시공 계약금에도 사용"
   },
-  demoUser: { name: "김건축", tier: "gold", points: 48200, company: "한빛건설(예시)" }
+  demoUser: { name: "김건축", tier: "gold", points: 48200, company: "한빛건설" }
 };

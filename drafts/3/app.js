@@ -102,7 +102,7 @@
       '<div class="gsec" id="pf"><h2>포트폴리오</h2><div class="pf">' + e.portfolio.map(function (p) { return '<div><img loading="lazy" src="' + photo(p.photo) + '" alt=""><small>' + esc(c.name) + "</small><b>" + esc(p.title) + '</b><div class="chips"><span>지역 ' + esc(e.region.split(" ")[0]) + "</span><span>예시 사진</span></div></div>"; }).join("") + "</div></div>" +
       '<div class="gsec desc" id="sv" style="margin-top:46px"><h2 style="text-align:left">서비스 설명</h2><p>' + esc(e.tagline) + "</p>" + e.packages.map(function (p) { return "<h4>" + esc(p.tier) + "</h4><p>" + esc(p.items.join(" · ")) + "</p>"; }).join("") + '<p style="color:#9A9BA7;font-size:12px">필요한 자재는 BUILDGO 회원 자재몰에서 회원가로 함께 준비할 수 있어요</p></div>' + areas(e) + '</div>' +
       '<aside><div class="pkgbox" id="pr"><div class="pkgtabs">' + e.packages.map(function (p, i) { return '<button type="button" data-pk="' + i + '" class="' + (i === sel ? "on" : "") + '">' + esc(p.tier) + "</button>"; }).join("") + '</div><div class="pkgin" id="pkgin"></div>' +
-      '<div class="pkgbtns"><button type="button" class="b-outline" data-act="ask">전문가에게 문의하기</button><a class="b-black" href="#/request?e=' + e.id + '">견적 요청하기</a></div></div><p class="pknote">· 계약과 대금은 고객과 전문가가 직접 주고받아요<br>· 시안이라 실제로 문의·요청이 보내지지 않아요</p></aside></div>' +
+      '<div class="pkgbtns"><button type="button" class="b-outline" data-act="ask">전문가에게 문의하기</button><a class="b-black" href="#/request?e=' + e.id + '">견적 요청하기</a></div></div><p class="pknote">· 계약과 대금은 고객과 전문가가 직접 주고받아요<br>· 견적을 받아 보고 결정해도 비용이 들지 않아요</p></aside></div>' +
       '<div class="mcta"><button type="button" class="b-outline" data-act="ask">문의</button><a class="b-black" href="#/request?e=' + e.id + '">견적 요청하기</a></div>';
     function pk(i) {
       var p = e.packages[i];
@@ -136,11 +136,11 @@
       '<div class="wrap gbody"><div><nav class="gtabs" style="margin-top:0"><a class="on" href="#tg">등급별 가격</a><a href="#sp">규격·배송</a></nav><div class="gsec" id="tg"><h2>등급별 회원가</h2><div class="revs">' +
       D.tiers.map(function (x) { return '<div class="rev"' + (t && t.id === x.id ? ' style="outline:2px solid #2337D9"' : "") + "><small>" + esc(x.rule) + "</small><p><b>" + esc(x.name) + "</b> · " + (x.discount ? x.discount + "% 할인" : "정가") + " · 적립 " + x.pointRate + "%</p><p style=\"font-size:18px;font-weight:800\">" + won(Math.round(m.price * (100 - x.discount) / 100 / 10) * 10) + "원</p></div>"; }).join("") +
       "</div></div>" +
-      '<div class="gsec" id="sp" style="margin-top:46px"><h2>규격·배송</h2><dl class="spec"><div><dt>규격</dt><dd>' + esc(m.spec) + "</dd></div><div><dt>판매 단위</dt><dd>" + esc(m.unit) + "</dd></div><div><dt>최소 주문</dt><dd>" + m.moq + " " + esc(m.unit) + "</dd></div><div><dt>출고</dt><dd>" + esc(m.stock) + '</dd></div><div><dt>배송</dt><dd>현장 직배송 · 지역별 배송비 별도 (예시)</dd></div><div><dt>증빙</dt><dd>사업자 회원 세금계산서 발행</dd></div></dl></div></div>' +
+      '<div class="gsec" id="sp" style="margin-top:46px"><h2>규격·배송</h2><dl class="spec"><div><dt>규격</dt><dd>' + esc(m.spec) + "</dd></div><div><dt>판매 단위</dt><dd>" + esc(m.unit) + "</dd></div><div><dt>최소 주문</dt><dd>" + m.moq + " " + esc(m.unit) + "</dd></div><div><dt>출고</dt><dd>" + esc(m.stock) + '</dd></div><div><dt>배송</dt><dd>현장 직배송 · 지역별 배송비 별도</dd></div><div><dt>증빙</dt><dd>사업자 회원 세금계산서 발행</dd></div></dl></div></div>' +
       '<aside><div class="pkgbox"><div class="pkgtabs" style="grid-template-columns:1fr 1fr"><button type="button" class="' + (t ? "" : "on") + '" data-act="' + (t ? "login" : "") + '">일반가</button><button type="button" class="' + (t ? "on" : "") + '" data-act="' + (t ? "" : "login") + '">회원가</button></div>' +
       '<div class="pkgin"><p class="pp">' + won(unit) + "원<small>/ " + esc(m.unit) + "</small></p>" + (t ? '<p class="pt" style="color:#2337D9">' + esc(t.name) + " 회원가 " + t.discount + "% 적용</p>" : '<p class="pt">회원가 모드를 켜면 등급가로 바뀌어요</p>') +
       '<div class="qtybox"><span>수량</span><div><button type="button" data-q="-1" aria-label="빼기">−</button><input id="q" value="' + m.moq + '" inputmode="numeric" aria-label="수량"><button type="button" data-q="1" aria-label="더하기">+</button></div></div><div class="rows" id="rows"></div></div>' +
-      '<div class="pkgbtns"><button type="button" class="b-outline" data-act="cart">장바구니 담기</button><button type="button" class="b-black" data-act="buy">구매하기</button></div></div><p class="pknote">· 최소 주문 ' + m.moq + esc(m.unit) + " · " + esc(m.stock) + "<br>· 시안이라 실제 주문은 진행되지 않아요</p></aside></div>" +
+      '<div class="pkgbtns"><button type="button" class="b-outline" data-act="cart">장바구니 담기</button><button type="button" class="b-black" data-act="buy">구매하기</button></div></div><p class="pknote">· 최소 주문 ' + m.moq + esc(m.unit) + " · " + esc(m.stock) + "<br>· 사업자 회원은 세금계산서가 발행돼요</p></aside></div>" +
       '<div class="mcta"><button type="button" class="b-outline" data-act="cart">장바구니</button><button type="button" class="b-black" data-act="buy">구매하기</button></div>';
     function calc() {
       var q = Math.max(1, parseInt(document.getElementById("q").value, 10) || 1);
@@ -173,7 +173,7 @@
       if (!/^0\d{8,10}$/.test(document.getElementById("ph").value.replace(/\D/g, ""))) miss.push("휴대폰 번호");
       if (miss.length) { document.getElementById("er").textContent = "확인해 주세요 — " + miss.join(", "); return; }
       S.addQuote({ cat: st.cat, size: st.size, when: st.when, to: pre ? pre.name : "맞는 전문가들" });
-      app.innerHTML = '<div class="wrap done"><h1>견적 요청을 올렸어요</h1><p>시안이라 실제로 보내지지는 않아요. 실제 서비스에서는 전문가들의 견적이 도착하면 알려 드려요.</p><a class="btn-black" href="#/quotes">요청 내역 보기</a></div>';
+      app.innerHTML = '<div class="wrap done"><h1>견적 요청을 올렸어요</h1><p>전문가들의 견적이 도착하면 알려 드려요.</p><a class="btn-black" href="#/quotes">요청 내역 보기</a></div>';
     };
   }
   function quotes() {
@@ -187,7 +187,7 @@
       (S.cart.length ? S.cart.map(function (row) { var m = BG.MAT[row.id]; return '<div class="cartl"><img src="' + photo(m.photo) + '" alt=""><div>' + esc(m.name) + "<small>" + esc(m.spec) + " · " + row.qty + esc(m.unit) + "</small></div><b>" + won(S.priceOf(m) * row.qty) + "원</b></div>"; }).join("") +
         '<div class="rows" style="margin-top:16px"><div><span>정가</span><span>' + won(t.list) + "원</span></div><div><span>등급 할인</span><span>-" + won(t.discount) + "원</span></div><div><span>적립 예정</span><span>" + won(t.points) + 'P</span></div><div class="t"><span>결제 예정</span><span>' + won(t.pay) + '원</span></div></div><button class="btn-block" type="button" data-act="order">주문하기</button>'
         : '<p class="empty">장바구니가 비었어요</p><a class="btn-block" href="#/mall">회원 자재몰 보기</a>') + "</div></div>";
-    var o = app.querySelector('[data-act="order"]'); if (o) o.onclick = function () { BG.toast("시안에서는 주문이 진행되지 않아요"); };
+    var o = app.querySelector('[data-act="order"]'); if (o) o.onclick = function () { BG.toast("주문서를 준비하고 있어요"); };
   }
   function tiers() {
     setGnb("tiers");
@@ -227,15 +227,13 @@
     if (!a || !a.dataset.act) return;
     if (a.dataset.act === "login") { ev.preventDefault(); S.member = !S.member; S.save(); sync(); document.getElementById("bizTip").classList.add("off"); BG.toast(S.member ? D.demoUser.name + "님(골드) 회원가 모드 — 자재가 등급가로 보여요" : "회원가 모드를 껐어요"); var y = window.scrollY; window.dispatchEvent(new HashChangeEvent("hashchange")); window.scrollTo(0, y); }
     if (a.dataset.act === "tip-close") document.getElementById("bizTip").classList.add("off");
-    if (a.dataset.act === "ask" || a.dataset.act === "share") BG.toast("시안에서는 실제로 보내지지 않아요");
+    if (a.dataset.act === "ask" || a.dataset.act === "share") BG.toast("문의 내용을 전문가에게 전달할게요");
   });
   document.addEventListener("submit", function (ev) {
     var f = ev.target.closest("[data-search]"); if (!f) return;
     ev.preventDefault(); var v = f.q.value.trim(); if (v) location.hash = "#/search?q=" + encodeURIComponent(v);
   });
   window.addEventListener("scroll", function () { if (window.scrollY > 120) document.getElementById("bizTip").classList.add("off"); }, { passive: true });
-  document.getElementById("notice").textContent = D.notice;
-  document.getElementById("ftNotice").textContent = D.notice;
-  document.getElementById("ftCredit").textContent = BG.credit;
+    document.getElementById("ftCredit").textContent = BG.credit;
   BG.router({ home: home, category: category, gig: gigView, mall: mall, item: item, request: request, quotes: quotes, cart: cart, tiers: tiers, join: join, search: search }, sync);
 })();

@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 rx=%279%27 fill=%27%232337D9%27/%3E%3Cpath d=%27M8.5 15.5 16 9.5l7.5 6%27 fill=%27none%27 stroke=%27%23fff%27 stroke-width=%273%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27/%3E%3Cpath d=%27M9.5 22.5h9%27 stroke=%27%23fff%27 stroke-width=%273%27 stroke-linecap=%27round%27/%3E%3Ccircle cx=%2723.5%27 cy=%2722.5%27 r=%272.5%27 fill=%27%23FF6B1A%27/%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<title>BUILDGO — 설계부터 시공·자재까지</title>
+<link rel="stylesheet" href="../assets/fonts.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="hd" id="hd">
+  <div class="wrap hd-in">
+    <a class="logo" href="#/" aria-label="BUILDGO 홈"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#2337D9"/><path d="M8.5 15.5 16 9.5l7.5 6" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.5 22.5h9" stroke="#fff" stroke-width="3" stroke-linecap="round"/><circle cx="23.5" cy="22.5" r="2.5" fill="#FF6B1A"/></svg><span class="word">BUILDGO</span></a>
+    <nav class="gnb" aria-label="주 메뉴">
+      <a href="#/services" data-nav="services">시공 맡기기</a>
+      <a href="#/mall" data-nav="mall">회원 자재몰</a>
+      <a href="#/cases" data-nav="cases">시공사례</a>
+      <a href="#/tiers" data-nav="tiers">등급 혜택</a>
+    </nav>
+    <div class="hd-r">
+      <a class="icon-btn" href="#/search" aria-label="검색"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></a>
+      <a class="icon-btn" href="#/cart" aria-label="장바구니"><svg class="i" viewBox="0 0 24 24"><path d="M3 4h2l2.2 11h10.6L20 7H6.2"/><circle cx="9" cy="19.5" r="1.4"/><circle cx="17" cy="19.5" r="1.4"/></svg><span class="cnt" id="cartN" hidden></span></a>
+      <button type="button" class="link" data-act="login" id="loginBtn">로그인</button>
+      <a class="btn btn-pri" href="#/request">견적 요청</a>
+    </div>
+  </div>
+</header>
+<main id="app"></main>
+<footer class="ft">
+  <div class="wrap">
+    <div class="ft-in">
+      <div>
+        <a class="logo" href="#/"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="9" fill="#2337D9"/><path d="M8.5 15.5 16 9.5l7.5 6" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.5 22.5h9" stroke="#fff" stroke-width="3" stroke-linecap="round"/><circle cx="23.5" cy="22.5" r="2.5" fill="#FF6B1A"/></svg><span class="word">BUILDGO</span></a>
+        <p>설계·시공 전문가 매칭과 회원 자재몰</p>
+        <p id="ftCredit"></p>
+      </div>
+      <nav><a href="#/services">시공 맡기기</a><a href="#/mall">회원 자재몰</a><a href="#/tiers">등급 혜택</a><a href="#/partner">전문가 등록</a></nav>
+    </div>
+  </div>
+</footer>
+<nav class="tabbar" aria-label="하단 메뉴">
+  <a href="#/" data-tab="home"><svg class="i" viewBox="0 0 24 24"><path d="M4 11 12 4.5 20 11v8.5h-5.5V14h-5v5.5H4z"/></svg>홈</a>
+  <a href="#/services" data-tab="services"><svg class="i" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>시공</a>
+  <a href="#/mall" data-tab="mall"><svg class="i" viewBox="0 0 24 24"><path d="M4 9h16l-1.2 10.5H5.2z"/><path d="M8.5 9V7a3.5 3.5 0 0 1 7 0v2"/></svg>자재몰</a>
+  <a href="#/request" data-tab="request"><svg class="i" viewBox="0 0 24 24"><path d="M6 3.5h9l4 4V20.5H6z"/><path d="M14.5 3.5V8H19M9 12.5h6M9 16h4"/></svg>견적</a>
+  <a href="#/tiers" data-tab="tiers"><svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4.5 20.5c1.5-3.7 4.3-5.5 7.5-5.5s6 1.8 7.5 5.5"/></svg>등급</a>
+</nav>
+<script src="../assets/data.js"></script>
+<script src="../assets/photos.js"></script>
+<script src="../assets/core.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
