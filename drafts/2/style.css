@@ -75,11 +75,12 @@ svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width:
 .sec-title a { font-size: 14px; font-weight: 600; color: var(--blue); }
 .cats { display: grid; grid-template-columns: repeat(12, 1fr); gap: 8px; text-align: center; }
 .cat { display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 13px; }
-.cat img { width: 64px; height: 64px; border-radius: 14px; object-fit: cover; }
+.cat img { width: 64px; height: 64px; object-fit: contain; transition: transform .25s ease; }
+.cat:hover img, .cat2 a:hover .ib img { transform: translateY(-2px); }
 .cat2 { display: grid; grid-template-columns: repeat(10, 1fr); gap: 8px; margin-top: 26px; text-align: center; }
 .cat2 a { display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 13px; }
-.cat2 .ib { width: 52px; height: 52px; border-radius: 16px; background: var(--blue-weak); color: var(--blue); display: flex; align-items: center; justify-content: center; }
-.cat2 .ib.o { background: #FFF1E8; color: var(--orange); }
+.cat2 .ib { width: 52px; height: 52px; border-radius: 16px; background: #F7F8FA; display: flex; align-items: center; justify-content: center; }
+.cat2 .ib img { width: 36px; height: 36px; object-fit: contain; transition: transform .25s ease; }
 
 .grid4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px 20px; }
 .card { position: relative; display: block; }

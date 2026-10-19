@@ -18,6 +18,12 @@
   function won(n) { return Math.round(n).toLocaleString("ko-KR"); }
   function man(n) { if (n == null) return "현장 견적"; if (n === 0) return "무료"; return n >= 10000 ? (n / 10000).toLocaleString("ko-KR") + "만원" : won(n) + "원"; }
   function photo(key) { return P[key] ? P[key].src : ""; }
+  var ICON_FILES = {
+    design: "triangular_ruler", frame: "building_construction", interior: "couch_and_lamp", mep: "wrench", waterproof: "umbrella_with_rain_drops", exterior: "window",
+    "mat-struct": "nut_and_bolt", "mat-board": "wood", "mat-finish": "brick", "mat-insul": "house", "mat-window": "door", "mat-tool": "toolbox",
+    mall: "brick", quote: "memo", cases: "framed_picture", tiers: "crown", deal: "fire", best: "trophy", today: "delivery_truck", pkg: "package", pro: "magnifying_glass_tilted_left", tool: "hammer", referral: "coin"
+  };
+  function icon(key) { return ICON_FILES[key] ? "../assets/icons/" + ICON_FILES[key] + ".png" : ""; }
   function store(key, val) {
     try {
       if (val === undefined) { var v = localStorage.getItem(key); return v ? JSON.parse(v) : null; }
@@ -101,8 +107,8 @@
 
   window.BG = {
     data: D, CAT: CAT, MAT_CAT: MAT_CAT, EXP: EXP, MAT: MAT,
-    esc: esc, won: won, man: man, photo: photo, Session: Session,
+    esc: esc, won: won, man: man, photo: photo, icon: icon, Session: Session,
     router: router, parseHash: parseHash, toast: toast, reduced: reduced, initial: initial,
-    credit: window.BGPhotosCredit || ""
+    credit: (window.BGPhotosCredit || "") + " · 입체 아이콘: Microsoft Fluent Emoji (MIT 라이선스)"
   };
 })();

@@ -10,9 +10,6 @@
     { img: "cat_exterior", title: "창호·중문 교체\n실측부터 설치까지", sub: "창호 자재는 회원 등급가로\n시공은 견적 비교로" }
   ];
   var ICON = {
-    quote: '<svg viewBox="0 0 48 48"><path d="M12 6h17l7 7v29H12z"/><path d="M28 6v8h8M18 24h12M18 31h8"/></svg>',
-    cases: '<svg viewBox="0 0 48 48"><path d="M8 22 24 9l16 13v18H8z"/><rect x="15" y="25" width="9" height="8"/><path d="M28 40V28h6v12"/></svg>',
-    mall: '<svg viewBox="0 0 48 48"><path d="M8 16h32v24H8zM16 16v-5h16v5"/><path d="M8 25h32"/></svg>',
     check: '<svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
     heart: '<svg viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>',
     home: '<svg viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v9H4z"/></svg>',
@@ -55,10 +52,10 @@
     document.body.classList.add("on-hero");
     var slides = HERO.map(function (h, i) { return '<div class="slide' + (i === 0 ? " on" : "") + '"><img src="' + photo(h.img) + '" alt=""></div>'; }).join("");
     var tiles = '<a class="tile" href="#/tiers"><span class="tbox brand">BUILDGO<br>회원가</span>회원 등급<br>혜택보기</a>' +
-      D.categories.map(function (c) { return '<a class="tile" href="#/experts?cat=' + c.id + '"><span class="tbox"><img loading="lazy" src="' + photo(c.photo) + '" alt=""></span>' + esc(c.name) + "</a>"; }).join("") +
-      '<a class="tile" href="#/quote"><span class="tbox">' + ICON.quote + "</span>무료 견적상담</a>" +
-      '<a class="tile" href="#/cases"><span class="tbox">' + ICON.cases + "</span>시공사례</a>" +
-      '<a class="tile" href="#/mall"><span class="tbox">' + ICON.mall + "</span>회원 자재몰</a>";
+      D.categories.map(function (c) { return '<a class="tile" href="#/experts?cat=' + c.id + '"><span class="tbox"><img class="ic" src="' + BG.icon(c.id) + '" alt=""></span>' + esc(c.name) + "</a>"; }).join("") +
+      '<a class="tile" href="#/quote"><span class="tbox"><img class="ic" src="' + BG.icon("quote") + '" alt=""></span>무료 견적상담</a>' +
+      '<a class="tile" href="#/cases"><span class="tbox"><img class="ic" src="' + BG.icon("cases") + '" alt=""></span>시공사례</a>' +
+      '<a class="tile" href="#/mall"><span class="tbox"><img class="ic" src="' + BG.icon("mall") + '" alt=""></span>회원 자재몰</a>';
     app.innerHTML =
       '<section class="hero" id="hero">' + slides +
       '<div class="hero-copy"><div class="wrap"><h1 id="heroTitle">' + esc(HERO[0].title) + '</h1><p id="heroSub">' + esc(HERO[0].sub) + "</p></div></div>" +

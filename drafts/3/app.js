@@ -10,15 +10,6 @@
     chev: '<svg viewBox="0 0 24 24" style="width:12px;height:12px"><path d="m9 6 6 6-6 6"/></svg>'
   };
   var CAT_ICON = {
-    design: '<svg viewBox="0 0 32 32"><path d="M6 26 22 6l4 4L10 30H6z"/><path d="M19 9l4 4M6 26h20"/></svg>',
-    frame: '<svg viewBox="0 0 32 32"><path d="M6 28V12l10-7 10 7v16"/><path d="M6 18h20M11 12v16M21 12v16"/></svg>',
-    interior: '<svg viewBox="0 0 32 32"><path d="M5 22v-6a3 3 0 0 1 6 0v2h10v-2a3 3 0 0 1 6 0v6z"/><path d="M8 22v4M24 22v4M9 14V10a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v4"/></svg>',
-    mep: '<svg viewBox="0 0 32 32"><path d="M6 10h10v6h10"/><path d="M26 12v8M6 6v8M16 16v10"/><circle cx="16" cy="27" r="1.5"/></svg>',
-    waterproof: '<svg viewBox="0 0 32 32"><path d="M16 4s8 9 8 15a8 8 0 0 1-16 0c0-6 8-15 8-15z"/><path d="M12 20a4 4 0 0 0 4 4"/></svg>',
-    exterior: '<svg viewBox="0 0 32 32"><rect x="6" y="5" width="20" height="22" rx="1"/><path d="M16 5v22M6 16h20"/></svg>',
-    mall: '<svg viewBox="0 0 32 32"><path d="M5 11h22v16H5zM11 11V7h10v4"/><path d="M5 17h22"/></svg>',
-    tiers: '<svg viewBox="0 0 32 32"><path d="m5 11 6 5 5-9 5 9 6-5-2 15H7z"/></svg>',
-    request: '<svg viewBox="0 0 32 32"><path d="M6 6h20v15H12l-6 5z"/><path d="M11 12h10M11 16h6"/></svg>',
     all: '<svg viewBox="0 0 32 32"><rect x="7" y="7" width="7" height="7" rx="1.5"/><rect x="18" y="7" width="7" height="7" rx="1.5"/><rect x="7" y="18" width="7" height="7" rx="1.5"/><rect x="18" y="18" width="7" height="7" rx="1.5"/></svg>'
   };
 
@@ -49,10 +40,10 @@
       { t: "<mark>집 짓기</mark> 시작할 때<br>많이 찾아요", cols: [["설계·인허가", D.experts[0]], ["골조·철거", D.experts[1]], ["방수·단열", D.experts[4]], ["외장·창호", D.experts[5]]] }
     ];
     var matsBand = { t: "<mark>현장 소장님</mark>이<br>많이 찾아요", cols: [["보드·합판", BG.MAT.m1], ["구조재·철물", BG.MAT.m3], ["단열·지붕", BG.MAT.m8], ["타일·바닥재", BG.MAT.m5]] };
-    var cats = D.categories.map(function (c) { return '<a href="#/category?c=' + c.id + '"><span class="ci">' + CAT_ICON[c.id] + "</span>" + esc(c.name) + "</a>"; }).join("") +
-      '<a href="#/mall"><span class="bd">회원가</span><span class="ci b">' + CAT_ICON.mall + "</span>회원 자재몰</a>" +
-      '<a href="#/tiers"><span class="ci">' + CAT_ICON.tiers + "</span>등급 혜택</a>" +
-      '<a href="#/request"><span class="bd">무료</span><span class="ci b">' + CAT_ICON.request + "</span>견적 요청</a>" +
+    var cats = D.categories.map(function (c) { return '<a href="#/category?c=' + c.id + '"><span class="ci"><img src="' + BG.icon(c.id) + '" alt="">' + "</span>" + esc(c.name) + "</a>"; }).join("") +
+      '<a href="#/mall"><span class="bd">회원가</span><span class="ci"><img src="' + BG.icon("mall") + '" alt="">' + "</span>회원 자재몰</a>" +
+      '<a href="#/tiers"><span class="ci"><img src="' + BG.icon("tiers") + '" alt="">' + "</span>등급 혜택</a>" +
+      '<a href="#/request"><span class="bd">무료</span><span class="ci"><img src="' + BG.icon("quote") + '" alt="">' + "</span>견적 요청</a>" +
       '<a href="#/category"><span class="ci">' + CAT_ICON.all + "</span>전체보기</a>";
     var verified = D.experts.filter(function (e) { return e.rating >= 4.8; });
     app.innerHTML = '<div class="wrap"><section class="hero"><div><h1>설계부터 시공까지,<br>딱 맞는 전문가를 찾아보세요</h1>' +

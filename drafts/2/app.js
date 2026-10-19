@@ -10,16 +10,6 @@
     right: '<svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg>',
     star: '<svg viewBox="0 0 24 24" style="width:13px;height:13px;fill:currentColor;stroke:none"><path d="M12 3l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.3l-5.2 2.8 1-5.8L3.5 9.2l5.9-.8z"/></svg>',
     check: '<svg viewBox="0 0 24 24" style="width:30px;height:30px;stroke-width:2.4"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
-    deal: '<svg viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></svg>',
-    best: '<svg viewBox="0 0 24 24"><circle cx="12" cy="9" r="6"/><path d="m8.5 14-1.5 8 5-3 5 3-1.5-8"/></svg>',
-    truck: '<svg viewBox="0 0 24 24"><path d="M3 6h11v10H3zM14 9h4l3 3v4h-7"/><circle cx="7" cy="18" r="1.8"/><circle cx="17" cy="18" r="1.8"/></svg>',
-    box: '<svg viewBox="0 0 24 24"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9z"/><path d="m4 7.5 8 4.5 8-4.5M12 12v9"/></svg>',
-    doc: '<svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M9 13h7M9 17h5"/></svg>',
-    crown: '<svg viewBox="0 0 24 24"><path d="m3 8 4.5 4L12 5l4.5 7L21 8l-2 11H5z"/></svg>',
-    photo: '<svg viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="2"/><path d="m4 16 5-5 4 4 3-3 4 4"/></svg>',
-    pro: '<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c1-4 4-6 7-6s6 2 7 6"/></svg>',
-    tape: '<svg viewBox="0 0 24 24"><circle cx="10" cy="12" r="6"/><circle cx="10" cy="12" r="2"/><path d="M16 12h5v3"/></svg>',
-    gift: '<svg viewBox="0 0 24 24"><path d="M4 10h16v10H4zM3 7h18v3H3zM12 7v13M12 7c-2-4-6-3-5 0M12 7c2-4 6-3 5 0"/></svg>'
   };
   var SUB = {
     store: [["", "자재몰홈"], ["cat", "카테고리"], ["best", "베스트"], ["deal", "회원특가"], ["today", "당일출고"], ["pkg", "현장패키지"], ["plan", "기획전"]],
@@ -56,7 +46,7 @@
       { img: "hero_site", t: "현장 하나로 묶어\n자재를 한 번에 주문", s: "보드·합판·구조재 대량 주문", href: "#/store?c=pkg", chip: D.materials[1] },
       { img: "cat_waterproof", t: "장마 전에\n옥상 방수 점검", s: "방수 전문가 무료 현장 실측", href: "#/pro/e5" }
     ];
-    var row2 = [["#/store?c=deal", I.deal, "회원특가", "o"], ["#/store?c=best", I.best, "베스트"], ["#/store?c=today", I.truck, "당일출고"], ["#/store?c=pkg", I.box, "현장패키지"], ["#/quote", I.doc, "견적 요청", "o"], ["#/tiers", I.crown, "등급 혜택"], ["#/cases", I.photo, "시공사례"], ["#/pros", I.pro, "전문가 찾기"], ["#/store?c=tool", I.tape, "공구·소모품"], ["#/tiers", I.gift, "추천 적립", "o"]];
+    var row2 = [["#/store?c=deal", "deal", "회원특가"], ["#/store?c=best", "best", "베스트"], ["#/store?c=today", "today", "당일출고"], ["#/store?c=pkg", "pkg", "현장패키지"], ["#/quote", "quote", "견적 요청"], ["#/tiers", "tiers", "등급 혜택"], ["#/cases", "cases", "시공사례"], ["#/pros", "pro", "전문가 찾기"], ["#/store?c=tool", "tool", "공구·소모품"], ["#/tiers", "referral", "추천 적립"]];
     var cards = D.materials.map(mcard);
     cards.splice(3, 0, '<a class="dark-card" href="#/pros"><img loading="lazy" src="' + photo("pf_e3_2") + '" alt=""><div class="dc"><small>시공 맡기기</small><b>인테리어 전문가 견적 비교</b><p>면허·사업자·보험 확인한 전문가</p><span class="go">' + I.right + "</span></div></a>");
     app.innerHTML = '<div class="wrap"><section class="heroes">' + heroes.map(function (h) {
@@ -65,9 +55,9 @@
     }).join("") + "</section>" +
       '<div class="pager pc-only"><div class="track"><i></i></div><button type="button" aria-label="이전">' + I.left + '</button><button type="button" aria-label="다음">' + I.right + "</button></div>" +
       '<section class="sec"><div class="sec-title"><h2>카테고리</h2></div><div class="cats">' +
-      D.materialCategories.map(function (c) { var m = D.materials.filter(function (x) { return x.category === c.id; })[0]; return '<a class="cat" href="#/store?c=' + c.id + '"><img loading="lazy" src="' + photo(m ? m.photo : "mat_m1") + '" alt="">' + esc(c.name) + "</a>"; }).join("") +
-      D.categories.map(function (c) { return '<a class="cat" href="#/cases?c=' + c.id + '"><img loading="lazy" src="' + photo(c.photo) + '" alt="">' + esc(c.name) + "</a>"; }).join("") + "</div>" +
-      '<div class="cat2">' + row2.map(function (x) { return '<a href="' + x[0] + '"><span class="ib' + (x[3] ? " o" : "") + '">' + x[1] + "</span>" + esc(x[2]) + "</a>"; }).join("") + "</div></section>" +
+      D.materialCategories.map(function (c) { return '<a class="cat" href="#/store?c=' + c.id + '"><img src="' + BG.icon("mat-" + c.id) + '" alt="">' + esc(c.name) + "</a>"; }).join("") +
+      D.categories.map(function (c) { return '<a class="cat" href="#/cases?c=' + c.id + '"><img src="' + BG.icon(c.id) + '" alt="">' + esc(c.name) + "</a>"; }).join("") + "</div>" +
+      '<div class="cat2">' + row2.map(function (x) { return '<a href="' + x[0] + '"><span class="ib"><img src="' + BG.icon(x[1]) + '" alt=""></span>' + esc(x[2]) + "</a>"; }).join("") + "</div></section>" +
       '<section class="sec"><div class="sec-title"><h2>추천 자재</h2><a href="#/store">더보기</a></div><div class="grid4">' + cards.join("") + "</div></section></div>";
   }
 

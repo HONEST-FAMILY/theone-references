@@ -68,9 +68,10 @@ body.sub .gnb { display: flex; }
 
 .cats { display: grid; grid-template-columns: repeat(10, 1fr); gap: 8px; padding: 38px 0 50px; text-align: center; }
 .cats a { position: relative; display: flex; flex-direction: column; align-items: center; gap: 10px; font-size: 13px; }
-.cats .ci { width: 56px; height: 56px; border-radius: 18px; background: #F2F3F7; display: flex; align-items: center; justify-content: center; color: var(--ink); }
-.cats .ci svg { width: 30px; height: 30px; stroke-width: 1.5; }
-.cats .ci.b { background: var(--hl); color: var(--blue); }
+.cats .ci { width: 56px; height: 56px; display: flex; align-items: center; justify-content: center; color: var(--ink); }
+.cats .ci img { width: 52px; height: 52px; object-fit: contain; transition: transform .25s ease; }
+.cats a:hover .ci img { transform: translateY(-3px); }
+.cats .ci svg { width: 26px; height: 26px; stroke-width: 1.6; }
 .cats .bd { white-space: nowrap; position: absolute; top: -10px; left: 50%; transform: translateX(-50%); padding: 0 5px; border: 1px solid #F04A4A; border-radius: 3px; background: #fff; color: #F04A4A; font-size: 9px; font-weight: 700; line-height: 15px; }
 
 .band { background: var(--band); padding: 50px 0; }
@@ -267,7 +268,8 @@ body.sub .gnb { display: flex; }
   .kw a { flex: none; }
   .cats { grid-template-columns: repeat(5, 1fr); gap: 18px 4px; padding: 28px 0 34px; }
   .cats a { font-size: 11.5px; }
-  .cats .ci { width: 48px; height: 48px; border-radius: 15px; }
+  .cats .ci { width: 48px; height: 48px; }
+  .cats .ci img { width: 46px; height: 46px; }
   .band { padding: 34px 0; }
   .brow { grid-template-columns: 1fr; padding-top: 36px; gap: 12px; }
   .brow h2 { font-size: 20px; }
