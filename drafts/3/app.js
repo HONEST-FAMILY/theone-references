@@ -42,6 +42,33 @@
     document.querySelectorAll("[data-tab]").forEach(function (a) { a.classList.toggle("on", a.dataset.tab === active || (active !== "home" && D.categories.some(function (c) { return c.id === active; }) && a.dataset.tab === "category")); });
   }
 
+  var SLIDES = [
+    { bg: "#FFE5CF", art: ["mall", "mat-tool", "mat-board"], t: "회원 자재몰<br>회원가로 바로 확인", s: "골드 등급부터 시작해요", href: "#/mall" },
+    { bg: "#DCE6FF", art: ["frame", "design", "mat-insul"], t: "집 짓기 시작할 때<br>설계부터 시공까지", s: "전문가 패키지 비교하기", href: "#/category?c=design" },
+    { bg: "#EADFFF", art: ["waterproof", "exterior", "mat-window"], t: "장마 오기 전에<br>옥상 방수 점검", s: "실측 후 견적을 받아요", href: "#/gig/e5" }
+  ];
+  var promoAt = 0, promoLock = 0, promoHold = 0, promoT = 0;
+  function promoMark(j) {
+    var box = document.getElementById("promo"); if (!box) return;
+    promoAt = j;
+    box.querySelectorAll(".pslide").forEach(function (x, k) { x.classList.toggle("on", k === j); x.setAttribute("aria-hidden", k === j ? "false" : "true"); });
+    box.style.setProperty("--n1", SLIDES[(j + 1) % SLIDES.length].bg);
+    box.style.setProperty("--n2", SLIDES[(j + 2) % SLIDES.length].bg);
+    document.getElementById("promoPg").innerHTML = "<b>" + (j + 1) + "</b> / " + SLIDES.length + " ›";
+  }
+  function promoGo() {
+    var box = document.getElementById("promo"); if (!box) return;
+    var tr = box.querySelector(".ptrack"), j = (promoAt + 1) % SLIDES.length;
+    if (tr.scrollWidth > tr.clientWidth + 4) { promoLock = Date.now() + 900; tr.scrollTo({ left: j * tr.clientWidth, behavior: BG.reduced() ? "auto" : "smooth" }); }
+    promoMark(j);
+  }
+  setInterval(function () { if (!BG.reduced() && !document.hidden && Date.now() > promoHold) promoGo(); }, 4500);
+  document.addEventListener("scroll", function (ev) {
+    var t = ev.target; if (!t.classList || !t.classList.contains("ptrack")) return;
+    if (Date.now() > promoLock) promoHold = Date.now() + 6000;
+    clearTimeout(promoT);
+    promoT = setTimeout(function () { var j = Math.round(t.scrollLeft / t.clientWidth); if (j !== promoAt) promoMark(j); }, 120);
+  }, true);
   function home() {
     setGnb("home");
     var bands = [
@@ -54,12 +81,15 @@
       '<a href="#/tiers"><span class="ci"><img src="' + BG.icon("tiers") + '" alt="">' + "</span>등급 혜택</a>" +
       '<a href="#/request"><span class="bd">무료</span><span class="ci"><img src="' + BG.icon("quote") + '" alt="">' + "</span>견적 요청</a>" +
       '<a href="#/category"><span class="ci">' + CAT_ICON.all + "</span>전체보기</a>";
+    var mchips = [["욕실", "waterproof"], ["창호", "exterior"], ["인테리어", "interior"], ["석고보드", "mat-board"], ["단열재", "mat-insul"]].map(function (k) { return '<a href="#/search?q=' + encodeURIComponent(k[0]) + '"><img src="' + BG.icon(k[1]) + '" alt="">' + esc(k[0]) + "</a>"; }).join("");
     var verified = D.experts.filter(function (e) { return e.rating >= 4.8; });
-    app.innerHTML = '<div class="wrap"><section class="hero"><div><h1>설계부터 시공까지,<br>딱 맞는 전문가를 찾아보세요</h1>' +
+    promoAt = 0;
+    app.innerHTML = '<div class="top"><div class="wrap top-in"><section class="hero"><div class="hero-copy"><h1>설계부터 시공까지,<br>딱 맞는 전문가를 찾아보세요</h1>' +
       '<form class="big-search" data-search><input type="search" name="q" placeholder="어떤 시공 전문가가 필요하세요?" aria-label="검색"><button type="submit" aria-label="검색">' + I.search + "</button></form>" +
-      '<div class="kw">' + ["인테리어", "욕실", "옥상 방수", "창호", "주택 설계", "석고보드", "타일", "단열재"].map(function (k) { return '<a href="#/search?q=' + encodeURIComponent(k.split(" ")[0]) + '">' + esc(k) + "</a>"; }).join("") + "</div></div>" +
-      '<a class="promo" href="#/mall"><span class="pcard"><span class="art"><img src="' + BG.icon("mall") + '" alt=""><img src="' + BG.icon("mat-tool") + '" alt=""><img src="' + BG.icon("mat-board") + '" alt=""></span><b>회원 자재몰을<br>회원가로 바로 확인하세요</b><p>사업자 회원은 골드 등급부터 시작해요</p><span class="pg">1 / 3 ›</span></span></a></section>' +
-      '<nav class="cats" aria-label="카테고리">' + cats + "</nav></div>" +
+      '<div class="kw">' + ["인테리어", "욕실", "방수", "창호", "설계", "석고보드", "타일", "단열재"].map(function (k) { return '<a href="#/search?q=' + encodeURIComponent(k.split(" ")[0]) + '">' + esc(k) + "</a>"; }).join("") + "</div></div>" +
+      '<div class="promo" id="promo" style="--n1:' + SLIDES[1].bg + ";--n2:" + SLIDES[2].bg + '"><div class="ptrack">' + SLIDES.map(function (x, i) { return '<a class="pslide' + (i ? "" : " on") + '" href="' + x.href + '" style="--bg:' + x.bg + '" aria-hidden="' + (i ? "true" : "false") + '"><span class="art">' + x.art.map(function (k) { return '<img src="' + BG.icon(k) + '" alt="">'; }).join("") + '</span><span class="pt"><b>' + x.t + "</b><p>" + esc(x.s) + "</p></span></a>"; }).join("") + "</div>" +
+      '<button type="button" class="pg" data-act="promo-next" id="promoPg" aria-label="다음 배너"><b>1</b> / ' + SLIDES.length + " ›</button></div></section>" +
+      '<nav class="cats" aria-label="카테고리">' + cats + '<div class="mchips">' + mchips + "</div></nav></div></div>" +
       '<section class="band"><div class="wrap">' + bands.map(function (b) {
         return '<div class="brow"><h2>' + b.t + '</h2><div class="cols">' + b.cols.map(function (c) { return '<div><a class="subcat" href="#/category?c=' + c[1].category + '">' + esc(c[0]) + "<span>+</span></a>" + gig(c[1]) + "</div>"; }).join("") + "</div></div>";
       }).join("") +
@@ -227,13 +257,15 @@
     if (!a || !a.dataset.act) return;
     if (a.dataset.act === "login") { ev.preventDefault(); S.member = !S.member; S.save(); sync(); document.getElementById("bizTip").classList.add("off"); BG.toast(S.member ? D.demoUser.name + "님(골드) 회원가 모드 — 자재가 등급가로 보여요" : "회원가 모드를 껐어요"); var y = window.scrollY; window.dispatchEvent(new HashChangeEvent("hashchange")); window.scrollTo(0, y); }
     if (a.dataset.act === "tip-close") document.getElementById("bizTip").classList.add("off");
+    if (a.dataset.act === "promo-next") { ev.preventDefault(); promoHold = Date.now() + 6000; promoGo(); }
+    if (a.dataset.act === "appbar-close") { ev.preventDefault(); document.getElementById("appbar").remove(); }
     if (a.dataset.act === "ask" || a.dataset.act === "share") BG.toast("문의 내용을 전문가에게 전달할게요");
   });
   document.addEventListener("submit", function (ev) {
     var f = ev.target.closest("[data-search]"); if (!f) return;
     ev.preventDefault(); var v = f.q.value.trim(); if (v) location.hash = "#/search?q=" + encodeURIComponent(v);
   });
-  window.addEventListener("scroll", function () { if (window.scrollY > 120) document.getElementById("bizTip").classList.add("off"); }, { passive: true });
+  window.addEventListener("scroll", function () { document.body.classList.toggle("scrolled", window.scrollY > 8); if (window.scrollY > 120) document.getElementById("bizTip").classList.add("off"); }, { passive: true });
     document.getElementById("ftCredit").textContent = BG.credit;
   BG.router({ home: home, category: category, gig: gigView, mall: mall, item: item, request: request, quotes: quotes, cart: cart, tiers: tiers, join: join, search: search }, sync);
 })();
