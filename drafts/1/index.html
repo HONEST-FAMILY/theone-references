@@ -5,80 +5,53 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 28 28%27%3E%3Crect x=%271%27 y=%271%27 width=%2726%27 height=%2726%27 rx=%276%27 fill=%27%232337D9%27/%3E%3Cpath d=%27M7 21V9l7-4 7 4v12%27 fill=%27none%27 stroke=%27%23fff%27 stroke-width=%272%27/%3E%3Ccircle cx=%2721%27 cy=%2721%27 r=%272.4%27 fill=%27%23FF6B1A%27/%3E%3C/svg%3E">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="#070B1F">
-<title>BUILDGO — 시안 1 · 간지·인터랙션</title>
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap">
+<title>BUILDGO — 시안 1 · 한샘 스타일</title>
+<link rel="stylesheet" href="../assets/fonts.css">
 <link rel="stylesheet" href="style.css">
-<script>document.documentElement.className = matchMedia('(prefers-reduced-motion: reduce)').matches ? 'rm' : 'motion';</script>
 </head>
 <body>
-<div class="bp-grid" aria-hidden="true"></div>
-
-<header class="hdr" id="hdr">
-  <div class="strip">
-    <span class="strip-tag">시안 1 · 간지·인터랙션</span>
-    <span class="strip-notice" id="notice"></span>
-    <a class="strip-back" href="../../">← 레퍼런스 보드</a>
-  </div>
-  <div class="bar">
-    <a class="logo" href="#/" aria-label="BUILDGO 홈">
-      <svg class="logo-mark" viewBox="0 0 28 28" aria-hidden="true"><rect x="1" y="1" width="26" height="26" rx="6" fill="#2337D9"/><path d="M7 21V9l7-4 7 4v12" fill="none" stroke="#fff" stroke-width="2"/><path d="M11 21v-6h6v6" fill="none" stroke="#fff" stroke-width="2"/><circle cx="21" cy="21" r="2.4" fill="#FF6B1A"/></svg>
-      <span class="logo-txt">BUILD<b>GO</b></span>
-    </a>
-    <nav class="nav" aria-label="주 메뉴">
-      <a href="#/experts" data-nav="experts">전문가 찾기</a>
-      <a href="#/quote" data-nav="quote">견적 요청</a>
-      <a href="#/tiers" data-nav="tiers">등급·포인트</a>
+<div class="notice-bar"><span class="tag">시안 1 · 한샘 스타일</span><span id="notice"></span><a href="../../">레퍼런스 보드</a></div>
+<header class="hd" id="hd">
+  <div class="wrap hd-in">
+    <button class="hd-menu" type="button" aria-label="메뉴" data-act="menu"><svg viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+    <a class="logo" href="#/" aria-label="BUILDGO 홈">BUILDGO</a>
+    <nav class="gnb" aria-label="주 메뉴">
+      <a href="#/experts" data-nav="experts">시공 맡기기</a>
+      <a href="#/mall" data-nav="mall">자재몰</a>
+      <a href="#/tiers" data-nav="tiers">등급 혜택</a>
     </nav>
-    <form class="search search-hdr" role="search" data-search autocomplete="off">
-      <svg class="ic" viewBox="0 0 32 32" aria-hidden="true"><circle cx="14" cy="14" r="8"/><path d="M20 20l6 6"/></svg>
-      <input type="search" name="q" placeholder="필요한 시공 분야를 입력해 보세요" aria-label="시공 분야 검색">
-      <div class="suggest" hidden></div>
+    <form class="hd-search" role="search" data-search>
+      <input type="search" name="q" placeholder="회원가로 자재 찾기 · 시공 분야 검색" aria-label="검색">
+      <button type="submit" aria-label="검색"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg></button>
     </form>
-    <div class="bar-right">
-      <button class="mtoggle" id="mtoggle" type="button" role="switch" aria-checked="false" data-action="toggle-member">
-        <span class="mt-label"><span class="mt-long">회원가 보기</span><span class="mt-short">회원가</span></span>
-        <span class="mt-sw" aria-hidden="true"><i></i></span>
-      </button>
-      <span class="who" id="who" hidden></span>
-      <a class="cart-btn" href="#/cart" aria-label="장바구니" data-nav="cart">
-        <svg class="ic" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 6h3l3 14h14l3-10H9"/><circle cx="12" cy="25" r="1.6"/><circle cx="22" cy="25" r="1.6"/></svg>
-        <span class="cart-n" id="cartN" hidden>0</span>
-      </a>
-      <a class="btn-mall" href="#/shop" data-nav="shop">
-        <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1.5a4.5 4.5 0 0 1 4.5 4.5c0 3.2-4.5 8.5-4.5 8.5S3.5 9.2 3.5 6A4.5 4.5 0 0 1 8 1.5z" fill="#FF6B1A"/><circle cx="8" cy="6" r="1.7" fill="#fff"/></svg>
-        회원전용 자재 도매몰
-      </a>
+    <div class="hd-icons">
+      <button type="button" class="ic" data-act="login"><svg viewBox="0 0 24 24"><path d="M10 4h8v16h-8M13 12H3m4-4-4 4 4 4"/></svg><span id="loginLabel">로그인</span></button>
+      <a class="ic ic-quote" href="#/quotes"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h5"/></svg><span>견적함</span></a>
+      <a class="ic" href="#/cart"><svg viewBox="0 0 24 24"><path d="M6 8h12l-1 13H7z"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/></svg><span>장바구니</span><b class="badge" id="cartN" hidden>0</b></a>
+      <a class="ic ic-my" href="#/tiers"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg><span>마이</span></a>
     </div>
   </div>
 </header>
-
-<main id="app" tabindex="-1"></main>
-
-<footer class="ftr">
-  <div class="wrap ftr-in">
-    <div class="ftr-brand"><span class="logo-txt">BUILD<b>GO</b></span><span class="ftr-co" id="ftrCo"></span></div>
-    <p class="ftr-notice" id="ftrNotice"></p>
-    <div class="ftr-meta"><span class="code">시안 1 · 간지·인터랙션</span><a href="../../">← 레퍼런스 보드</a></div>
+<main id="app"></main>
+<a class="float-quote" href="#/quote">무료<br>견적 상담</a>
+<nav class="tabbar" aria-label="하단 메뉴">
+  <a href="#/" data-nav="home"><svg viewBox="0 0 24 24"><path d="M4 11 12 4l8 7v9H4z"/></svg><span>홈</span></a>
+  <a href="#/experts" data-nav="experts"><svg viewBox="0 0 24 24"><path d="M4 20h16M6 20V9l6-5 6 5v11M10 20v-5h4v5"/></svg><span>시공</span></a>
+  <a href="#/mall" data-nav="mall"><svg viewBox="0 0 24 24"><path d="M4 8h16v12H4zM8 8V5h8v3"/></svg><span>자재몰</span></a>
+  <a href="#/quotes" data-nav="quotes"><svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M9 13h7M9 17h5"/></svg><span>견적함</span></a>
+  <a href="#/tiers" data-nav="tiers"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg><span>마이</span></a>
+</nav>
+<footer class="ft">
+  <div class="wrap ft-in">
+    <p class="ft-logo">BUILDGO</p>
+    <p id="ftNotice"></p>
+    <p id="ftCredit"></p>
+    <p><a href="../../">더원파트너스 레퍼런스 보드로 돌아가기</a></p>
   </div>
 </footer>
-
-<nav class="tabbar" aria-label="하단 메뉴">
-  <a href="#/" data-nav="home"><svg class="ic" viewBox="0 0 32 32" aria-hidden="true"><path d="M5 15L16 6l11 9"/><path d="M8 13v13h16V13"/></svg><span>홈</span></a>
-  <a href="#/experts" data-nav="experts"><svg class="ic" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="11" r="5"/><path d="M6 27c1.5-5 5.5-7 10-7s8.5 2 10 7"/></svg><span>전문가</span></a>
-  <a href="#/quote" data-nav="quote"><svg class="ic" viewBox="0 0 32 32" aria-hidden="true"><path d="M8 4h12l5 5v19H8z"/><path d="M20 4v5h5M12 15h9M12 20h9"/></svg><span>견적</span></a>
-  <a href="#/shop" data-nav="shop"><svg class="ic" viewBox="0 0 32 32" aria-hidden="true"><path d="M4 10l12-5 12 5v12l-12 5-12-5z"/><path d="M4 10l12 5 12-5M16 15v12"/></svg><span>자재몰</span></a>
-  <a href="#/tiers" data-nav="tiers"><svg class="ic" viewBox="0 0 32 32" aria-hidden="true"><path d="M6 26h20M9 26V18h14v8M12 18v-6h8v6M14 12V7h4v5"/></svg><span>등급</span></a>
-</nav>
-
-<div class="toast" id="toast" role="status" aria-live="polite"></div>
-
 <script src="../assets/data.js"></script>
-<script src="../assets/art.js"></script>
+<script src="../assets/photos.js"></script>
+<script src="../assets/core.js"></script>
 <script src="app.js"></script>
 </body>
 </html>
