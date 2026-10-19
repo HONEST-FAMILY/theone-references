@@ -89,13 +89,13 @@
     var top = D.experts.slice().sort(function (a, b) { return b.reviews - a.reviews; }).slice(0, 4);
     app.innerHTML =
       '<section class="hero"><div class="wrap hero-in"><div class="hero-copy">' +
-      '<p class="eyebrow rv">설계 · 시공 · 자재를 한 곳에서</p>' +
-      '<h1 class="rv" style="transition-delay:60ms"><span class="l">집 짓는 일,</span><span class="b">전문가와 자재를 한 번에</span></h1>' +
-      '<p class="lead rv" style="transition-delay:120ms">면허와 후기를 확인한 전문가에게 견적을 받고, <br>필요한 자재는 회원 등급가로 바로 주문하세요.</p>' +
-      '<form class="search rv" style="transition-delay:180ms" data-search><div class="seg" role="tablist" aria-label="검색 대상"><button type="button" class="on" data-seg="svc" role="tab" aria-selected="true">시공 전문가</button><button type="button" data-seg="mat" role="tab" aria-selected="false">회원 자재</button></div>' +
+      '<p class="eyebrow">설계 · 시공 · 자재를 한 곳에서</p>' +
+      '<h1><span class="l">집 짓는 일,</span><span class="b">전문가와 자재를 한 번에</span></h1>' +
+      '<p class="lead">면허와 후기를 확인한 전문가에게 견적을 받고, <br>필요한 자재는 회원 등급가로 바로 주문하세요.</p>' +
+      '<form class="search" data-search><div class="seg" role="tablist" aria-label="검색 대상"><button type="button" class="on" data-seg="svc" role="tab" aria-selected="true">시공 전문가</button><button type="button" data-seg="mat" role="tab" aria-selected="false">회원 자재</button></div>' +
       '<div class="field">' + I.search + '<input name="q" id="heroQ" placeholder="어떤 공사를 계획하세요?" aria-label="검색어"><button class="btn btn-pri" type="submit">' + I.search + "<span>검색</span></button></div></form>" +
-      '<div class="pop rv" style="transition-delay:240ms" id="pop"></div></div>' +
-      '<div class="hero-art rv" style="transition-delay:120ms"><div class="photo"><img src="' + photo("f_house2") + '" alt="수영장이 있는 흰 단독주택"></div>' +
+      '<div class="pop" id="pop"></div></div>' +
+      '<div class="hero-art"><div class="photo"><img src="' + photo("f_house2") + '" alt="수영장이 있는 흰 단독주택"></div>' +
       '<div class="fc fc-quote"><div class="fc-h"><b>욕실 리모델링 견적</b><span class="pill pill-blue">견적 3건 도착</span></div>' +
       q.map(function (x) { var e = BG.EXP[x[0]], p = e.packages[x[1]]; return '<div class="qrow">' + mono(e) + "<div>" + esc(e.name) + "<small>" + esc(p.tier) + " · 평균 응답 " + e.responseHours + '시간</small></div><strong class="num">' + won(p.price) + "원</strong></div>"; }).join("") + "</div>" +
       '<div class="fc fc-mat"><img src="' + photo(m1.photo) + '" alt=""><div><p>보드·합판</p><b>' + esc(m1.name) + " " + esc(m1.spec.split(" ")[0]) + '</b><div class="pr num">' + won(goldPrice(m1)) + "원<s>" + won(m1.price) + "원</s></div></div></div>" +
@@ -302,11 +302,12 @@
   var VIEWS = { home: home, services: services, service: service, mall: mall, item: item, request: request, cases: cases, tiers: tiers, cart: cart, search: search, partner: partner };
   var NAV = { services: "services", service: "services", mall: "mall", item: "mall", cart: "mall", cases: "cases", tiers: "tiers" };
   var TAB = { home: "home", services: "services", service: "services", mall: "mall", item: "mall", cart: "mall", request: "request", tiers: "tiers" };
-  var io = "IntersectionObserver" in window ? new IntersectionObserver(function (ents) { ents.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } }); }, { rootMargin: "0px 0px -8% 0px" }) : null;
+  var io = "IntersectionObserver" in window ? new IntersectionObserver(function (ents) { ents.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add("in"); io.unobserve(en.target); } }); }, { rootMargin: "0px 0px 12% 0px" }) : null;
   function reveal() {
     var els = app.querySelectorAll(".rv:not(.in)");
     if (!io || BG.reduced()) { els.forEach(function (el) { el.classList.add("in"); }); return; }
     els.forEach(function (el) { io.observe(el); });
+    setTimeout(function () { app.querySelectorAll(".rv:not(.in)").forEach(function (el) { if (el.getBoundingClientRect().top < window.innerHeight * 1.15) el.classList.add("in"); }); }, 900);
   }
   function render() {
     var y = window.scrollY;
