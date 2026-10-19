@@ -12,6 +12,7 @@
     check: '<svg viewBox="0 0 24 24" style="width:30px;height:30px;stroke-width:2.4"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
   };
   var SUB = {
+    home: [["", "홈"], ["rec", "추천"], ["cases", "시공사례"], ["photos", "현장사진"], ["pros", "전문가"], ["quote", "견적요청"]],
     store: [["", "자재몰홈"], ["cat", "카테고리"], ["best", "베스트"], ["deal", "회원특가"], ["today", "당일출고"], ["pkg", "현장패키지"], ["plan", "기획전"]],
     cases: [["", "시공사례홈"], ["interior", "인테리어"], ["design", "설계·인허가"], ["frame", "골조·철거"], ["waterproof", "방수·단열"], ["exterior", "외장·창호"]],
     pros: [["", "전문가 찾기"], ["quote", "견적 요청"], ["tiers", "회원 혜택"]]
@@ -29,7 +30,13 @@
   }
   function setSub(group, active) {
     var nav = document.getElementById("subNav");
-    var base = group === "store" ? "#/" : group === "cases" ? "#/cases" : "#/pros";
+    if (group === "home") {
+      var hm = { "": "#/", rec: "#/", cases: "#/cases", photos: "#/cases", pros: "#/pros", quote: "#/quote" };
+      nav.innerHTML = SUB.home.map(function (x) { return '<a href="' + hm[x[0]] + '" class="' + (x[0] === active ? "on" : "") + '">' + esc(x[1]) + "</a>"; }).join("") + '<span class="ticker"><b>4</b><em>NEW</em>석고보드</span>';
+      document.querySelectorAll("[data-main]").forEach(function (a) { a.classList.toggle("on", a.dataset.main === "home"); });
+      return;
+    }
+    var base = group === "store" ? "#/shop" : group === "cases" ? "#/cases" : "#/pros";
     nav.innerHTML = SUB[group].map(function (x) {
       var href = group === "pros" ? (x[0] === "quote" ? "#/quote" : x[0] === "tiers" ? "#/tiers" : "#/pros") : (x[0] ? base + (group === "store" ? "store" : "") + "?c=" + x[0] : base);
       if (group === "store" && x[0]) href = "#/store?c=" + x[0];
@@ -38,6 +45,99 @@
     document.querySelectorAll("[data-main]").forEach(function (a) { a.classList.toggle("on", a.dataset.main === group); });
     document.querySelectorAll("[data-tab]").forEach(function (a) { a.classList.toggle("on", a.dataset.tab === group); });
   }
+
+  var MC = { e1: "#2337D9", e2: "#334155", e3: "#B45309", e4: "#0F766E", e5: "#7C3AED", e6: "#BE123C" };
+  var BANNERS = [
+    { tag: "#사업자회원", t: "골드부터 자재 6% 할인", img: "mat_m7", bg: "#E9EEFF", href: "#/tiers" },
+    { tag: "#욕실리모델링", t: "욕실 방수부터 타일까지", img: "f_bath", bg: "#E5F5EE", href: "#/pro/e5" },
+    { tag: "#당일출고", t: "오늘 주문, 오늘 출고", img: "mat_m1", bg: "#F6EFE6", href: "#/store?c=today" }
+  ];
+  var QUICK = [["#/shop", "mat-tool", "자재몰"], ["#/store?c=deal", "deal", "회원특가"], ["#/cases", "cases", "시공사례"], ["#/tiers", "referral", "포인트적립"], ["#/store?c=pkg", "pkg", "현장패키지"], ["#/quote", "quote", "견적요청"], ["#/store?c=today", "today", "당일출고"], ["#/pros", "pro", "전문가찾기"], ["#/store?c=best", "best", "베스트"], ["#/tiers", "tiers", "등급혜택"]];
+  var RECS = [
+    { ph: "f_living2", e: "e3", ov: "30평 아파트\n화이트 우드 시공" },
+    { ph: "f_kitchen", e: "e3" }, { ph: "f_bath2", e: "e5" }, { ph: "pf_e3_2", e: "e3" },
+    { ph: "f_house3", e: "e6" }, { ph: "f_draw1", e: "e1" }, { ph: "pf_e6_2", e: "e6" }
+  ];
+  var HOUSES = [
+    { ph: "f_kitchen2", e: "e3", t: "마포 34평, 주방부터 욕실까지 화이트 우드로 바꾼 집" },
+    { ph: "f_hero", e: "e2", t: "용인 2층 단독주택, 골조부터 준공까지 6개월의 기록" },
+    { ph: "f_living", e: "e3", t: "합정 13평 오피스텔, 수납을 두 배로 늘린 거실" },
+    { ph: "f_house2", e: "e1", t: "양평 단독주택 설계, 인허가까지 한 번에 끝낸 이야기" }
+  ];
+  var DEALS = [
+    { id: "m7", off: 12, rate: 4.8, rv: 1284, badge: "" },
+    { id: "m5", off: 9, rate: 4.7, rv: 812, badge: "" },
+    { id: "m2", off: 7, rate: 4.9, rv: 2031, badge: "당일\n출고" },
+    { id: "m8", off: 15, rate: 4.8, rv: 1577, badge: "당일\n출고" }
+  ];
+  var REVS = [
+    { ph: "x_kitchen", e: "e3", t: "30평 아파트 전체 리모델링을 맡겼어요. 세 곳에서 견적을 받아 비교했는데 패키지마다 들어가는 항목이 다 적혀 있어서 고르기 쉬웠어요. 자재는 회원가로 바꿔 넣으니 처음 견적보다 내려갔고, 매일 작업 사진을 보내 주셔서 안심됐습니다." },
+    { ph: "pf_e5_2", e: "e5", t: "오래된 상가 옥상 방수가 급했는데 장마 전에 끝내야 해서 걱정이 많았어요. 현장 실측 당일에 견적을 받고 3일 만에 공사가 끝났습니다. 하자보증 기간도 계약서에 적어 주셔서 믿음이 갔어요." },
+    { ph: "pf_e6_2", e: "e6", t: "베란다 창호 교체를 알아보다가 실측 예약을 했어요. 동네 업체 견적보다 범위가 분명했고, 시스템창호 자재도 회원가로 함께 주문할 수 있어서 한 번에 끝났습니다." }
+  ];
+  var PLANS = [
+    { ph: "mat_m8", ov: "단열 자재\n기획전", s: "겨울 오기 전 단열 보강", t: "단열·지붕 자재 최대 15% 할인", href: "#/store?c=insul" },
+    { ph: "f_bath", ov: "현장 패키지", s: "욕실 한 번에 바꾸기", t: "30평 욕실 리모델링 자재 묶음", href: "#/store?c=pkg" },
+    { ph: "mat_m1", ov: "오늘 주문\n오늘 출고", s: "급한 현장에 바로", t: "당일 출고 자재 모음", href: "#/store?c=today" },
+    { ph: "", ov: "사업자 회원\n전용 혜택", s: "회원 등급 혜택", t: "골드 등급부터 자재 6% 할인", href: "#/tiers" }
+  ];
+  var BEST = ["m1", "m3", "m2", "m7", "m5", "m8", "m4", "m6", "m12", "m9", "m11", "m10"];
+  var KW = [["석고보드", "new"], ["욕실 방수", "new"], ["강마루", "up"], ["시스템창호", "new"], ["유리섬유 단열재", "new"], ["포세린 타일", "up"], ["구조용 합판", "new"], ["옥상 방수", "new"], ["중문 교체", "up"], ["노출 콘크리트", "new"]];
+  function mono2(e) { return '<span class="mono" style="background:' + (MC[e.id] || "#2337D9") + '">' + esc(BG.initial(e.name)) + "</span>"; }
+  function arr() { return '<span class="arr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg></span>'; }
+  function head(title, sub, href) { return '<div class="oh-h"><div><h2>' + esc(title) + "</h2>" + (sub ? "<p>" + esc(sub) + "</p>" : "") + '</div><a class="more" href="' + href + '">더보기</a><a class="arrlink" href="' + href + '" aria-label="' + esc(title) + ' 더보기">' + arr() + "</a></div>"; }
+  function left() {
+    var n = new Date(), end = new Date(n.getFullYear(), n.getMonth(), n.getDate() + 1), d = Math.max(0, Math.floor((end - n) / 1000));
+    function z(x) { return (x < 10 ? "0" : "") + x; }
+    return z(Math.floor(d / 3600)) + ":" + z(Math.floor(d % 3600 / 60)) + ":" + z(d % 60) + " 남음";
+  }
+  function dealCard(x) {
+    var m = BG.MAT[x.id], price = Math.round(m.price * (100 - x.off) / 100 / 10) * 10;
+    return '<div class="dl-card"><div class="dl-img"><a href="#/goods/' + m.id + '"><img loading="lazy" src="' + photo(m.photo) + '" alt="' + esc(m.name) + '"></a><span class="timer" data-cd>' + left() + "</span>" + (x.badge ? '<span class="dl-badge" style="white-space:pre-line">' + esc(x.badge) + "</span>" : "") + scrapBtn(m.id) + "</div>" +
+      '<a class="dl-info" href="#/goods/' + m.id + '"><p class="br">BUILDGO 자재몰</p><p class="nm">[회원특가] ' + esc(m.name) + " " + esc(m.spec) + '</p><p class="rate">' + I.star + "<b>" + x.rate + "</b>· 리뷰 " + won(x.rv) + '</p><p class="pr"><em>' + x.off + "%</em>" + won(price) + "<small> 외</small></p>" + (m.stock === "당일 출고" ? '<span class="tag-box">당일출고</span>' : '<span class="tag-box">현장 직배송</span>') + "</a></div>";
+  }
+  function bestCard(id, i) {
+    var m = BG.MAT[id], t = S.tier(), off = t ? t.discount : 0, price = S.priceOf(m);
+    return '<div class="bs-card"><div class="bs-img"><a href="#/goods/' + m.id + '"><img loading="lazy" src="' + photo(m.photo) + '" alt="' + esc(m.name) + '"></a><span class="rank">' + (i + 1) + "</span>" + scrapBtn(m.id) + "</div>" +
+      '<a class="dl-info" href="#/goods/' + m.id + '"><p class="br">' + esc(BG.MAT_CAT[m.category].name) + '</p><p class="nm">' + esc(m.name) + " " + esc(m.spec) + "</p>" + (t ? '<p class="special">' + esc(t.name) + " 회원가</p>" : '<p class="special">회원가 최대 10%</p>') + '<p class="pr">' + (off ? "<em>" + off + "%</em>" : "") + won(price) + "</p>" +
+      (m.stock === "당일 출고" ? '<p class="ship2"><b>당일출고</b><span>오늘 14:00까지 주문 시</span></p>' : "") + "</a></div>";
+  }
+  function home() {
+    setSub("home", "");
+    var e3 = BG.EXP.e3;
+    app.innerHTML = '<div class="wrap oh">' +
+      '<section class="oh-hero"><a class="oh-big" href="#/pro/e3"><img src="' + photo("f_kitchen2") + '" alt="화이트 우드 주방"><div class="bc"><h2>마포 34평, 주방부터 욕실까지 화이트 우드로 바꾼 집</h2><p class="by">' + mono2(e3) + esc(e3.name) + "</p></div></a>" +
+      '<a class="oh-side" href="#/tiers"><div class="sc"><small>회원 혜택</small><p>사업자 회원이라면</p><b>골드 등급부터<br>자재 6% 할인</b></div><img src="' + photo("mat_m7") + '" alt=""><span class="cnt-pill">3 / 12 +</span></a></section>' +
+      '<section class="oh-banner" id="ban">' + BANNERS.map(function (b, i) { return '<a class="bn' + (i ? "" : " on") + '" href="' + b.href + '" style="background:' + b.bg + '"><div class="bt"><small>' + esc(b.tag) + "</small><b>" + esc(b.t) + '</b></div><img src="' + photo(b.img) + '" alt=""></a>'; }).join("") + '<span class="cnt-pill" id="banN">1 / 12 +</span></section>' +
+      '<nav class="oh-quick" aria-label="바로가기">' + QUICK.map(function (q) { return '<a href="' + q[0] + '"><span class="qi"><img src="' + BG.icon(q[1]) + '" alt=""></span>' + esc(q[2]) + "</a>"; }).join("") + "</nav>" +
+      '<section class="oh-sec">' + head("이런 시공 찾고 있나요?", "관심 가질 만한 시공 사진을 추천해 드려요", "#/cases") + '<div class="oh-photos">' + RECS.slice(0, 6).concat(RECS.slice(6)).map(function (x) { var e = BG.EXP[x.e]; return '<a class="ph-card" href="#/pro/' + e.id + '"><img loading="lazy" src="' + photo(x.ph) + '" alt="">' + (x.ov ? '<span class="ov">' + esc(x.ov) + "</span>" : "") + '<span class="who">' + mono2(e) + esc(e.name) + "</span></a>"; }).join("") + "</div></section>" +
+      '<section class="oh-sec">' + head("오늘의 추천 시공사례 구경해보세요", "", "#/cases") + '<div class="oh-houses">' + HOUSES.map(function (h) { return '<a class="hs-card" href="#/pro/' + h.e + '"><div class="hs-img"><img loading="lazy" src="' + photo(h.ph) + '" alt=""></div><p>' + esc(h.t) + "</p></a>"; }).join("") + "</div></section>" +
+      '<section class="oh-sec">' + head("카테고리별 자재 찾기", "", "#/shop").replace('<a class="more"', '<a class="more" style="visibility:hidden"') + '<div class="oh-cats">' +
+      D.materialCategories.map(function (c) { return '<a href="#/store?c=' + c.id + '"><img src="' + BG.icon("mat-" + c.id) + '" alt="">' + esc(c.name) + "</a>"; }).join("") +
+      D.categories.map(function (c) { return '<a href="#/cases?c=' + c.id + '"><img src="' + BG.icon(c.id) + '" alt="">' + esc(c.name) + "</a>"; }).join("") + "</div></section>" +
+      '<section class="oh-sec">' + head("회원 특가", "", "#/store?c=deal") + '<div class="oh-deals">' + DEALS.map(dealCard).join("") + '</div><a class="btn-more" href="#/store?c=deal">회원 특가 더보기</a></section>' +
+      '<section class="oh-sec">' + head("고객들의 시공 리뷰", "", "#/pros") + '<div class="oh-revs">' + REVS.map(function (r) { var e = BG.EXP[r.e]; return '<a class="rv-card" href="#/pro/' + e.id + '"><div class="rv-img"><img loading="lazy" src="' + photo(r.ph) + '" alt=""></div><div><b>BUILDGO 시공 · ' + esc(e.name) + "</b><p>" + esc(r.t) + "</p></div></a>"; }).join("") + '</div><a class="btn-more" href="#/pros">시공 전문가 찾기</a></section>' +
+      '<section class="oh-sec">' + head("이번 주 기획전", "", "#/store?c=plan") + '<div class="oh-plans">' + PLANS.map(function (x) { return '<a class="pl-card" href="' + x.href + '"><div class="pl-img' + (x.ph ? "" : " blue") + '">' + (x.ph ? '<img loading="lazy" src="' + photo(x.ph) + '" alt="">' : "") + "<span>" + esc(x.ov) + "</span></div><div><small>" + esc(x.s) + "</small><b>" + esc(x.t) + "</b></div></a>"; }).join("") + '</div><a class="btn-more" href="#/store?c=plan">기획전 더보기</a></section>' +
+      '<section class="oh-sec">' + head("베스트", "", "#/store?c=best") + '<div class="bs-chips" id="bsChips"><button type="button" class="on" data-bc="">전체</button>' + D.materialCategories.map(function (c) { return '<button type="button" data-bc="' + c.id + '">' + esc(c.name) + "</button>"; }).join("") + '</div><div class="oh-best" id="bsGrid"></div></section>' +
+      '<section class="oh-sec oh-kw"><div class="oh-h"><div><h2>인기 검색어</h2></div></div><ol class="kw-list">' + KW.map(function (k, i) { return '<li><b>' + (i + 1) + "</b><i>" + (k[1] === "new" ? "NEW" : "▲") + '</i><a href="#/search?q=' + encodeURIComponent(k[0]) + '">' + esc(k[0]) + "</a></li>"; }).join("") + "</ol></section>" +
+      "</div>";
+    function best(c) {
+      var ids = BEST.filter(function (id) { return !c || BG.MAT[id].category === c; }).slice(0, 3);
+      document.getElementById("bsGrid").innerHTML = ids.map(bestCard).join("") || '<p class="empty">준비 중인 자재예요</p>';
+    }
+    best("");
+    document.getElementById("bsChips").onclick = function (ev) { var b = ev.target.closest("[data-bc]"); if (!b) return; this.querySelectorAll("button").forEach(function (x) { x.classList.toggle("on", x === b); }); best(b.dataset.bc); };
+  }
+  setInterval(function () {
+    document.querySelectorAll("[data-cd]").forEach(function (el) { el.textContent = left(); });
+  }, 1000);
+  setInterval(function () {
+    var box = document.getElementById("ban"); if (!box || BG.reduced()) return;
+    var bs = box.querySelectorAll(".bn"), i = 0;
+    bs.forEach(function (b, k) { if (b.classList.contains("on")) i = k; });
+    bs[i].classList.remove("on"); i = (i + 1) % bs.length; bs[i].classList.add("on");
+    document.getElementById("banN").textContent = (i + 1) + " / 12 +";
+  }, 4000);
 
   function storeHome() {
     setSub("store", "");
@@ -218,11 +318,13 @@
     if (lk) { ev.preventDefault(); var on = S.toggleLike(lk.dataset.like); lk.classList.toggle("on", on); BG.toast(on ? "스크랩했어요" : "스크랩을 취소했어요"); return; }
     var a = ev.target.closest("[data-act]");
     if (!a) return;
-    if (a.dataset.act === "login") { ev.preventDefault(); S.member = !S.member; S.save(); sync(); BG.toast(S.member ? D.demoUser.name + "님(골드)으로 데모 로그인 — 회원가가 보여요" : "로그아웃했어요"); window.dispatchEvent(new HashChangeEvent("hashchange")); }
+    if (a.dataset.act === "login") { ev.preventDefault(); S.member = !S.member; S.save(); sync(); BG.toast(S.member ? D.demoUser.name + "님(골드)으로 로그인했어요 — 회원가가 보여요" : "로그아웃했어요"); window.dispatchEvent(new HashChangeEvent("hashchange")); }
     if (a.dataset.act === "promo-close") document.getElementById("promo").classList.add("off");
+    if (a.dataset.act === "appbar-close") document.getElementById("appbar").classList.add("off");
+    if (a.dataset.act === "app") BG.toast("앱 출시 소식을 알려 드릴게요");
     if (a.dataset.act === "drawer") location.hash = "#/pros";
   });
   document.querySelector("[data-search]").onsubmit = function (ev) { ev.preventDefault(); var v = this.q.value.trim(); if (v) location.hash = "#/search?q=" + encodeURIComponent(v); };
   document.getElementById("ftCredit").textContent = BG.credit;
-  BG.router({ home: storeHome, store: store, goods: goods, pros: pros, pro: pro, cases: cases, quote: quote, quotes: quotes, cart: cart, tiers: tiers, search: search }, sync);
+  BG.router({ home: home, shop: storeHome, store: store, goods: goods, pros: pros, pro: pro, cases: cases, quote: quote, quotes: quotes, cart: cart, tiers: tiers, search: search }, sync);
 })();
