@@ -151,45 +151,45 @@ window.BGPhotos = {
  },
  "mat_m1": {
   "src": "../assets/photos/mat_m1.jpg",
-  "alt": "A plain white textured background",
-  "page": "https://unsplash.com/photos/a-plain-white-textured-background-gehjUbJXjHw",
-  "kb": 161
+  "alt": "Interior construction with exposed brick and drywall sheets",
+  "page": "https://unsplash.com/photos/interior-construction-with-exposed-brick-and-drywall-sheets-hnwkK0lQwBw",
+  "kb": 231
  },
  "mat_m2": {
   "src": "../assets/photos/mat_m2.jpg",
-  "alt": "light oak wood plank texture background",
-  "page": "https://unsplash.com/photos/light-oak-wood-plank-texture-background-JH_R66BihvA",
-  "kb": 66
+  "alt": "A stack of wooden boards stacked on top of each other",
+  "page": "https://unsplash.com/photos/a-stack-of-wooden-boards-stacked-on-top-of-each-other--1SFWuFyxYw",
+  "kb": 176
  },
  "mat_m3": {
   "src": "../assets/photos/mat_m3.jpg",
-  "alt": "brown wooden blocks on white table",
-  "page": "https://unsplash.com/photos/brown-wooden-blocks-on-white-table-iW9iaL-gjX8",
-  "kb": 44
+  "alt": "closeup photo of beige wooden stands",
+  "page": "https://unsplash.com/photos/closeup-photo-of-beige-wooden-stands-x3PjWTt6JKo",
+  "kb": 170
  },
  "mat_m4": {
   "src": "../assets/photos/mat_m4.jpg",
-  "alt": "gray steel rod lot",
-  "page": "https://unsplash.com/photos/gray-steel-rod-lot-Zpdb7-owcpw",
-  "kb": 166
+  "alt": "gray plastic cups on wooden table",
+  "page": "https://unsplash.com/photos/gray-plastic-cups-on-wooden-table-lqx_D7xIZ2o",
+  "kb": 265
  },
  "mat_m5": {
   "src": "../assets/photos/mat_m5.jpg",
-  "alt": "A grid of alternating sage green and off-white square ceramic tiles",
-  "page": "https://unsplash.com/photos/sage-green-and-white-tiles-cB18uhhf43s",
-  "kb": 57
+  "alt": "Various material samples are arranged on a surface",
+  "page": "https://unsplash.com/photos/various-material-samples-are-arranged-on-a-surface-Nw3V_qTGWMg",
+  "kb": 105
  },
  "mat_m6": {
   "src": "../assets/photos/mat_m6.jpg",
-  "alt": "A light grey concrete wall with a subtle textured surface",
-  "page": "https://unsplash.com/photos/light-grey-concrete-wall-texture-jgP2szvR8xw",
-  "kb": 169
+  "alt": "three chairs sitting on a marble floor in a room",
+  "page": "https://unsplash.com/photos/three-chairs-sitting-on-a-marble-floor-in-a-room-v9oBtvRCKHk",
+  "kb": 79
  },
  "mat_m7": {
   "src": "../assets/photos/mat_m7.jpg",
-  "alt": "Wooden floor with herringbone pattern",
-  "page": "https://unsplash.com/photos/wooden-floor-with-herringbone-pattern-Kq8uV6tZM20",
-  "kb": 122
+  "alt": "brown parquet floor",
+  "page": "https://unsplash.com/photos/brown-parquet-floor-CVTmLMv5oG4",
+  "kb": 95
  },
  "mat_m8": {
   "src": "../assets/photos/mat_m8.jpg",
@@ -199,27 +199,27 @@ window.BGPhotos = {
  },
  "mat_m9": {
   "src": "../assets/photos/mat_m9.jpg",
-  "alt": "black and white glass building",
-  "page": "https://unsplash.com/photos/black-and-white-glass-building-Mu9uo42SXEY",
-  "kb": 90
+  "alt": "brown wooden wall under blue sky during daytime",
+  "page": "https://unsplash.com/photos/brown-wooden-wall-under-blue-sky-during-daytime-ms07HdgOZow",
+  "kb": 92
  },
  "mat_m10": {
   "src": "../assets/photos/mat_m10.jpg",
-  "alt": "Modern empty room with large windows and unique chandelier",
-  "page": "https://unsplash.com/photos/modern-empty-room-with-large-windows-and-unique-chandelier-2Az1mFD1NCw",
-  "kb": 68
+  "alt": "white teapot and tow flower vases on windowpane",
+  "page": "https://unsplash.com/photos/white-teapot-and-tow-flower-vases-on-windowpane-U8zsjmKA840",
+  "kb": 117
  },
  "mat_m11": {
   "src": "../assets/photos/mat_m11.jpg",
-  "alt": "A close-up of a red brick wall",
-  "page": "https://unsplash.com/photos/a-close-up-of-a-red-brick-wall-UbGaRz7U8s8",
-  "kb": 117
+  "alt": "a pile of bricks sitting next to each other",
+  "page": "https://unsplash.com/photos/a-pile-of-bricks-sitting-next-to-each-other-O-rCs_m4dvM",
+  "kb": 189
  },
  "mat_m12": {
   "src": "../assets/photos/mat_m12.jpg",
-  "alt": "white concrete wall",
-  "page": "https://unsplash.com/photos/white-concrete-wall-Md6_qA-BMis",
-  "kb": 83
+  "alt": "gray scale photo of wooden door",
+  "page": "https://unsplash.com/photos/gray-scale-photo-of-wooden-door-_GBw5sVMmPU",
+  "kb": 239
  },
  "x_bath": {
   "src": "../assets/photos/x_bath.jpg",

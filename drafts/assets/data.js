@@ -134,7 +134,7 @@ window.BUILDGO = {
     { id: "m3", name: "각재 (구조목 SPF)", spec: "38 × 89 × 3600", unit: "개", price: 9800, category: "struct", texture: "wood", stock: "당일 출고", moq: 20, photo: "mat_m3" },
     { id: "m4", name: "아연도 강관", spec: "50A × 2.3T × 6m", unit: "본", price: 41000, category: "struct", texture: "steel", stock: "1~2일", moq: 5, photo: "mat_m4" },
     { id: "m5", name: "포세린 타일 무광", spec: "600 × 600", unit: "박스(4장)", price: 38000, category: "finish", texture: "tile", stock: "1~2일", moq: 10, photo: "mat_m5" },
-    { id: "m6", name: "콘크리트 질감 포세린 타일", spec: "600 × 1200", unit: "박스(2장)", price: 52000, category: "finish", texture: "concrete", stock: "3~5일", moq: 5, photo: "mat_m6" },
+    { id: "m6", name: "대리석 패턴 포세린 타일", spec: "600 × 1200", unit: "박스(2장)", price: 52000, category: "finish", texture: "marble", stock: "3~5일", moq: 5, photo: "mat_m6" },
     { id: "m7", name: "강마루 오크", spec: "8T × 195 × 1200", unit: "박스(1평)", price: 58000, category: "finish", texture: "oak", stock: "1~2일", moq: 5, photo: "mat_m7" },
     { id: "m8", name: "유리섬유 단열재", spec: "50T × 450 × 1200", unit: "묶음(10장)", price: 14500, category: "insul", texture: "insulation", stock: "당일 출고", moq: 20, photo: "mat_m8" },
     { id: "m9", name: "컬러강판 지붕재", spec: "0.5T × 1000 × 3000", unit: "장", price: 36000, category: "insul", texture: "membrane", stock: "1~2일", moq: 2, photo: "mat_m9" },

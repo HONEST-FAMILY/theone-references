@@ -152,6 +152,8 @@
       '<dl class="pd-row"><dt>출고</dt><dd>' + esc(m.stock) + " · 현장 직배송(일부 지역 제외)</dd></dl>" +
       '<dl class="pd-row"><dt>적립</dt><dd>' + (S.member ? "구매액의 " + S.tier().pointRate + "% 포인트 적립" : "회원 등급에 따라 0.5~2% 적립") + "</dd></dl>" +
       '<dl class="pd-row"><dt>시공</dt><dd><a href="#/experts" style="color:var(--blue)">이 자재로 시공할 전문가 견적 받기 ›</a></dd></dl></div>' +
+      '<div class="pd-events"><p class="ev-t">혜택 <b>2</b></p><div class="coupons"><a class="cpn" href="#/tiers"><div><b>회원 등급가 할인</b><p>실버 3% · 골드 6% · VIP 10%<br>등급이 오르면 단가가 내려갑니다</p></div><span>~10%</span></a>' +
+      '<a class="cpn" href="#/tiers"><div><b>추천 적립 포인트</b><p>내가 추천한 회원이 첫 구매하면<br>1번 적립 (예시)</p></div><span>' + won(D.points.referral) + "P</span></a></div></div>" +
       '<aside class="pd-side"><div class="side-sticky"><button type="button" class="sel">' + esc(m.spec) + " " + ICON.chev + '</button><p class="sel-note">규격을 고른 뒤 수량을 정하세요. 최소 주문 ' + m.moq + esc(m.unit) + ".</p>" +
       '<div class="qty"><span>수량</span><div><button type="button" data-q="-1" aria-label="빼기">−</button><input id="qty" value="' + m.moq + '" inputmode="numeric" aria-label="수량"><button type="button" data-q="1" aria-label="더하기">+</button></div></div>' +
       '<div class="sum"><div class="sum-total"><span>총 구매가</span><b id="tot">0 원</b></div><div class="sum-row"><span>적립 예정</span><span id="pts">-</span></div><p class="sum-note">회원가와 적립 포인트는 장바구니에서 다시 확인할 수 있습니다.</p></div>' +

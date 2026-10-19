@@ -14,15 +14,24 @@
   };
 
   function stars(n) { var r = Math.round(n); return "★★★★★".slice(0, r) + "☆☆☆☆☆".slice(0, 5 - r); }
+  var THUMB = {
+    e1: { em: "평면 3안 비교", b: "주택 설계\n<span>인허가까지</span>" },
+    e2: { em: "무료 현장 실측", b: "신축 골조\n공정표대로" },
+    e3: { em: "30평 기준", b: "아파트 전체\n리모델링", i: "디자인부터 준공 청소까지" },
+    e4: { em: "점검 리포트 제공", b: "보일러\n배관 교체", i: "전기 증설까지" },
+    e5: { em: "하자보증 3년", b: "옥상·욕실\n방수", i: "외단열까지 한 번에" },
+    e6: { em: "실측 당일 견적", b: "시스템창호\n중문 교체" }
+  };
+  function thumbText(t) { return '<span class="tt">' + (t.em ? "<em>" + t.em + "</em>" : "") + "<b>" + t.b + "</b>" + (t.i ? "<i>" + t.i + "</i>" : "") + "</span>"; }
   function heartBtn(id) { return '<button type="button" class="heart' + (S.likes.indexOf(id) >= 0 ? " on" : "") + '" data-like="' + id + '" aria-label="찜">' + I.heart + "</button>"; }
   function gig(e) {
     var minPrice = e.packages.filter(function (p) { return p.price; }).map(function (p) { return p.price; })[0];
-    return '<div class="gig"><div class="gimg"><a href="#/gig/' + e.id + '"><img loading="lazy" src="' + photo(e.portfolio[0].photo) + '" alt="' + esc(e.portfolio[0].title) + '"></a>' + heartBtn(e.id) + "</div>" +
+    return '<div class="gig"><div class="gimg th th-' + e.id + '"><a href="#/gig/' + e.id + '"><img loading="lazy" src="' + photo(e.portfolio[0].photo) + '" alt="' + esc(e.portfolio[0].title) + '">' + thumbText(THUMB[e.id]) + "</a>" + heartBtn(e.id) + "</div>" +
       '<a href="#/gig/' + e.id + '">' + (e.verified.license ? '<span class="gtag">검증</span>' : "") + '<p class="gtitle">' + esc(e.service) + '</p><p class="grate"><span class="st">★</span><b>' + e.rating + "</b> (" + e.reviews + ')</p><p class="gprice">' + (minPrice ? won(minPrice) + "원~" : "현장 견적") + '</p><p class="gseller"><span class="mono">' + esc(BG.initial(e.name)) + "</span>" + esc(e.name) + "</p></a></div>";
   }
   function mat(m) {
     var t = S.tier();
-    return '<div class="gig"><div class="gimg"><a href="#/item/' + m.id + '"><img loading="lazy" src="' + photo(m.photo) + '" alt="' + esc(m.name) + '"></a>' + heartBtn(m.id) + '</div><a href="#/item/' + m.id + '"><span class="gtag" style="background:#2337D9">회원전용</span><p class="gtitle">' + esc(m.name) + " " + esc(m.spec) + '</p><p class="grate">' + esc(BG.MAT_CAT[m.category].name) + " · " + esc(m.stock) + "</p>" +
+    return '<div class="gig"><div class="gimg th th-mat"><a href="#/item/' + m.id + '"><img loading="lazy" src="' + photo(m.photo) + '" alt="' + esc(m.name) + '">' + thumbText({ em: m.stock, b: esc(m.name) }) + "</a>" + heartBtn(m.id) + '</div><a href="#/item/' + m.id + '"><span class="gtag" style="background:#2337D9">회원전용</span><p class="gtitle">' + esc(m.name) + " " + esc(m.spec) + '</p><p class="grate">' + esc(BG.MAT_CAT[m.category].name) + " · " + esc(m.stock) + "</p>" +
       '<p class="gprice">' + (t ? won(S.priceOf(m)) + "원<s>" + won(m.price) + "원</s>" : won(m.price) + '원 <span class="lock">· 회원가 보기</span>') + '</p><p class="gseller"><span class="mono" style="background:#212224">B</span>BUILDGO 자재몰</p></a></div>';
   }
   function setGnb(active) {
@@ -48,8 +57,8 @@
     var verified = D.experts.filter(function (e) { return e.rating >= 4.8; });
     app.innerHTML = '<div class="wrap"><section class="hero"><div><h1>설계부터 시공까지,<br>딱 맞는 전문가를 찾아보세요</h1>' +
       '<form class="big-search" data-search><input type="search" name="q" placeholder="어떤 시공 전문가가 필요하세요?" aria-label="검색"><button type="submit" aria-label="검색">' + I.search + "</button></form>" +
-      '<div class="kw">' + ["인테리어", "욕실 리모델링", "옥상 방수", "창호 교체", "주택 설계", "석고보드", "타일", "단열재"].map(function (k) { return '<a href="#/search?q=' + encodeURIComponent(k.split(" ")[0]) + '">' + esc(k) + "</a>"; }).join("") + "</div></div>" +
-      '<a class="promo" href="#/mall"><div class="stack"><img src="' + photo("mat_m7") + '" alt=""><img src="' + photo("mat_m6") + '" alt=""><img src="' + photo("mat_m2") + '" alt=""></div><b>회원 자재몰<br>회원가로 바로 확인하세요</b><p>등급에 따라 자재 단가가 내려가요</p><span class="pg">1 / 3 ›</span></a></section>' +
+      '<div class="kw">' + ["인테리어", "욕실", "옥상 방수", "창호", "주택 설계", "석고보드", "타일", "단열재"].map(function (k) { return '<a href="#/search?q=' + encodeURIComponent(k.split(" ")[0]) + '">' + esc(k) + "</a>"; }).join("") + "</div></div>" +
+      '<a class="promo" href="#/mall"><span class="pcard"><span class="art"><img src="' + BG.icon("mall") + '" alt=""><img src="' + BG.icon("mat-tool") + '" alt=""><img src="' + BG.icon("mat-board") + '" alt=""></span><b>회원 자재몰을<br>회원가로 바로 확인하세요</b><p>사업자 회원은 골드 등급부터 시작해요</p><span class="pg">1 / 3 ›</span></span></a></section>' +
       '<nav class="cats" aria-label="카테고리">' + cats + "</nav></div>" +
       '<section class="band"><div class="wrap">' + bands.map(function (b) {
         return '<div class="brow"><h2>' + b.t + '</h2><div class="cols">' + b.cols.map(function (c) { return '<div><a class="subcat" href="#/category?c=' + c[1].category + '">' + esc(c[0]) + "<span>+</span></a>" + gig(c[1]) + "</div>"; }).join("") + "</div></div>";
@@ -87,7 +96,7 @@
     app.innerHTML = '<section class="gband"><div class="wrap ghead"><div><div class="gmeta"><span class="crumb">' + esc(c.name) + " " + I.chev + " " + esc(e.region) + '</span><span class="act"><button type="button" data-like="' + e.id + '" class="' + (S.likes.indexOf(e.id) >= 0 ? "on" : "") + '" style="display:inline-flex;gap:4px;align-items:center">' + I.heart + '</button><button type="button" data-act="share" aria-label="공유">' + I.share + "</button></span></div>" +
       "<h1>" + esc(e.service) + '</h1><p class="stars">' + stars(e.rating) + "<b>" + e.rating + " (" + e.reviews + ')</b></p>' +
       '<div class="seller"><span class="mono">' + esc(BG.initial(e.name)) + "</span><div><b>" + esc(e.name) + "</b><span>경력 " + e.years + "년 · 평균 응답 " + e.responseHours + "시간 이내 · " + [e.verified.license ? e.verified.license + " 확인" : "", e.verified.insurance ? "보험 가입" : ""].filter(Boolean).join(" · ") + '</span></div><button type="button" data-act="ask">문의하기</button></div></div>' +
-      '<div class="gal"><div class="main"><img id="gimg" src="' + photo(shots[0]) + '" alt=""></div><div class="thumbs">' + shots.map(function (k, i) { return '<button type="button" class="' + (i ? "" : "on") + '" data-shot="' + k + '"><img src="' + photo(k) + '" alt=""></button>'; }).join("") + "</div></div></div></section>" +
+      '<div class="gal"><div class="main gimg th th-' + e.id + '" id="gmain"><a class="gl"><img id="gimg" src="' + photo(shots[0]) + '" alt="">' + thumbText(THUMB[e.id]) + '</a></div><div class="thumbs">' + shots.map(function (k, i) { return '<button type="button" class="' + (i ? "" : "on") + '" data-shot="' + k + '"><img src="' + photo(k) + '" alt=""></button>'; }).join("") + "</div></div></div></section>" +
       '<div class="wrap gbody"><div><div class="rev-head" id="rv"><h2>최근 받은 후기</h2><a href="#rv" style="font-size:13px;font-weight:600">전체보기</a></div><div class="revs">' + e.reviewsSample.map(function (v) { return '<div class="rev"><span class="stars">' + stars(v.rating) + "</span><small>" + esc(v.author) + "</small><p>" + esc(v.text) + "</p></div>"; }).join("") + "</div>" +
       '<nav class="gtabs"><a class="on" href="#pf">포트폴리오</a><a href="#sv">서비스 설명</a><a href="#pr">가격 정보</a><a href="#rv">후기(' + e.reviews + ")</a></nav>" +
       '<div class="gsec" id="pf"><h2>포트폴리오</h2><div class="pf">' + e.portfolio.map(function (p) { return '<div><img loading="lazy" src="' + photo(p.photo) + '" alt=""><small>' + esc(c.name) + "</small><b>" + esc(p.title) + '</b><div class="chips"><span>지역 ' + esc(e.region.split(" ")[0]) + "</span><span>예시 사진</span></div></div>"; }).join("") + "</div></div>" +
@@ -101,7 +110,7 @@
     }
     pk(sel);
     app.querySelector(".pkgtabs").onclick = function (ev) { var b = ev.target.closest("[data-pk]"); if (!b) return; this.querySelectorAll("button").forEach(function (x) { x.classList.toggle("on", x === b); }); pk(+b.dataset.pk); };
-    app.querySelector(".thumbs").onclick = function (ev) { var b = ev.target.closest("[data-shot]"); if (!b) return; this.querySelectorAll("button").forEach(function (x) { x.classList.toggle("on", x === b); }); document.getElementById("gimg").src = photo(b.dataset.shot); };
+    app.querySelector(".thumbs").onclick = function (ev) { var b = ev.target.closest("[data-shot]"); if (!b) return; this.querySelectorAll("button").forEach(function (x) { x.classList.toggle("on", x === b); }); document.getElementById("gimg").src = photo(b.dataset.shot); document.getElementById("gmain").classList.toggle("plain", b !== this.querySelector("button")); };
   }
 
   function mall(r) {

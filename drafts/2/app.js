@@ -22,10 +22,10 @@
   function mcard(m) {
     var t = S.tier();
     var price = t ? '<p class="special">' + esc(t.name) + ' 회원가</p><p class="price"><span class="pct">' + t.discount + "%</span>" + won(S.priceOf(m)) + "</p>"
-      : '<p class="price">' + won(m.price) + '</p><button type="button" class="lock" data-act="login">' + I.lock + "로그인하고 회원가 보기</button>";
+      : '<p class="special">회원가 최대 ' + D.tiers[D.tiers.length - 1].discount + '% 할인</p><p class="price">' + won(m.price) + '</p><button type="button" class="lock" data-act="login">' + I.lock + "로그인하고 회원가 보기</button>";
     return '<div class="card"><div class="tw"><a class="thumb" href="#/goods/' + m.id + '"><img loading="lazy" src="' + photo(m.photo) + '" alt="' + esc(m.name) + '">' + (m.stock === "당일 출고" ? '<span class="pick">당일<br>출고</span>' : "") + "</a>" + scrapBtn(m.id) + "</div>" +
-      '<a href="#/goods/' + m.id + '"><p class="brand">' + esc(BG.MAT_CAT[m.category].name) + '</p><p class="name">' + esc(m.name) + " " + esc(m.spec) + "</p>" + price +
-      '<div class="tags"><span>' + esc(m.stock) + "</span><span>최소 " + m.moq + "</span>" + (t ? '<span class="cp">적립 ' + t.pointRate + "%</span>" : "") + "</div></a></div>";
+      '<a href="#/goods/' + m.id + '"><p class="brand">' + esc(BG.MAT_CAT[m.category].name) + '</p><p class="name">' + esc(m.name) + " " + esc(m.spec) + "</p>" + price + (m.stock === "당일 출고" ? '<p class="ship">오늘 14:00까지 주문 시 당일 출고</p>' : '<p class="meta">' + esc(m.stock) + " 출고 · 현장 직배송</p>") +
+      '<div class="tags"><span>최소 ' + m.moq + "</span><span>세금계산서 발행</span>" + (t ? '<span class="cp">적립 ' + t.pointRate + "%</span>" : "") + "</div></a></div>";
   }
   function setSub(group, active) {
     var nav = document.getElementById("subNav");
