@@ -25,8 +25,8 @@
   function matCard(m) {
     var price = S.priceOf(m), rate = tierRate();
     var priceHtml = S.member
-      ? '<div class="pstrike">' + won(m.price) + '원</div><div class="pprice"><span class="rate">' + rate + "%</span>" + won(price) + "<small>원</small></div>"
-      : '<div class="pprice">' + won(m.price) + '<small>원</small></div><button type="button" class="pmember" data-act="login">회원가 보기 ' + ICON.chev + "</button>";
+      ? '<div class="pstrike" data-pop>' + won(m.price) + '원</div><div class="pprice"><span class="rate mo-ib" data-pop>' + rate + '%</span><span data-roll="' + m.id + '">' + won(price) + "</span><small>원</small></div>"
+      : '<div class="pprice"><span data-roll="' + m.id + '">' + won(m.price) + '</span><small>원</small></div><button type="button" class="pmember" data-act="login" data-pop>회원가 보기 ' + ICON.chev + "</button>";
     return '<div class="pcard"><a href="#/goods/' + m.id + '" class="pthumb"><img loading="lazy" src="' + photo(m.photo) + '" alt="' + esc(m.name) + '"><span class="pflag">회원<br>전용</span></a>' + likeBtn(m.id) +
       '<a href="#/goods/' + m.id + '"><p class="pname">[' + esc(BG.MAT_CAT[m.category].name) + "] " + esc(m.name) + " " + esc(m.spec) + "</p></a>" + priceHtml +
       '<div class="ptags"><span>' + esc(m.stock) + "</span><span>최소 " + m.moq + esc(m.unit.replace(/\(.*\)/, "")) + "</span></div></div>";
@@ -79,11 +79,11 @@
       i = (n + HERO.length) % HERO.length;
       if (prev !== i) BG.slide(s[prev], s[i], dir, 1000);
       s.forEach(function (el, k) { el.classList.toggle("on", k === i); });
-      document.getElementById("heroTitle").textContent = HERO[i].title;
-      document.getElementById("heroSub").textContent = HERO[i].sub;
+      var ht = document.getElementById("heroTitle"), hs = document.getElementById("heroSub");
+      if (prev !== i) { BG.mo.text(ht, HERO[i].title, { delay: 260 }); BG.mo.text(hs, HERO[i].sub, { delay: 430, gap: 70, dur: 800 }); BG.mo.play([s[i].querySelector("img")], "settle", { s: 1.1, dur: 6400 }); }
+      else { ht.textContent = HERO[i].title; hs.textContent = HERO[i].sub; }
       document.getElementById("heroNum").textContent = (i + 1) + " / " + HERO.length;
       document.getElementById("heroBar").style.transform = "translateX(" + (i * 100) + "%)";
-      if (prev !== i && !BG.reduced()) document.querySelectorAll("#heroTitle, #heroSub").forEach(function (el, k) { el.animate([{ opacity: 0, transform: "translateX(" + (48 * dir) + "px)" }, { opacity: 1, transform: "none" }], { duration: 800, delay: 260 + k * 90, easing: "cubic-bezier(.25,.1,.25,1)", fill: "backwards" }); });
     }
     function auto() { clearInterval(heroTimer); if (!BG.reduced()) heroTimer = setInterval(function () { if (!document.getElementById("hero")) return clearInterval(heroTimer); go(i + 1, 1); }, 5000); }
     auto();
@@ -93,13 +93,16 @@
       var b = ev.target.closest(".chip"); if (!b) return;
       this.querySelectorAll(".chip").forEach(function (c) { c.classList.toggle("on", c === b); });
       var list = D.materials.filter(function (m) { return !b.dataset.mcat || m.category === b.dataset.mcat; });
-      document.getElementById("homeMall").innerHTML = list.slice(0, 8).map(matCard).join("");
+      var g = document.getElementById("homeMall");
+      g.innerHTML = list.slice(0, 8).map(matCard).join("");
+      BG.mo.play(g.children, "card", { stagger: 50, dur: 650, y: 24 });
     };
     var cc = app.querySelector('[data-chipset="cases"]');
-    function setCases(cat) {
-      var list = caseItems(cat);
+    function setCases(cat, anim) {
+      var list = caseItems(cat), g = document.getElementById("homeCases");
       var fill = list.concat(caseItems("").filter(function (x) { return x.e.category !== cat; }));
-      document.getElementById("homeCases").innerHTML = fill.slice(0, 8).map(caseCard).join("");
+      g.innerHTML = fill.slice(0, 8).map(caseCard).join("");
+      if (anim) BG.mo.play(g.children, "card", { stagger: 50, dur: 650, y: 24 });
       document.getElementById("casesMore").innerHTML = esc(BG.CAT[cat].name) + " 시공사례 전체보기 " + ICON.chev;
       document.getElementById("casesMore").setAttribute("href", "#/cases?cat=" + cat);
     }
@@ -107,7 +110,7 @@
     cc.onclick = function (ev) {
       var b = ev.target.closest(".chip"); if (!b) return;
       cc.querySelectorAll(".chip").forEach(function (c) { c.classList.toggle("on", c === b); });
-      setCases(b.dataset.ccat);
+      setCases(b.dataset.ccat, true);
     };
   }
 
@@ -313,9 +316,27 @@
   window.addEventListener("scroll", function () { document.body.classList.toggle("scrolled", window.scrollY > 40); }, { passive: true });
     document.getElementById("ftCredit").textContent = BG.credit;
 
+  var MOTION = [
+    [".hero .slide.on img", "settle", { s: 1.1, dur: 6400 }],
+    [".hero-copy h1", "lines", { delay: 200 }],
+    [".hero-copy p", "lines", { delay: 380, gap: 70, dur: 800 }],
+    [".hero-ctl", "up", { y: 14, delay: 650 }],
+    [".tile", "up", { y: 26, stagger: 45, delay: 520 }],
+    [".sec-head h2, .list-head h1, .form h1, .done h1", "lines", {}],
+    [".sec-head p, .form .lead", "lines", { lag: 140, dur: 800 }],
+    [".sec-head .more", "up", { y: 12, lag: 220 }],
+    [".chip", "up", { y: 14, stagger: 35, lag: 160, dur: 600, max: 8 }],
+    [".pcard, .ccard, .ecard", "card", { stagger: 70, lag: 60, max: 4 }],
+    [".band-photo", "wipeX", {}],
+    [".band-copy h3", "lines", { lag: 120 }],
+    [".band-copy p, .band-copy a", "up", { y: 16, lag: 380, stagger: 100 }],
+    [".more-pill", "up", { y: 14 }]
+  ];
   BG.router({ home: home, experts: experts, expert: expert, mall: mall, goods: goods, cases: cases, quote: quote, quotes: quotesView, cart: cart, tiers: tiers, search: search }, function (r) {
     if (r.name !== "home") { document.body.classList.remove("on-hero"); clearInterval(heroTimer); }
     document.querySelectorAll("[data-nav]").forEach(function (a) { a.classList.toggle("on", a.dataset.nav === r.name || (r.name === "expert" && a.dataset.nav === "experts") || (r.name === "goods" && a.dataset.nav === "mall")); });
     syncHeader();
+    BG.mo.scan(app, MOTION);
   });
+  BG.mo.play([document.querySelector(".float-quote")], "pop", { delay: 1200, y: 20, s: .5 });
 })();

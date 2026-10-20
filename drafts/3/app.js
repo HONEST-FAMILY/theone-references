@@ -32,7 +32,7 @@
   function mat(m) {
     var t = S.tier();
     return '<div class="gig"><div class="gimg th th-mat"><a href="#/item/' + m.id + '"><img loading="lazy" src="' + photo(m.photo) + '" alt="' + esc(m.name) + '">' + thumbText({ em: m.stock, b: esc(m.name) }) + "</a>" + heartBtn(m.id) + '</div><a href="#/item/' + m.id + '"><span class="gtag" style="background:#2337D9">회원전용</span><p class="gtitle">' + esc(m.name) + " " + esc(m.spec) + '</p><p class="grate">' + esc(BG.MAT_CAT[m.category].name) + " · " + esc(m.stock) + "</p>" +
-      '<p class="gprice">' + (t ? won(S.priceOf(m)) + "원<s>" + won(m.price) + "원</s>" : won(m.price) + '원 <span class="lock">· 회원가 보기</span>') + '</p><p class="gseller"><span class="mono" style="background:#212224">B</span>BUILDGO 자재몰</p></a></div>';
+      '<p class="gprice">' + (t ? '<span data-roll="' + m.id + '">' + won(S.priceOf(m)) + '</span>원<s class="mo-ib" data-pop>' + won(m.price) + "원</s>" : '<span data-roll="' + m.id + '">' + won(m.price) + '</span>원 <span class="lock mo-ib" data-pop>· 회원가 보기</span>') + '</p><p class="gseller"><span class="mono" style="background:#212224">B</span>BUILDGO 자재몰</p></a></div>';
   }
   function setGnb(active) {
     document.body.classList.toggle("sub", active !== "home");
@@ -48,8 +48,23 @@
     { bg: "#EADFFF", art: ["waterproof", "exterior", "mat-window"], t: "장마 오기 전에<br>옥상 방수 점검", s: "실측 후 견적을 받아요", href: "#/gig/e5" }
   ];
   var promoAt = 0, promoLock = 0, promoHold = 0, promoT = 0;
+  function promoMotion(j) {
+    var box = document.getElementById("promo"), sl = box && box.querySelectorAll(".pslide")[j];
+    if (!sl || !BG.mo.able()) return;
+    var tr = box.querySelector(".ptrack"), deck = tr.scrollWidth <= tr.clientWidth + 4;
+    if (deck) {
+      var pg = document.getElementById("promoPg").getBoundingClientRect(), r = sl.getBoundingClientRect();
+      sl.classList.add("bleed");
+      var a = BG.mo.bleed(sl, pg.left + pg.width / 2 - r.left, pg.top + pg.height / 2 - r.top, 360);
+      a.onfinish = a.oncancel = function () { sl.classList.remove("bleed"); };
+    }
+    BG.mo.play(sl.querySelectorAll(".art img"), "pop", { stagger: 70, delay: deck ? 200 : 120, y: 18, s: .4 });
+    BG.mo.play([sl.querySelector(".pt b")], "lines", { delay: deck ? 260 : 160, gap: 80, dur: 700 });
+    BG.mo.play([sl.querySelector(".pt p")], "up", { y: 10, delay: deck ? 420 : 300, dur: 600 });
+  }
   function promoMark(j) {
     var box = document.getElementById("promo"); if (!box) return;
+    if (j !== promoAt) promoMotion(j);
     promoAt = j;
     box.querySelectorAll(".pslide").forEach(function (x, k) { x.classList.toggle("on", k === j); x.setAttribute("aria-hidden", k === j ? "false" : "true"); });
     box.style.setProperty("--n1", SLIDES[(j + 1) % SLIDES.length].bg);
@@ -69,6 +84,21 @@
     clearTimeout(promoT);
     promoT = setTimeout(function () { var j = Math.round(t.scrollLeft / t.clientWidth); if (j !== promoAt) promoMark(j); }, 120);
   }, true);
+  function hint(input) {
+    if (!input || !BG.mo.able()) return;
+    var base = input.placeholder, words = ["욕실 리모델링 견적", "옥상 방수 공사", "30평 아파트 인테리어", "시스템창호 교체", "석고보드 회원가"], wi = 0, ci = 0, dir = 1;
+    function tick() {
+      if (!document.body.contains(input)) return;
+      if (document.activeElement === input || input.value) { input.placeholder = base; ci = 0; dir = 1; setTimeout(tick, 1500); return; }
+      var w = words[wi];
+      if (dir > 0 && ci === w.length) { dir = -1; setTimeout(tick, 1600); return; }
+      ci += dir;
+      if (ci <= 0) { ci = 0; dir = 1; wi = (wi + 1) % words.length; input.placeholder = base; setTimeout(tick, 1800); return; }
+      input.placeholder = w.slice(0, ci);
+      setTimeout(tick, dir > 0 ? 85 : 35);
+    }
+    setTimeout(tick, 2000);
+  }
   function stickTabs() {
     var gt = app.querySelector(".gtabs"), hd = document.querySelector(".hd");
     if (!gt || !hd) return;
@@ -104,7 +134,8 @@
       '<div class="box"><h3><span>인테리어</span>에서 놓치지 마세요</h3><div class="tiles">' + [["x_kitchen", "주방"], ["x_bath", "욕실"], ["x_living", "거실"], ["pf_e3_2", "원룸·오피스텔"]].map(function (x) { return '<a href="#/category?c=interior"><img loading="lazy" src="' + photo(x[0]) + '" alt="">' + x[1] + "</a>"; }).join("") + "</div></div>" +
       '<div class="box"><h3><span>시공 전</span>에 확인하세요</h3><div class="tiles">' + [["cat_design", "설계·도면"], ["x_drywall", "철거·내장"], ["cat_mep", "전기·배관"], ["cat_waterproof", "방수"]].map(function (x, i) { return '<a href="#/category?c=' + ["design", "frame", "mep", "waterproof"][i] + '"><img loading="lazy" src="' + photo(x[0]) + '" alt="">' + x[1] + "</a>"; }).join("") + "</div></div>" +
       '<div class="box"><h3><span>회원 자재</span>, 많이 담아요</h3><div class="tiles">' + ["m2", "m5", "m11", "m10"].map(function (id) { var m = BG.MAT[id]; return '<a href="#/item/' + id + '"><img loading="lazy" src="' + photo(m.photo) + '" alt="">' + esc(m.name) + "</a>"; }).join("") + "</div></div></section>" +
-      '<section class="verified"><h2>BUILDGO가 검증한<br>평균 4.8점 이상 전문가</h2><div class="vrow">' + verified.slice(0, 4).map(gig).join("") + "</div></section></div>";
+      '<section class="verified"><h2>BUILDGO가 검증한<br>평균 <span data-n>4.8</span>점 이상 전문가</h2><div class="vrow">' + verified.slice(0, 4).map(gig).join("") + "</div></section></div>";
+    hint(app.querySelector(".big-search input"));
   }
 
   function category(r) {
@@ -275,5 +306,21 @@
   });
   window.addEventListener("scroll", function () { document.body.classList.toggle("scrolled", window.scrollY > 8); if (window.scrollY > 120) document.getElementById("bizTip").classList.add("off"); }, { passive: true });
     document.getElementById("ftCredit").textContent = BG.credit;
-  BG.router({ home: home, category: category, gig: gigView, mall: mall, item: item, request: request, quotes: quotes, cart: cart, tiers: tiers, join: join, search: search }, sync);
+  var MOTION = [
+    [".hero h1", "lines", { delay: 120 }],
+    [".big-search", "draw", { r: 30, m: 24, delay: 380, dur: 900 }],
+    [".kw a", "up", { y: 12, stagger: 35, delay: 640, max: 8 }],
+    [".pslide.on .art img", "pop", { stagger: 80, delay: 380, y: 18, s: .4 }],
+    [".pslide.on .pt b", "lines", { delay: 440, gap: 80 }],
+    [".pslide.on .pt p", "up", { y: 10, delay: 600 }],
+    [".cats > a", "up", { y: 18, stagger: 35, delay: 420, max: 14 }],
+    [".mchips a", "up", { y: 12, stagger: 40, delay: 640, max: 5 }],
+    [".brow h2, .ltitle h1, .req h1, .done h1", "lines", { sweep: "mark" }],
+    [".subcat", "up", { y: 10, stagger: 60, lag: 80, max: 4 }],
+    [".gig", "card", { stagger: 70, lag: 60, max: 4, inner: [[".tt em", "pop", 300, { y: 8, s: .5 }], [".tt b", "lines", 340, { gap: 80, dur: 800 }], [".tt i", "up", 520, { y: 10 }]] }],
+    [".box h3", "lines", {}],
+    [".box .tiles > a", "wipe", { stagger: 60, lag: 120, max: 4 }],
+    [".verified h2", "lines", { count: "[data-n]" }]
+  ];
+  BG.router({ home: home, category: category, gig: gigView, mall: mall, item: item, request: request, quotes: quotes, cart: cart, tiers: tiers, join: join, search: search }, function (r) { sync(r); BG.mo.scan(app, MOTION); });
 })();

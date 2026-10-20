@@ -22,8 +22,8 @@
   function scrapBtn(id) { return '<button type="button" class="scrap' + (S.likes.indexOf(id) >= 0 ? " on" : "") + '" data-like="' + id + '" aria-label="스크랩">' + I.scrap + "</button>"; }
   function mcard(m) {
     var t = S.tier();
-    var price = t ? '<p class="special">' + esc(t.name) + ' 회원가</p><p class="price"><span class="pct">' + t.discount + "%</span>" + won(S.priceOf(m)) + "</p>"
-      : '<p class="special">회원가 최대 ' + D.tiers[D.tiers.length - 1].discount + '% 할인</p><p class="price">' + won(m.price) + '</p><button type="button" class="lock" data-act="login">' + I.lock + "로그인하고 회원가 보기</button>";
+    var price = t ? '<p class="special" data-pop>' + esc(t.name) + ' 회원가</p><p class="price"><span class="pct mo-ib" data-pop>' + t.discount + '%</span><span data-roll="' + m.id + '">' + won(S.priceOf(m)) + "</span></p>"
+      : '<p class="special" data-pop>회원가 최대 ' + D.tiers[D.tiers.length - 1].discount + '% 할인</p><p class="price"><span data-roll="' + m.id + '">' + won(m.price) + '</span></p><button type="button" class="lock" data-act="login" data-pop>' + I.lock + "로그인하고 회원가 보기</button>";
     return '<div class="card"><div class="tw"><a class="thumb" href="#/goods/' + m.id + '"><img loading="lazy" src="' + photo(m.photo) + '" alt="' + esc(m.name) + '">' + (m.stock === "당일 출고" ? '<span class="pick">당일<br>출고</span>' : "") + "</a>" + scrapBtn(m.id) + "</div>" +
       '<a href="#/goods/' + m.id + '"><p class="brand">' + esc(BG.MAT_CAT[m.category].name) + '</p><p class="name">' + esc(m.name) + " " + esc(m.spec) + "</p>" + price + (m.stock === "당일 출고" ? '<p class="ship">오늘 14:00까지 주문 시 당일 출고</p>' : '<p class="meta">' + esc(m.stock) + " 출고 · 현장 직배송</p>") +
       '<div class="tags"><span>최소 ' + m.moq + "</span><span>세금계산서 발행</span>" + (t ? '<span class="cp">적립 ' + t.pointRate + "%</span>" : "") + "</div></a></div>";
@@ -99,7 +99,7 @@
   function bestCard(id, i) {
     var m = BG.MAT[id], t = S.tier(), off = t ? t.discount : 0, price = S.priceOf(m);
     return '<div class="bs-card"><div class="bs-img"><a href="#/goods/' + m.id + '"><img loading="lazy" src="' + photo(m.photo) + '" alt="' + esc(m.name) + '"></a><span class="rank">' + (i + 1) + "</span>" + scrapBtn(m.id) + "</div>" +
-      '<a class="dl-info" href="#/goods/' + m.id + '"><p class="br">' + esc(BG.MAT_CAT[m.category].name) + '</p><p class="nm">' + esc(m.name) + " " + esc(m.spec) + "</p>" + (t ? '<p class="special">' + esc(t.name) + " 회원가</p>" : '<p class="special">회원가 최대 10%</p>') + '<p class="pr">' + (off ? "<em>" + off + "%</em>" : "") + won(price) + "</p>" +
+      '<a class="dl-info" href="#/goods/' + m.id + '"><p class="br">' + esc(BG.MAT_CAT[m.category].name) + '</p><p class="nm">' + esc(m.name) + " " + esc(m.spec) + "</p>" + (t ? '<p class="special" data-pop>' + esc(t.name) + " 회원가</p>" : '<p class="special" data-pop>회원가 최대 10%</p>') + '<p class="pr">' + (off ? '<em class="mo-ib" data-pop>' + off + "%</em>" : "") + '<span data-roll="' + m.id + '">' + won(price) + "</span></p>" +
       (m.stock === "당일 출고" ? '<p class="ship2"><b>당일출고</b><span>오늘 14:00까지 주문 시</span></p>' : "") + "</a></div>";
   }
   function home() {
@@ -121,14 +121,14 @@
       '<section class="oh-sec">' + head("베스트", "", "#/store?c=best") + '<div class="bs-chips" id="bsChips"><button type="button" class="on" data-bc="">전체</button>' + D.materialCategories.map(function (c) { return '<button type="button" data-bc="' + c.id + '">' + esc(c.name) + "</button>"; }).join("") + '</div><div class="oh-best" id="bsGrid"></div></section>' +
       '<section class="oh-sec oh-kw"><div class="oh-h"><div><h2>인기 검색어</h2></div></div><ol class="kw-list">' + KW.map(function (k, i) { return '<li><b>' + (i + 1) + "</b><i>" + (k[1] === "new" ? "NEW" : "▲") + '</i><a href="#/search?q=' + encodeURIComponent(k[0]) + '">' + esc(k[0]) + "</a></li>"; }).join("") + "</ol></section>" +
       "</div>";
-    function best(c) {
+    function best(c, anim) {
       var ids = BEST.filter(function (id) { return !c || BG.MAT[id].category === c; }).slice(0, 3);
       var g = document.getElementById("bsGrid");
       g.innerHTML = ids.map(bestCard).join("") || '<p class="empty">준비 중인 자재예요</p>';
-      if (!BG.reduced() && g.animate) g.animate([{ opacity: 0, transform: "translateY(6px)" }, { opacity: 1, transform: "none" }], { duration: 220, easing: "ease" });
+      if (anim) BG.mo.play(g.children, "card", { stagger: 60, dur: 600, y: 20 });
     }
     best("");
-    document.getElementById("bsChips").onclick = function (ev) { var b = ev.target.closest("[data-bc]"); if (!b) return; this.querySelectorAll("button").forEach(function (x) { x.classList.toggle("on", x === b); }); best(b.dataset.bc); };
+    document.getElementById("bsChips").onclick = function (ev) { var b = ev.target.closest("[data-bc]"); if (!b) return; this.querySelectorAll("button").forEach(function (x) { x.classList.toggle("on", x === b); }); best(b.dataset.bc, true); };
     BG.swipe(document.getElementById("ban"), function () { banHold = Date.now() + 6000; banGo(1); }, function () { banHold = Date.now() + 6000; banGo(-1); });
   }
   setInterval(function () {
@@ -142,6 +142,9 @@
     var j = (i + dir + bs.length) % bs.length;
     BG.slide(bs[i], bs[j], dir, 360, "cubic-bezier(.2,0,.2,1)");
     bs[i].classList.remove("on"); bs[j].classList.add("on");
+    BG.mo.play([bs[j].querySelector(".bt small")], "up", { y: 10, delay: 160, dur: 600 });
+    BG.mo.play([bs[j].querySelector(".bt b")], "lines", { delay: 220, dur: 700 });
+    BG.mo.play([bs[j].querySelector("img")], "settle", { s: 1.15, dur: 1400 });
     document.getElementById("banN").textContent = (j + 1) + " / 12 +";
   }
   setInterval(function () { if (BG.reduced() || document.hidden || Date.now() < banHold) return; banGo(1); }, 4800);
@@ -337,5 +340,24 @@
   });
   document.querySelector("[data-search]").onsubmit = function (ev) { ev.preventDefault(); var v = this.q.value.trim(); if (v) location.hash = "#/search?q=" + encodeURIComponent(v); };
   document.getElementById("ftCredit").textContent = BG.credit;
-  BG.router({ home: home, shop: storeHome, store: store, goods: goods, pros: pros, pro: pro, cases: cases, quote: quote, quotes: quotes, cart: cart, tiers: tiers, search: search }, sync);
+  var MOTION = [
+    [".oh-big img", "settle", { s: 1.12, dur: 1800 }],
+    [".oh-big h2", "lines", { delay: 220 }],
+    [".oh-big .by", "up", { y: 12, delay: 520 }],
+    [".oh-side", "up", { y: 30, delay: 260, dur: 900 }],
+    ["#ban .bn.on small", "up", { y: 10, delay: 160 }],
+    ["#ban .bn.on b", "lines", { delay: 220 }],
+    [".oh-quick > a", "pop", { stagger: 35, delay: 300 }],
+    [".oh-h h2, .crumb, .form h1, .done h1", "lines", {}],
+    [".oh-h p, .form .lead", "lines", { lag: 120, dur: 800 }],
+    [".oh-h .more", "up", { y: 10, lag: 200 }],
+    [".ph-card", "side", { x: 56, stagger: 60 }],
+    [".hs-card, .rv-card, .pl-card, .bs-card, .card", "card", { stagger: 80, max: 4 }],
+    [".oh-cats > a", "pop", { stagger: 28, max: 12 }],
+    [".dl-card", "card", { stagger: 80, max: 4, inner: [[".pr em", "count", 250, { dur: 900 }]] }],
+    [".bs-chips button", "up", { y: 10, stagger: 30, max: 8 }],
+    [".kw-list li", "up", { y: 14, stagger: 40, max: 10 }],
+    [".btn-more", "up", { y: 12 }]
+  ];
+  BG.router({ home: home, shop: storeHome, store: store, goods: goods, pros: pros, pro: pro, cases: cases, quote: quote, quotes: quotes, cart: cart, tiers: tiers, search: search }, function (r) { sync(r); BG.mo.scan(app, MOTION); });
 })();

@@ -48,7 +48,7 @@ body.on-hero.scrolled .hd { top: 0; background: #fff; color: var(--ink); border-
 body.on-hero.scrolled .hd-search { border-color: #DADADA; }
 body.on-hero.scrolled .hd-search input::placeholder { color: #9A9A9A; }
 
-.hero { position: relative; height: 712px; overflow: hidden; background: #ddd; }
+.hero { position: relative; height: 712px; overflow: hidden; background: #ddd; -webkit-user-select: none; user-select: none; }
 .hero .slide { position: absolute; inset: 0; opacity: 0; transition: opacity .9s ease; }
 .hero .slide.on { opacity: 1; }
 .hero .slide img { width: 100%; height: 100%; object-fit: cover; }
@@ -115,6 +115,7 @@ body.on-hero.scrolled .hd-search input::placeholder { color: #9A9A9A; }
 .band-copy h3 { margin: 0; font-family: var(--font-point); font-weight: 500; font-size: 32px; line-height: 1.4; white-space: pre-line; }
 .band-copy p { margin: 12px 0 26px; color: rgba(255,255,255,.85); font-size: 15px; }
 .band-copy a { align-self: flex-start; height: 44px; padding: 0 22px; display: inline-flex; align-items: center; border: 1px solid rgba(255,255,255,.8); font-size: 14px; }
+.band-photo { overflow: hidden; }
 .band-photo img { width: 100%; height: 100%; object-fit: cover; }
 
 .egrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px 32px; }
