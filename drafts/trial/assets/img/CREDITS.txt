@@ -1,0 +1,32 @@
+BUILDGO 시안 사진 출처
+
+모든 사진은 Unsplash 무료 라이선스(https://unsplash.com/license) 사진을 받아 잘라 쓴 것이다.
+상업적 이용 가능, 출처 표기 의무 없음. 단, 사진을 크게 손대지 않은 채 그대로 판매하거나 Unsplash와 비슷한 사진 서비스를 만드는 데 쓰는 것은 금지된다.
+
+assets/img/hero-house.jpg	@salvomedia	https://unsplash.com/photos/a-modern-house-with-a-swimming-pool-and-green-lawn-ylzGfY-xzBY
+assets/img/banner-team.jpg	@thisisengineering	https://unsplash.com/photos/man-in-orange-and-white-striped-polo-shirt-beside-woman-in-black-and-white-floral-dress-df7erzy97sg
+assets/img/look-kitchen.jpg	@baileyal3xander	https://unsplash.com/photos/a-kitchen-with-a-center-island-with-stools-waqb5i0NrX8
+assets/img/look-bath.jpg	@steveungermann	https://unsplash.com/photos/white-ceramic-bathtub-near-green-potted-plant-Aac7IlKnYX8
+assets/img/look-living.jpg	@claybanks	https://unsplash.com/photos/a-living-room-filled-with-furniture-and-a-fire-place-qdavoiFWGQc
+assets/img/look-cafe.jpg	@keghancphoto	https://unsplash.com/photos/modern-coffee-shop-interior-with-curved-counter-ZZxmc66SjfM
+assets/img/look-office.jpg	@copernicowork	https://unsplash.com/photos/modern-lounge-interior-with-plants-and-chairs-p_kICQCOM4s
+assets/img/look-stair.jpg	@alesiaskaz	https://unsplash.com/photos/minimalist-concrete-staircase-with-vase-0B7ijYKaKcE
+assets/img/look-terrace.jpg	@wanderfleur	https://unsplash.com/photos/green-potted-plant-on-black-wicker-table-796Jt0WI2MM
+assets/img/case-house.jpg	@salmansaqib	https://unsplash.com/photos/a-modern-house-with-a-large-front-yard-URD4NdWyd60
+assets/img/case-cafe.jpg	@thetangledtomato	https://unsplash.com/photos/white-and-brown-dining-table-and-chairs-ZimlF1xeZ8k
+assets/img/case-office.jpg	@sunday_digital	https://unsplash.com/photos/photo-of-dining-table-and-chairs-inside-room-eHD8Y1Znfpk
+assets/img/case-kitchen.jpg	@aahubs	https://unsplash.com/photos/white-kitchen-room-set-G7sE2S4Lab4
+assets/img/deal-paint.jpg	@abject	https://unsplash.com/photos/stainless-steel-round-container-with-handle-w6slclJPb9M
+assets/img/deal-mortar.jpg	@ellekay16	https://unsplash.com/photos/three-white-sacks-stand-against-a-striped-wall-Cw9_TQKGHwo
+assets/img/deal-lumber.jpg	@marissadaeger	https://unsplash.com/photos/brown-wooden-blocks-on-white-table-iW9iaL-gjX8
+assets/img/deal-helmet.jpg	@richard_he	https://unsplash.com/photos/a-yellow-hard-hat-rests-on-a-wooden-pallet-cigfVTfU39I
+assets/img/review-bath.jpg	@claybanks	https://unsplash.com/photos/a-modern-bathroom-with-double-sinks-and-a-bathtub-YDc_S7uIYic
+assets/img/review-kitchen.jpg	@roamincolor	https://unsplash.com/photos/white-kitchen-table-AwOG1tC5buE
+assets/img/review-floor.jpg	@beazy	https://unsplash.com/photos/green-throw-pillow-on-white-sofa-RuCVvjuyNeQ
+assets/img/best-design.jpg	@d_mccullough	https://unsplash.com/photos/person-drafting-on-blueprint--FPFq_trr2Y
+assets/img/best-remodel.jpg	@anniegray	https://unsplash.com/photos/man-standing-infront-of-miter-saw-WEWTGkPUVT0
+assets/img/best-supervise.jpg	@fiqihalfarish	https://unsplash.com/photos/two-women-in-hard-hats-review-blueprints-indoors-c7iL-YvyAyU
+assets/img/promo-package.jpg	@troyscanon	https://unsplash.com/photos/several-houses-under-construction-with-wooden-frames-AmGQi4pF_lE
+assets/img/banner-mall.jpg	@shs521	https://unsplash.com/photos/two-rectangular-green-and-red-tool-cases-on-white-surface-2nSdQEd-Exc
+assets/img/deal-faucet.jpg	@alken	https://unsplash.com/photos/stainless-steel-faucet-on-white-ceramic-sink-zHWdhQ0Jubg
+assets/img/deal-roller.jpg	@siloine	https://unsplash.com/photos/white-paint-roller-LiDVw7tZPfY
