@@ -341,7 +341,7 @@ body:not(.sub):not(.scrolled) .hd { border-bottom-color: transparent; }
   .big-search input { font-size: 14px; background: transparent; }
   .big-search input::placeholder { color: #C8CAD2; }
   .kw { display: none; }
-  .cats { grid-template-columns: repeat(5, 1fr); gap: 20px 0; margin: 16px 0 0; padding: 28px 12px 26px; border-radius: 16px; background: #fff; }
+  .cats { grid-template-columns: repeat(5, 1fr); gap: 20px 0; margin: 16px 0 0; padding: 28px 12px 26px; border-radius: 12px; background: #fff; }
   .cats a { gap: 8px; font-size: 12px; font-weight: 500; }
   .cats .ci { width: 42px; height: 42px; }
   .cats .ci img { width: 42px; height: 42px; }
