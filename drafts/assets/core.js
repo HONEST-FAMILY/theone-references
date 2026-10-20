@@ -72,6 +72,25 @@
     var parts = h.split("/").filter(Boolean);
     return { name: parts[0] || "home", id: parts[1] || null, query: q };
   }
+  var MAIN_ONLY = /[?&]main(=|&|$)/.test(location.search);
+  function homeHash() { history.replaceState(null, "", location.pathname + location.search + "#/"); }
+  if (MAIN_ONLY) {
+    document.documentElement.classList.add("main-only");
+    if (parseHash().name !== "home") homeHash();
+    document.addEventListener("click", function (e) {
+      if (!e.target.closest) return;
+      var a = e.target.closest("a[href], button, [data-act], [data-like]");
+      if (!a || a.tagName !== "A" || a.hasAttribute("data-act") || a.hasAttribute("data-like")) return;
+      var h = a.getAttribute("href");
+      if (h.length > 1 && h.charAt(0) === "#" && h.charAt(1) !== "/") return;
+      e.preventDefault();
+      e.stopPropagation();
+    }, true);
+    document.addEventListener("submit", function (e) { e.preventDefault(); e.stopPropagation(); }, true);
+    var st = document.createElement("style");
+    st.textContent = '.main-only a[href^="#/"], .main-only a[href^="../"], .main-only a[href^="http"] { cursor: default; } .main-only a[href="../../"] { display: none; }';
+    document.head.appendChild(st);
+  }
   function router(views, after) {
     function run() {
       var r = parseHash();
@@ -79,7 +98,11 @@
       view(r);
       if (after) after(r);
     }
-    window.addEventListener("hashchange", function () { run(); window.scrollTo(0, 0); });
+    window.addEventListener("hashchange", function () {
+      if (MAIN_ONLY && parseHash().name !== "home") { homeHash(); return; }
+      run();
+      window.scrollTo(0, 0);
+    });
     run();
   }
   function toast(msg) {
