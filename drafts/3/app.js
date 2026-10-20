@@ -69,6 +69,12 @@
     clearTimeout(promoT);
     promoT = setTimeout(function () { var j = Math.round(t.scrollLeft / t.clientWidth); if (j !== promoAt) promoMark(j); }, 120);
   }, true);
+  function stickTabs() {
+    var gt = app.querySelector(".gtabs"), hd = document.querySelector(".hd");
+    if (!gt || !hd) return;
+    document.documentElement.style.setProperty("--hdh", hd.offsetHeight + "px");
+    BG.spy(gt, function () { return hd.offsetHeight + gt.offsetHeight + 12; });
+  }
   function home() {
     setGnb("home");
     var bands = [
@@ -140,6 +146,7 @@
     }
     pk(sel);
     app.querySelector(".pkgtabs").onclick = function (ev) { var b = ev.target.closest("[data-pk]"); if (!b) return; this.querySelectorAll("button").forEach(function (x) { x.classList.toggle("on", x === b); }); pk(+b.dataset.pk); };
+    stickTabs();
     app.querySelector(".thumbs").onclick = function (ev) { var b = ev.target.closest("[data-shot]"); if (!b) return; this.querySelectorAll("button").forEach(function (x) { x.classList.toggle("on", x === b); }); document.getElementById("gimg").src = photo(b.dataset.shot); document.getElementById("gmain").classList.toggle("plain", b !== this.querySelector("button")); };
   }
 
@@ -182,6 +189,7 @@
     app.querySelector(".thumbs").onclick = function (ev) { var b = ev.target.closest("[data-shot]"); if (!b) return; this.querySelectorAll("button").forEach(function (x) { x.classList.toggle("on", x === b); }); document.getElementById("gimg").src = photo(b.dataset.shot); };
     app.querySelectorAll('[data-act="cart"]').forEach(function (b) { b.onclick = function () { S.addCart(m.id, parseInt(document.getElementById("q").value, 10) || 1); sync(); BG.toast("장바구니에 담았어요"); }; });
     app.querySelectorAll('[data-act="buy"]').forEach(function (b) { b.onclick = function () { S.addCart(m.id, parseInt(document.getElementById("q").value, 10) || 1); location.hash = "#/cart"; }; });
+    stickTabs();
   }
 
   function request(r) {

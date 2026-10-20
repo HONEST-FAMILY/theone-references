@@ -73,16 +73,21 @@
       '<div class="egrid" style="margin-top:40px">' + D.experts.slice(0, 4).map(expertCard).join("") + "</div></section></div>";
     var i = 0;
     clearInterval(heroTimer);
-    function go(n) {
-      i = n % HERO.length;
-      var s = document.querySelectorAll("#hero .slide");
+    function go(n, dir) {
+      var s = document.querySelectorAll("#hero .slide"), prev = i;
+      dir = dir || 1;
+      i = (n + HERO.length) % HERO.length;
+      if (prev !== i) BG.slide(s[prev], s[i], dir, 1000);
       s.forEach(function (el, k) { el.classList.toggle("on", k === i); });
       document.getElementById("heroTitle").textContent = HERO[i].title;
       document.getElementById("heroSub").textContent = HERO[i].sub;
       document.getElementById("heroNum").textContent = (i + 1) + " / " + HERO.length;
       document.getElementById("heroBar").style.transform = "translateX(" + (i * 100) + "%)";
+      if (prev !== i && !BG.reduced()) document.querySelectorAll("#heroTitle, #heroSub").forEach(function (el, k) { el.animate([{ opacity: 0, transform: "translateX(" + (48 * dir) + "px)" }, { opacity: 1, transform: "none" }], { duration: 800, delay: 260 + k * 90, easing: "cubic-bezier(.25,.1,.25,1)", fill: "backwards" }); });
     }
-    if (!BG.reduced()) heroTimer = setInterval(function () { if (!document.getElementById("hero")) return clearInterval(heroTimer); go(i + 1); }, 5000);
+    function auto() { clearInterval(heroTimer); if (!BG.reduced()) heroTimer = setInterval(function () { if (!document.getElementById("hero")) return clearInterval(heroTimer); go(i + 1, 1); }, 5000); }
+    auto();
+    BG.swipe(document.getElementById("hero"), function () { go(i + 1, 1); if (heroTimer) auto(); }, function () { go(i - 1, -1); if (heroTimer) auto(); });
     app.querySelector('[data-act="pause"]').onclick = function () { clearInterval(heroTimer); heroTimer = null; BG.toast("자동 넘김을 멈췄어요"); };
     app.querySelector('[data-chipset="mall"]').onclick = function (ev) {
       var b = ev.target.closest(".chip"); if (!b) return;

@@ -351,3 +351,12 @@ body:not(.on-hero) #app .wrap { max-width: var(--head); }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
+
+.hero .slide { opacity: 1; visibility: hidden; transition: none; }
+.hero .slide.on, .hero .slide.out { visibility: visible; z-index: 1; }
+.hero .slide img { -webkit-user-drag: none; user-select: none; }
+.hero-bar i { transition: transform 1s cubic-bezier(.25,.1,.25,1); }
+@media (prefers-reduced-motion: reduce) {
+  .hero .slide.out { visibility: hidden; }
+}
+

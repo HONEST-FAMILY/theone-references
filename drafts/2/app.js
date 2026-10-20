@@ -123,21 +123,32 @@
       "</div>";
     function best(c) {
       var ids = BEST.filter(function (id) { return !c || BG.MAT[id].category === c; }).slice(0, 3);
-      document.getElementById("bsGrid").innerHTML = ids.map(bestCard).join("") || '<p class="empty">준비 중인 자재예요</p>';
+      var g = document.getElementById("bsGrid");
+      g.innerHTML = ids.map(bestCard).join("") || '<p class="empty">준비 중인 자재예요</p>';
+      if (!BG.reduced() && g.animate) g.animate([{ opacity: 0, transform: "translateY(6px)" }, { opacity: 1, transform: "none" }], { duration: 220, easing: "ease" });
     }
     best("");
     document.getElementById("bsChips").onclick = function (ev) { var b = ev.target.closest("[data-bc]"); if (!b) return; this.querySelectorAll("button").forEach(function (x) { x.classList.toggle("on", x === b); }); best(b.dataset.bc); };
+    BG.swipe(document.getElementById("ban"), function () { banHold = Date.now() + 6000; banGo(1); }, function () { banHold = Date.now() + 6000; banGo(-1); });
   }
   setInterval(function () {
     document.querySelectorAll("[data-cd]").forEach(function (el) { el.textContent = left(); });
   }, 1000);
-  setInterval(function () {
-    var box = document.getElementById("ban"); if (!box || BG.reduced()) return;
+  var banHold = 0;
+  function banGo(dir) {
+    var box = document.getElementById("ban"); if (!box) return;
     var bs = box.querySelectorAll(".bn"), i = 0;
     bs.forEach(function (b, k) { if (b.classList.contains("on")) i = k; });
-    bs[i].classList.remove("on"); i = (i + 1) % bs.length; bs[i].classList.add("on");
-    document.getElementById("banN").textContent = (i + 1) + " / 12 +";
-  }, 4000);
+    var j = (i + dir + bs.length) % bs.length;
+    BG.slide(bs[i], bs[j], dir, 360, "cubic-bezier(.2,0,.2,1)");
+    bs[i].classList.remove("on"); bs[j].classList.add("on");
+    document.getElementById("banN").textContent = (j + 1) + " / 12 +";
+  }
+  setInterval(function () { if (BG.reduced() || document.hidden || Date.now() < banHold) return; banGo(1); }, 4800);
+  function subH() { var w = document.querySelector(".sub-wrap"); if (w) document.documentElement.style.setProperty("--subh", w.offsetHeight + "px"); }
+  subH();
+  window.addEventListener("resize", subH);
+  BG.onScrollDir(function (d, y) { document.body.classList.toggle("nav-up", d > 0 && y > 160); });
 
   function storeHome() {
     setSub("store", "");

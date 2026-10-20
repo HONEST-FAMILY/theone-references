@@ -100,15 +100,80 @@
     if (h === "#" || h.charAt(1) === "/") return;
     ev.preventDefault();
     var el = document.getElementById(h.slice(1));
-    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 130, behavior: reduced() ? "auto" : "smooth" });
+    var off = +(a.parentNode && a.parentNode.dataset && a.parentNode.dataset.offset) || 130;
+    if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - off, behavior: reduced() ? "auto" : "smooth" });
     var nav = a.parentNode;
     if (nav && nav.tagName === "NAV") Array.prototype.forEach.call(nav.children, function (x) { x.classList.toggle("on", x === a); });
   });
+
+  function swipe(el, next, prev) {
+    if (!el) return;
+    var x0 = null, y0 = 0, fired = false;
+    el.style.touchAction = "pan-y";
+    el.addEventListener("pointerdown", function (e) { if (e.pointerType === "mouse" && e.button !== 0) return; x0 = e.clientX; y0 = e.clientY; fired = false; });
+    el.addEventListener("pointermove", function (e) {
+      if (x0 === null || fired) return;
+      var dx = e.clientX - x0, dy = e.clientY - y0;
+      if (Math.abs(dx) > 44 && Math.abs(dx) > Math.abs(dy) * 1.3) { fired = true; el.dataset.swiped = "1"; (dx < 0 ? next : prev)(); }
+    });
+    function end() { x0 = null; setTimeout(function () { delete el.dataset.swiped; }, 80); }
+    el.addEventListener("pointerup", end);
+    el.addEventListener("pointercancel", end);
+    el.addEventListener("click", function (e) { if (el.dataset.swiped) { e.preventDefault(); e.stopPropagation(); } }, true);
+    el.addEventListener("dragstart", function (e) { e.preventDefault(); });
+  }
+
+  function slide(from, to, dir, ms, ease) {
+    if (!from || !to || from === to || reduced() || !from.animate) return;
+    var e = ease || "cubic-bezier(.25,.1,.25,1)";
+    from.classList.add("out");
+    var a = from.animate([{ transform: "translateX(0)" }, { transform: "translateX(" + (-100 * dir) + "%)" }], { duration: ms, easing: e });
+    to.animate([{ transform: "translateX(" + (100 * dir) + "%)" }, { transform: "translateX(0)" }], { duration: ms, easing: e });
+    a.onfinish = a.oncancel = function () { from.classList.remove("out"); };
+  }
+
+  function onScrollDir(fn) {
+    var last = window.scrollY, busy = false;
+    window.addEventListener("scroll", function () {
+      if (busy) return;
+      busy = true;
+      requestAnimationFrame(function () {
+        busy = false;
+        var y = window.scrollY, d = y - last;
+        if (Math.abs(d) < 5 && y > 0) return;
+        fn(d > 0 ? 1 : -1, y);
+        last = y;
+      });
+    }, { passive: true });
+  }
+
+  function spy(nav, offset) {
+    var links = [].slice.call(nav.querySelectorAll("a[href]")).filter(function (a) { var h = a.getAttribute("href"); return h.length > 1 && h.charAt(0) === "#" && h.charAt(1) !== "/"; });
+    var secs = links.map(function (a) { return document.getElementById(a.getAttribute("href").slice(1)); });
+    var tops = [];
+    function pinned(el) { for (var e = el, n = 0; e && e !== document.body && n < 4; e = e.parentElement, n++) { var p = getComputedStyle(e).position; if (p === "sticky" || p === "fixed") return true; } return false; }
+    function measure() { tops = secs.map(function (s) { return !s || pinned(s) ? Infinity : s.getBoundingClientRect().top + window.scrollY; }); nav.dataset.offset = Math.round(offset()); }
+    function update() {
+      if (!document.body.contains(nav)) { window.removeEventListener("scroll", onScroll); window.removeEventListener("resize", measure); return; }
+      var y = window.scrollY + offset() + 2, k = 0, best = -Infinity;
+      tops.forEach(function (t, i) { if (t <= y && t > best) { best = t; k = i; } });
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2) { var far = -Infinity; tops.forEach(function (t, i) { if (t !== Infinity && t > far) { far = t; k = i; } }); }
+      links.forEach(function (a, i) { a.classList.toggle("on", i === k); });
+    }
+    var busy = false;
+    function onScroll() { if (busy) return; busy = true; requestAnimationFrame(function () { busy = false; update(); }); }
+    measure();
+    setTimeout(measure, 800);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", measure);
+    update();
+  }
 
   window.BG = {
     data: D, CAT: CAT, MAT_CAT: MAT_CAT, EXP: EXP, MAT: MAT,
     esc: esc, won: won, man: man, photo: photo, icon: icon, Session: Session,
     router: router, parseHash: parseHash, toast: toast, reduced: reduced, initial: initial,
+    swipe: swipe, slide: slide, onScrollDir: onScrollDir, spy: spy,
     credit: (window.BGPhotosCredit || "") + " · 입체 아이콘: Microsoft Fluent Emoji (MIT 라이선스)"
   };
 })();

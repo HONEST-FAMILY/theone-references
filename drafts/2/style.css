@@ -492,3 +492,28 @@ svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width:
   .ft-in { gap: 26px; }
   .ft-links { gap: 14px 18px; display: flex; flex-wrap: wrap; font-size: 12px; }
 }
+
+.hd { transition: transform .2s ease; }
+.hd-top { position: relative; z-index: 2; background: #fff; transition: transform .2s ease; }
+.p-tabs { transition: top .2s ease; }
+@media (min-width: 761px) {
+  body.nav-up .hd { transform: translateY(calc(-1 * var(--subh, 54px))); }
+  body.nav-up .hd-top { transform: translateY(var(--subh, 54px)); }
+  body.nav-up .p-tabs { top: 80px; }
+}
+@media (max-width: 760px) {
+  body.nav-up .hd { transform: translateY(-100%); }
+  body.nav-up .p-tabs { top: 0; }
+  .bn { opacity: 1; visibility: hidden; transition: none; }
+  .bn.on, .bn.out { visibility: visible; z-index: 1; }
+  .bn img { -webkit-user-drag: none; user-select: none; }
+}
+.oh-big img, .ph-card img, .hs-img img, .dl-img img, .rv-img img, .bs-img img, .pl-img img, .hcard img, .card .thumb img { transition: transform .2s ease; }
+.scrap { transition: transform .111s cubic-bezier(.2,0,.2,1.05); }
+.scrap:active { transform: scale(.85); }
+.scrap svg { transition: fill .15s ease; }
+@media (prefers-reduced-motion: reduce) {
+  body.nav-up .hd, body.nav-up .hd-top { transform: none; }
+  .bn.out { visibility: hidden; }
+}
+

@@ -387,3 +387,14 @@ body:not(.sub):not(.scrolled) .hd { border-bottom-color: transparent; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { transition: none !important; animation: none !important; }
 }
+
+.gimg img { transition: transform .3s cubic-bezier(.4,0,.2,1); }
+.gtabs { position: sticky; top: var(--hdh, 124px); z-index: 6; background: #fff; }
+.gtabs a { transition: color .2s ease, border-color .2s ease; }
+[data-like] { transition: transform .15s cubic-bezier(.4,0,.2,1); }
+[data-like]:active { transform: scale(.85); }
+@media (hover: none) {
+  .gig, .cats a, .mchips a, .subcat, .tabbar a, .b-black, .b-outline, .btn-black, .pkgtabs button, .kw a { transition: transform .15s cubic-bezier(.4,0,.2,1), background-color .15s cubic-bezier(.4,0,.2,1); }
+  .gig:active, .cats a:active, .mchips a:active, .subcat:active, .b-black:active, .b-outline:active, .btn-black:active, .pkgtabs button:active { transform: scale(.97); }
+}
+
