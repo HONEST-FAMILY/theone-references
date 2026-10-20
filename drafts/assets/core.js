@@ -353,6 +353,14 @@
       [].forEach.call(els, function (el, i) { if (el) go(prep(el, kind, o), (o.delay || 0) + i * (o.stagger == null ? 50 : o.stagger)); });
     }
     function text(el, s, o) { el.textContent = s; play([el], "lines", o); }
+    function swap(el, s, o) {
+      o = o || {};
+      if (!able()) { el.textContent = s; return; }
+      var tok = el.__swap = {}, cur = [].slice.call(el.querySelectorAll("mo-l > mo-i")), spans = cur.length ? cur : split(el);
+      var out = spans.map(function (sp) { return sp.animate([{ transform: "none" }, { transform: "translateY(-120%)" }], { duration: o.out || 280, easing: "cubic-bezier(.5,0,.75,0)", fill: "forwards" }); });
+      if (!out.length) { text(el, s, o); return; }
+      out[out.length - 1].onfinish = function () { if (el.__swap === tok) text(el, s, o); };
+    }
     function bleed(el, x, y, ms) {
       if (!able() || !el) return null;
       var r = el.getBoundingClientRect(), R = Math.ceil(Math.max(Math.hypot(x, y), Math.hypot(r.width - x, y), Math.hypot(x, r.height - y), Math.hypot(r.width - x, r.height - y)));
@@ -380,6 +388,7 @@
     api.scan = scan;
     api.play = play;
     api.text = text;
+    api.swap = swap;
     api.bleed = bleed;
     api.snap = snap;
     api.roll = roll;

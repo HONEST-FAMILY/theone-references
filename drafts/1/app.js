@@ -80,7 +80,7 @@
       if (prev !== i) BG.slide(s[prev], s[i], dir, 1000);
       s.forEach(function (el, k) { el.classList.toggle("on", k === i); });
       var ht = document.getElementById("heroTitle"), hs = document.getElementById("heroSub");
-      if (prev !== i) { BG.mo.text(ht, HERO[i].title, { delay: 260 }); BG.mo.text(hs, HERO[i].sub, { delay: 430, gap: 70, dur: 800 }); BG.mo.play([s[i].querySelector("img")], "settle", { s: 1.1, dur: 6400 }); }
+      if (prev !== i) { BG.mo.swap(ht, HERO[i].title, { delay: 40 }); BG.mo.swap(hs, HERO[i].sub, { delay: 160, gap: 70, dur: 800 }); BG.mo.play([s[i].querySelector("img")], "settle", { s: 1.1, dur: 6400 }); }
       else { ht.textContent = HERO[i].title; hs.textContent = HERO[i].sub; }
       document.getElementById("heroNum").textContent = (i + 1) + " / " + HERO.length;
       document.getElementById("heroBar").style.transform = "translateX(" + (i * 100) + "%)";
