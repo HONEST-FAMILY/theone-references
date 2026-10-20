@@ -290,13 +290,14 @@
       });
       return parts;
     }
-    function go(parts, base) {
+    function go(parts, base, f) {
       var left = parts.length;
+      f = f || 1;
       function one() { if (--left === 0) parts.forEach(function (p) { if (p.restore) p.restore(); }); }
       parts.forEach(function (p) {
-        var d = base + (p.off || 0);
-        if (p.a) { p.a.effect.updateTiming({ delay: d }); p.a.onfinish = p.a.oncancel = one; p.a.play(); }
-        else if (p.count) countTo(p.count, 0, p.dur, d, one);
+        var d = base + (p.off || 0) * f;
+        if (p.a) { p.a.effect.updateTiming(f === 1 ? { delay: d } : { delay: d, duration: p.dur * f }); p.a.onfinish = p.a.oncancel = one; p.a.play(); }
+        else if (p.count) countTo(p.count, 0, p.dur * f, d, one);
         else one();
       });
     }
@@ -313,8 +314,9 @@
       list.forEach(function (t) {
         if (t.done) return;
         t.done = true;
-        var k = n[t.ri] = (n[t.ri] || 0) + 1, o = t.o;
-        go(t.parts, (early ? o.delay || 0 : 0) + (o.lag || 0) + Math.min(k - 1, o.max || 12) * (o.stagger == null ? 60 : o.stagger));
+        var k = n[t.ri] = (n[t.ri] || 0) + 1, o = t.o, jump = !early && t.host.getBoundingClientRect().top < window.innerHeight * .6;
+        var st = (o.stagger == null ? 60 : o.stagger) * (jump ? .4 : 1);
+        go(t.parts, (early ? o.delay || 0 : 0) + (jump ? 0 : o.lag || 0) + Math.min(k - 1, o.max || 12) * st, jump ? .55 : 1);
       });
       if (io && !live.some(function (t) { return !t.done; })) { io.disconnect(); io = null; }
     }
