@@ -430,6 +430,150 @@ window.BG2Photos = {
   "w": 1000,
   "h": 667,
   "kb": 84
+ },
+ "n_dusk": {
+  "src": "../assets/photos/n_dusk.jpg",
+  "alt": "푸른 저녁 하늘 아래 타워크레인이 선 신축 현장",
+  "w": 2000,
+  "h": 1335,
+  "kb": 154,
+  "page": "https://images.unsplash.com/photo-1485083269755-a7b559a4fe5e"
+ },
+ "n_crew": {
+  "src": "../assets/photos/n_crew.jpg",
+  "alt": "콘크리트 골조 안에서 도면을 함께 보는 현장 기술자들",
+  "w": 1600,
+  "h": 1066,
+  "kb": 217,
+  "page": "https://images.unsplash.com/photo-1694521787799-ad4ad241cb39"
+ },
+ "n_draft": {
+  "src": "../assets/photos/n_draft.jpg",
+  "alt": "자를 대고 도면을 그리는 설계자",
+  "w": 1600,
+  "h": 900,
+  "kb": 88,
+  "page": "https://images.unsplash.com/photo-1503387837-b154d5074bd2"
+ },
+ "n_steel": {
+  "src": "../assets/photos/n_steel.jpg",
+  "alt": "철근과 강재가 쌓인 자재 선반",
+  "w": 1600,
+  "h": 915,
+  "kb": 274,
+  "page": "https://images.unsplash.com/photo-1763926025477-423847028860"
+ },
+ "n_slab": {
+  "src": "../assets/photos/n_slab.jpg",
+  "alt": "넓은 콘크리트 슬래브 위에 선 현장 기술자들",
+  "w": 2000,
+  "h": 1333,
+  "kb": 630,
+  "page": "https://images.unsplash.com/photo-1541888946425-d81bb19240f5"
+ },
+ "n_room": {
+  "src": "../assets/photos/n_room.jpg",
+  "alt": "도시가 내다보이는 골조 공사 중인 실내",
+  "w": 1400,
+  "h": 1050,
+  "kb": 237,
+  "page": "https://images.unsplash.com/photo-1554921570-4fabf72d67b6"
+ },
+ "n_pair": {
+  "src": "../assets/photos/n_pair.jpg",
+  "alt": "현장을 가리키며 이야기하는 두 기술자",
+  "w": 1400,
+  "h": 1089,
+  "kb": 211,
+  "page": "https://images.unsplash.com/photo-1626885930974-4b69aa21bbf9"
+ },
+ "n_plan": {
+  "src": "../assets/photos/n_plan.jpg",
+  "alt": "제도 연필과 펼쳐 둔 설계 도면",
+  "w": 1400,
+  "h": 942,
+  "kb": 163,
+  "page": "https://images.unsplash.com/photo-1603901622056-0a5bee231395"
+ },
+ "n_hall": {
+  "src": "../assets/photos/n_hall.jpg",
+  "alt": "철골 지붕의 넓은 빈 창고",
+  "w": 1400,
+  "h": 933,
+  "kb": 257,
+  "page": "https://images.unsplash.com/photo-1565610222536-ef125c59da2e"
+ },
+ "n_aerial": {
+  "src": "../assets/photos/n_aerial.jpg",
+  "alt": "해 질 녘 빽빽이 선 고층 아파트 단지",
+  "w": 2000,
+  "h": 1551,
+  "kb": 551,
+  "page": "https://images.unsplash.com/photo-1746794263753-d8f74743c25c"
+ },
+ "n_wide": {
+  "src": "../assets/photos/n_wide.jpg",
+  "alt": "바다 가까이 올라가는 아파트 신축 현장",
+  "w": 2000,
+  "h": 1333,
+  "kb": 271,
+  "page": "https://images.unsplash.com/photo-1651836172062-c45ac2cf53b7"
+ },
+ "n_truss": {
+  "src": "../assets/photos/n_truss.jpg",
+  "alt": "철골 트러스를 올려다본 흑백 사진",
+  "w": 1400,
+  "h": 933,
+  "kb": 175,
+  "page": "https://images.unsplash.com/photo-1627922529156-41f27fb6f7ac"
+ },
+ "n_glassbox": {
+  "src": "../assets/photos/n_glassbox.jpg",
+  "alt": "유리 커튼월 건물의 모서리",
+  "w": 1400,
+  "h": 933,
+  "kb": 75,
+  "page": "https://images.unsplash.com/photo-1707823942892-3316eeb091a0"
+ },
+ "n_crane": {
+  "src": "../assets/photos/n_crane.jpg",
+  "alt": "맑은 하늘에 선 타워크레인",
+  "w": 1400,
+  "h": 880,
+  "kb": 78,
+  "page": "https://images.unsplash.com/photo-1683765143175-b6b87a5f8ac3"
+ },
+ "n_rebarman": {
+  "src": "../assets/photos/n_rebarman.jpg",
+  "alt": "철근 기둥 사이에서 일하는 기술자",
+  "w": 1400,
+  "h": 933,
+  "kb": 192,
+  "page": "https://images.unsplash.com/photo-1563166423-a78566af3dbe"
+ },
+ "n_night": {
+  "src": "../assets/photos/n_night.jpg",
+  "alt": "밤하늘 아래 크레인이 선 고층 건물",
+  "w": 1400,
+  "h": 1400,
+  "kb": 115,
+  "page": "https://images.unsplash.com/photo-1637701323782-10ebeae22093"
+ },
+ "n_slab2": {
+  "src": "../assets/photos/n_slab2.jpg",
+  "alt": "옥상 슬래브 위를 걷는 현장 기술자들",
+  "w": 1400,
+  "h": 933,
+  "kb": 243,
+  "page": "https://images.unsplash.com/photo-1541888894402-f3b1af908be4"
+ },
+ "n_aptv": {
+  "src": "../assets/photos/n_aptv.jpg",
+  "alt": "위에서 내려다본 고층 아파트 단지",
+  "w": 1400,
+  "h": 2100,
+  "kb": 583,
+  "page": "https://images.unsplash.com/photo-1702738684590-b4399327e0ef"
  }
 };
 window.BG2PhotosCredit = "사진: Unsplash (무료 라이선스)";

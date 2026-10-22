@@ -29,6 +29,7 @@ h1 { margin: 0; font-size: clamp(34px, 5.4vw, 56px); line-height: 1.15; letter-s
 .lead b { color: var(--fg); font-weight: 600; }
 .copyall { display: inline-flex; align-items: center; gap: 8px; height: 52px; padding: 0 24px; border: 0; border-radius: 999px; background: var(--fg); color: #111; font-size: 16px; font-weight: 700; }
 .copyall svg { width: 18px; height: 18px; }
+.copyall.cmp { margin-right: 8px; background: var(--accent); color: #fff; text-decoration: none; }
 .grid { display: grid; gap: 18px; grid-template-columns: 1fr; padding-bottom: 40px; }
 .card { display: flex; flex-direction: column; min-width: 0; background: var(--card); border: 1px solid var(--line); border-radius: 18px; overflow: hidden; }
 .shot { position: relative; display: block; aspect-ratio: 16 / 11; overflow: hidden; background: radial-gradient(120% 90% at 20% 0%, #233041 0%, #121a24 60%); border-bottom: 1px solid var(--line); }
@@ -73,7 +74,8 @@ h1 { margin: 0; font-size: clamp(34px, 5.4vw, 56px); line-height: 1.15; letter-s
   <a class="back" href="../">← 레퍼런스 보드(3판)로</a>
   <p class="eyebrow">더원파트너스 · BUILDGO · 고급·B2B 방향</p>
   <h1>시안 모음</h1>
-  <p class="lead">미팅에서 주신 방향대로 다시 만든 시안 3개입니다. <b>회사 소개가 큰 배너로 먼저 나오고</b>, 그 아래 <b>업체 찾기 · 전문가 찾기 · 자재몰</b> 세 갈래로 들어갑니다. 들어가면 업체와 전문가 목록이 바로 나오고, 자재는 자재몰 안에만 있습니다. 현장소장·기업 담당자가 쓰기 좋게 글씨와 버튼을 크게 키웠습니다.</p>
+  <p class="lead">레퍼런스 사이트를 직접 재서 같은 순서와 비례로 다시 만든 시안 3개입니다. <b>회사 소개가 큰 배너로 먼저 나오고</b>, 그 아래 <b>업체 찾기 · 전문가 찾기 · 자재몰</b> 세 갈래로 들어갑니다. 들어가면 업체와 전문가 목록이 바로 나오고, 자재는 자재몰 안에만 있습니다. 현장소장·기업 담당자가 쓰기 좋게 글씨와 버튼을 크게 키웠습니다.</p>
+  <a class="copyall cmp" href="compare/">원본과 나란히 비교 보기 →</a>
   <button type="button" class="copyall" data-copy="all"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V6a2 2 0 0 1 2-2h9"/></svg>링크 3개 한 번에 복사</button>
 </header>
 <main class="wrap grid" id="list"></main>
@@ -91,15 +93,15 @@ h1 { margin: 0; font-size: clamp(34px, 5.4vw, 56px); line-height: 1.15; letter-s
 <script>
 (function () {
   var D = [
-    { n: 1, feat: true, tag: "1안 · 권장", title: "어두운 현장 사진과 큰 문장, 들어가면 업체 목록", desc: "첫 화면에서 부동산 개발·설계·골조·외장·자재 다섯 분야가 사진과 함께 넘어가고, 바로 아래에 세 갈래 문이 올라옵니다. 업체 찾기는 공종과 지역 두 칸만 고르면 되는 목록입니다. 고급스러움과 큼직함을 함께 잡아 권하는 안입니다." },
-    { n: 2, tag: "2안 · 밝고 단정하게", title: "밝은 바탕에 큰 명조 문장", desc: "미색 바탕에 큰 명조 문장으로 회사를 소개합니다. 세 갈래는 큰 글자 줄로 두고, 마우스를 올리면 사진이 떠오릅니다. 업체 목록은 실적 사진 줄과 함께 보여 줍니다. 나이 드신 분이 가장 읽기 편한 안입니다." },
-    { n: 3, tag: "3안 · 국내 대형 건설사 결", title: "기업 홈페이지에 B2B 연결을 붙인 화면", desc: "흰 바탕과 진한 남색에 배너 오른쪽 바로가기 세 개를 세웠습니다. 업체·전문가 목록은 표로, 자재몰은 분류 목록과 상품 카드로 정리했습니다. 국내 대기업 사이트에 익숙한 담당자에게 가장 낯설지 않은 안입니다." }
+    { n: 1, feat: true, tag: "1안 · 권장", title: "Spence 구성 그대로 — 어두운 현장 사진과 큰 문장", desc: "영국 건설사 Spence를 직접 재서 같은 순서와 비례로 만들었습니다. 큰 사진 첫 화면 오른쪽에 업체 찾기·전문가 찾기·자재몰 세 갈래가 있고, 아래로 회사 소개와 세 칸 안내가 이어집니다. 업체 목록은 Procore처럼 왼쪽 체크 칸과 두 줄 카드입니다." },
+    { n: 2, tag: "2안 · 밝고 단정하게", title: "TANDEM 구성 그대로 — 밝은 바탕과 화면 가득한 큰 글자", desc: "미국 개발사 TANDEM처럼 가운데 큰 문장과 사진 띠로 시작해, 화면을 채우는 큰 글자로 단락을 나눕니다. 세 갈래는 무늬 카드 세 장, 업체 목록은 Architizer처럼 줄마다 실적 사진이 붙습니다." },
+    { n: 3, tag: "3안 · 국내 대형 건설사 결", title: "현대건설 구성 그대로 — 기업 홈페이지에 B2B를 붙인 화면", desc: "현대건설 홈페이지의 순서(첫 사진 → 소개와 숫자 → 소식 → 바로가기 띠 → 사업 분야)를 그대로 따르고, 초록 자리에 BUILDGO 파랑을 썼습니다. 업체·전문가 목록은 표로 정리했습니다." }
   ];
   function abs(n) { return new URL(n + "/", location.href).href; }
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   document.getElementById("list").innerHTML = D.map(function (d) {
     return '<article class="card' + (d.feat ? " feat" : "") + '">' +
-      '<a class="shot" href="' + d.n + '/" aria-label="' + esc(d.tag) + ' 열기"><img class="pc" src="assets/thumbs/d' + d.n + '.jpg?v=1" alt="' + esc(d.tag) + ' PC 첫 화면"' + (d.feat ? "" : ' loading="lazy"') + '><img class="m" src="assets/thumbs/d' + d.n + '_m.jpg?v=1" alt="' + esc(d.tag) + ' 폰 첫 화면"' + (d.feat ? "" : ' loading="lazy"') + "></a>" +
+      '<a class="shot" href="' + d.n + '/" aria-label="' + esc(d.tag) + ' 열기"><img class="pc" src="assets/thumbs/d' + d.n + '.jpg?v=2" alt="' + esc(d.tag) + ' PC 첫 화면"' + (d.feat ? "" : ' loading="lazy"') + '><img class="m" src="assets/thumbs/d' + d.n + '_m.jpg?v=2" alt="' + esc(d.tag) + ' 폰 첫 화면"' + (d.feat ? "" : ' loading="lazy"') + "></a>" +
       '<div class="info"><span class="tag">' + esc(d.tag) + "</span><h2>" + esc(d.title) + "</h2><p>" + esc(d.desc) + "</p>" +
       '<div class="act"><a class="open" href="' + d.n + '/">시안 열어보기 ↗</a><button type="button" class="cp" data-copy="' + d.n + '">링크 복사</button></div>' +
       '<p class="url">' + esc(abs(d.n).replace(/^https?:\/\//, "")) + "</p></div></article>";

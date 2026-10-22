@@ -20,16 +20,25 @@
     cmp: '<svg viewBox="0 0 48 48"><rect x="6" y="10" width="14" height="28" rx="2"/><rect x="28" y="10" width="14" height="28" rx="2"/><path d="M10 18h6M10 24h6M32 18h6M32 24h6"/></svg>',
     doc: '<svg viewBox="0 0 48 48"><path d="M12 6h18l8 8v28H12z"/><path d="M30 6v8h8M18 24h14M18 30h14M18 36h8"/></svg>'
   };
-  var SLIDES = [
-    { ph: "hero_kr", t: "설계부터 시공·자재까지<br>기업 고객을 위한 건설 B2B", s: "면허와 사업자 정보를 확인한 업체·전문가를 한 곳에서 찾습니다." },
-    { ph: "hero_rise", t: "현장에 맞는 업체를<br>공종과 지역으로", s: "철근콘크리트·철골·방수·설비까지, 공종별로 비교하고 견적을 받습니다." },
-    { ph: "hero_night", t: "자재는 사업자 회원가로<br>현장까지 바로", s: "등급별 회원가와 수도권 당일 출고 품목을 갖춘 회원 자재몰." }
-  ];
+  var ART = {
+    tower: '<svg viewBox="0 0 96 96"><path d="M14 86h68M24 86V30l18-10v66M42 86V36h30v50M50 44h4M60 44h4M50 54h4M60 54h4M50 64h4M60 64h4M50 74h4M60 74h4M30 38h6M30 48h6M30 58h6M30 68h6M30 78h6M72 36V18h-2M70 18H46l6 6M70 18l10 10M80 28v6"/></svg>',
+    doc: '<svg viewBox="0 0 96 96"><path d="M26 12h32l14 14v58H26z"/><path d="M58 12v14h14M36 40h26M36 50h26M36 60h16"/><circle cx="62" cy="70" r="11"/><path d="m57 70 4 4 7-8"/></svg>',
+    helmet: '<svg viewBox="0 0 96 96"><path d="M18 64a30 30 0 0 1 60 0"/><path d="M14 64h68v8H14zM42 36V24h12v12M30 44c2-6 6-10 12-12M66 44c-2-6-6-10-12-12M24 80h48"/></svg>',
+    beam: '<svg viewBox="0 0 96 96"><path d="M14 30 50 18l32 10-36 12z"/><path d="M14 30v8l32 10v-8M46 48v8l36-12v-8M28 44v18M64 40v18M14 66l36-12 32 10-36 12z"/><path d="M14 66v8l32 10v-8M46 84v-8l36-12v8"/></svg>'
+  };
   var NEWS = [
-    { d: "2026.10.20", t: "BUILDGO 사업자 회원 가입 안내", c: "안내" },
-    { d: "2026.10.14", t: "회원 자재몰 수도권 당일 출고 품목 확대", c: "자재몰" },
-    { d: "2026.10.02", t: "견적 문의 한 번으로 여러 업체에 요청하는 방법", c: "이용 안내" },
-    { d: "2026.09.25", t: "업체 등록 시 면허·사업자·보험 확인 절차", c: "업체" }
+    { d: "2026.10.20", t: "BUILDGO 사업자 회원 가입 안내" },
+    { d: "2026.10.14", t: "회원 자재몰 수도권 당일 출고 품목 안내" },
+    { d: "2026.10.02", t: "견적 요청 한 번으로 여러 업체에 요청하는 방법" },
+    { d: "2026.09.25", t: "업체 등록 때 확인하는 면허·사업자·보험" }
+  ];
+  var BIZ = [
+    { ph: "hero_glass", t: "부동산 개발·공급", d: "1998년부터 이어 온 더원파트너스의 본업입니다. 개발 현장의 경험이 BUILDGO의 기준이 됩니다.", tags: ["부동산개발", "공급"], href: "#intro" },
+    { ph: "n_crew", t: "시공 업체 연결", d: "종합·전문건설사를 공종과 지역으로 찾고, 면허와 실적을 확인한 뒤 견적을 요청합니다.", tags: ["종합건설", "전문건설"], href: "#/companies" },
+    { ph: "n_draft", t: "설계·감리 전문가", d: "건축사, 구조기술사, 감리원과 현장소장급 기술자를 경력과 실적으로 고릅니다.", tags: ["설계", "감리", "기술자"], href: "#/experts" },
+    { ph: "n_steel", t: "회원 자재 공급", d: "철근·형강부터 마감재까지, 사업자 회원은 등급별 회원가로 삽니다.", tags: ["철강", "마감재"], href: "#/mall" },
+    { ph: "n_glassbox", t: "외장·창호 공사", d: "커튼월과 창호, 외벽 공사 업체를 실적 사진과 함께 비교합니다.", tags: ["창호", "커튼월"], href: "#/companies?work=window" },
+    { ph: "n_rebarman", t: "골조·철근콘크리트", d: "골조 공사 업체와 철근 자재를 한 곳에서 함께 준비합니다.", tags: ["골조", "철근콘크리트"], href: "#/companies?work=rc" }
   ];
 
   function typeName(id) { return BG.TYPE[id] ? BG.TYPE[id].name : ""; }
@@ -45,76 +54,30 @@
   }
 
   function home() {
-    var slides = SLIDES.map(function (s, i) { return '<div class="sl' + (i ? "" : " on") + '"><img src="' + photo(s.ph) + '" alt="" ' + (i ? 'loading="lazy"' : "") + "></div>"; }).join("");
-    var doors = [["#/companies", "업체 찾기", "종합·전문건설, 설계사무소, 자재사"], ["#/experts", "전문가 찾기", "건축사·기술사·현장소장급 기술자"], ["#/mall", "회원 자재몰", "사업자 회원가 · 수도권 당일 출고"]].map(function (d, k) {
-      return '<a class="vdoor" href="' + d[0] + '"><em>0' + (k + 1) + "</em><b>" + d[1] + "</b><span>" + d[2] + "</span><i>" + I.arrow + "</i></a>";
-    }).join("");
     var stats = [
-      { i: I.bld, n: BG.years(D.company.since), u: "년", l: D.company.since + "년 설립 · 부동산 개발·공급" },
-      { i: I.co, n: D.companies.length, u: "곳", l: "면허·사업자를 확인한 업체" },
-      { i: I.hat, n: D.experts.length, u: "명", l: "자격을 확인한 전문가" },
-      { i: I.box, n: D.materials.length, u: "종", l: "회원 자재" }
-    ].map(function (x) { return '<div class="stat">' + x.i + '<p class="sn"><b>' + x.n + "</b>" + x.u + "</p><p>" + esc(x.l) + "</p></div>"; }).join("");
-    var biz = [
-      { t: "부동산 개발", d: "1998년부터 이어 온 더원파트너스의 본업", ph: "hero_glass", href: "#about" },
-      { t: "업체·전문가 연결", d: "공종과 지역으로 찾고 한 번에 견적 요청", ph: "w_women", href: "#/companies" },
-      { t: "회원 자재 공급", d: "사업자 회원 등급가 · 수도권 당일 출고", ph: "mt_hbeam", href: "#/mall" }
-    ].map(function (b) { return '<a class="bcard" href="' + b.href + '"><img loading="lazy" src="' + photo(b.ph) + '" alt=""><span class="bshade"></span><span class="bt"><b>' + esc(b.t) + "</b>" + esc(b.d) + '<i>자세히 보기 ' + I.arrow + "</i></span></a>"; }).join("");
-    var news = NEWS.map(function (n) { return '<li><span class="nc">' + esc(n.c) + "</span><b>" + esc(n.t) + "</b><time>" + n.d + "</time></li>"; }).join("");
+      { k: "설립 1998년부터", n: BG.years(D.company.since), u: "년", art: ART.tower },
+      { k: "면허·사업자 확인", n: D.companies.length, u: "곳", art: ART.doc },
+      { k: "자격 확인 전문가", n: D.experts.length, u: "명", art: ART.helmet },
+      { k: "사업자 회원 자재", n: D.materials.length, u: "종", art: ART.beam }
+    ].map(function (s) { return '<li><p class="sk">' + esc(s.k) + '</p><div class="sart" aria-hidden="true">' + s.art + '</div><p class="snum"><b>' + s.n + "</b>" + s.u + "</p></li>"; }).join("");
+    var news = NEWS.map(function (n) { return '<li><time>' + n.d + '</time><a href="#/quote">' + esc(n.t) + "</a></li>"; }).join("");
+    var doors = [["#/companies", "업체 찾기", "종합·전문건설 · 설계 · 자재 공급", ART.tower], ["#/experts", "전문가 찾기", "건축사 · 기술사 · 현장소장", ART.helmet], ["#/mall", "회원 자재몰", "사업자 회원가 · 당일 출고", ART.beam]].map(function (d) {
+      return '<a href="' + d[0] + '"><span class="bart" aria-hidden="true">' + d[3] + "</span><b>" + d[1] + "</b><span>" + d[2] + "</span><i>" + I.arrow + "</i></a>";
+    }).join("");
+    var biz = BIZ.map(function (b, i) { return '<article class="pj' + (i % 3 === 1 ? " tall" : "") + '"><a href="' + b.href + '"><div class="pj-im"><img loading="lazy" src="' + photo(b.ph) + '" alt="' + esc(b.t) + '"></div><h3>' + esc(b.t) + "</h3><p>" + esc(b.d) + '</p><p class="tags">' + b.tags.map(function (t) { return "#" + esc(t); }).join(" ") + "</p></a></article>"; }).join("");
     app.innerHTML =
-      '<section class="hero" id="hero"><div class="slides" id="slides">' + slides + '</div><div class="shade"></div>' +
-      '<div class="wrap hero-in"><div class="hcopy" id="hcopy"><p class="eyebrow">THE ONE PARTNERS · SINCE 1998</p><h1 id="htitle">' + SLIDES[0].t + '</h1><p class="sub" id="hsub">' + esc(SLIDES[0].s) + "</p>" +
-      '<div class="cta"><a class="btn btn-blue" href="#/companies">업체 찾기</a><a class="btn btn-white" href="#/quote">견적 요청</a></div>' +
-      '<div class="spager"><span id="snum">01</span><i><b id="sbar"></b></i><span>0' + SLIDES.length + '</span><button type="button" data-act="snext" aria-label="다음">' + I.arrow + "</button></div></div></div>" +
-      '<nav class="vdoors" aria-label="바로 가기">' + doors + "</nav></section>" +
-      '<section class="stats"><div class="wrap stats-in">' + stats + "</div></section>" +
-      '<section class="wrap about" id="about"><div class="sec-t"><p class="eyebrow">회사 소개</p><h2>현장을 아는 회사가<br>만든 건설 거래 사이트</h2></div><p class="about-p">더원파트너스는 1998년 설립 이후 부동산 개발과 공급을 해 왔습니다. 개발 현장에서 직접 겪은 일 — 믿을 만한 업체 찾기, 견적 비교, 자재 구매 — 를 기업 고객이 한 곳에서 할 수 있도록 BUILDGO를 만들었습니다.</p></section>' +
-      '<section class="wrap biz"><div class="sec-t row"><div><p class="eyebrow">사업 소개</p><h2>BUILDGO가 하는 일</h2></div></div><div class="bgrid">' + biz + "</div></section>" +
-      '<section class="ent"><div class="wrap ent-in"><div><p class="eyebrow">기업 전용</p><h2>견적부터 계약까지<br>담당 매니저가 함께합니다</h2><p>현장 규모와 일정만 알려 주시면 맞는 업체를 고르고, 견적을 비교해 드립니다.</p>' +
-      '<div class="cta"><a class="btn btn-blue" href="#/quote">견적 요청하기</a><a class="btn btn-line" href="#/quote">상담 신청하기</a></div></div>' +
-      '<ul class="feat"><li>' + I.cmp + "<b>업체 선별</b><span>면허·사업자·보험을 확인한 업체만</span></li><li>" + I.doc + "<b>견적 비교</b><span>같은 조건으로 받은 견적을 나란히</span></li><li>" + I.mgr + "<b>담당 매니저</b><span>계약과 일정 조율까지 한 사람이</span></li></ul></div></section>" +
-      '<section class="wrap news"><div class="sec-t row"><div><p class="eyebrow">BUILDGO 소식</p><h2>공지사항</h2></div></div><ul class="nlist">' + news + "</ul></section>";
-    slideSetup();
+      '<section class="hero" id="hero"><img src="' + photo("n_aerial") + '" alt=""><div class="shade"></div><div class="hero-in"><p class="eyebrow">THE ONE PARTNERS · SINCE 1998</p><h1 id="htitle">현장을 아는 회사가<br>만든 건설 거래</h1></div><a class="hscroll" href="#intro" aria-label="아래로">SCROLL</a></section>' +
+      '<section class="intro" id="intro"><div class="wrap"><h2>더원파트너스는 현장에서 답을 찾습니다</h2><p class="intro-p">1998년 설립 이후 부동산을 개발하고 공급해 왔습니다. 개발 현장에서 직접 겪은 일 — 믿을 만한 업체를 찾고, 견적을 비교하고, 자재를 제때 구하는 일 — 을<br>기업 고객이 한 곳에서 할 수 있도록 BUILDGO를 만들었습니다.</p><ul class="stats">' + stats + "</ul></div></section>" +
+      '<section class="news"><div class="wrap"><div class="sec-h"><h2>BUILDGO 소식</h2><a href="#/quote">+ more</a></div><ul class="nlist">' + news + "</ul></div></section>" +
+      '<section class="band"><div class="wrap band-in">' + doors + "</div></section>" +
+      '<section class="biz"><div class="wrap"><div class="sec-h"><h2>사업 분야</h2></div><div class="mason">' + biz + "</div></div></section>" +
+      '<section class="cta"><img loading="lazy" src="' + photo("n_slab") + '" alt=""><div class="shade2"></div><div class="wrap cta-in"><h2>기업 고객을 위한 건설 거래,<br>BUILDGO와 시작하세요</h2><div class="cta-b">' +
+      '<a href="#/quote"><span aria-hidden="true">' + ART.doc + "</span><b>견적 요청</b><i>바로 가기</i></a>" +
+      '<a href="#/quote"><span aria-hidden="true">' + ART.helmet + "</span><b>사업자 회원 가입 문의</b><i>바로 가기</i></a>" +
+      '<a href="#/quote"><span aria-hidden="true">' + ART.tower + "</span><b>업체 등록 문의</b><i>바로 가기</i></a></div></div></section>";
+    var im = app.querySelector(".hero img");
+    BG.mo.play([im], "settle", { s: 1.08, dur: 3000 });
   }
-  var slideAt = 0;
-  function slideGo(i) {
-    var box = document.getElementById("slides"); if (!box) return;
-    i = (i + SLIDES.length) % SLIDES.length;
-    if (i === slideAt) return;
-    var els = box.querySelectorAll(".sl"), from = els[slideAt], to = els[i];
-    var img = to.querySelector("img"); if (img.loading === "lazy") img.loading = "eager";
-    slideAt = i;
-    to.classList.add("on");
-    if (!BG.reduced() && to.animate) {
-      var a = to.animate([{ clipPath: "inset(0 0 0 100%)" }, { clipPath: "inset(0 0 0 0%)" }], { duration: 1000, easing: "cubic-bezier(.7,0,.2,1)" });
-      BG.mo.play([img], "settle", { s: 1.1, dur: 6000 });
-      a.onfinish = function () { from.classList.remove("on"); };
-    } else from.classList.remove("on");
-    var t = document.getElementById("htitle");
-    if (BG.reduced() || !t.animate) t.innerHTML = SLIDES[i].t;
-    else {
-      var tok = t.__tok = {};
-      var out = t.animate([{ transform: "none", opacity: 1 }, { transform: "translateY(-16px)", opacity: 0 }], { duration: 260, easing: "cubic-bezier(.5,0,.75,0)", fill: "forwards" });
-      out.onfinish = function () { if (t.__tok !== tok) return; t.innerHTML = SLIDES[i].t; out.cancel(); BG.mo.play([t], "lines", { gap: 110 }); };
-    }
-    document.getElementById("hsub").textContent = SLIDES[i].s;
-    document.getElementById("snum").textContent = "0" + (i + 1);
-    barRun();
-  }
-  function barRun() {
-    var bar = document.getElementById("sbar"); if (!bar || !bar.animate || BG.reduced()) return;
-    bar.getAnimations().forEach(function (x) { x.cancel(); });
-    bar.animate([{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }], { duration: 6000, easing: "linear", fill: "forwards" });
-  }
-  function slideSetup() {
-    slideAt = 0;
-    clearInterval(slideTimer);
-    BG.mo.play([document.querySelector("#slides .sl img")], "settle", { s: 1.1, dur: 6000 });
-    if (!BG.reduced()) slideTimer = setInterval(function () { if (!document.getElementById("slides")) return clearInterval(slideTimer); if (!document.hidden) slideGo(slideAt + 1); }, 6000);
-    barRun();
-    BG.swipe(document.getElementById("hero"), function () { slideGo(slideAt + 1); }, function () { slideGo(slideAt - 1); });
-  }
-
   function pageHead(title, sub, crumb) {
     return '<section class="page-h"><div class="wrap"><p class="crumb"><a href="#/">홈</a> · ' + esc(crumb || title) + "</p><h1>" + esc(title) + "</h1><p>" + esc(sub) + "</p></div></section>";
   }
@@ -254,7 +217,6 @@
     if (act === "do-login") { S.member = true; S.save(); BG.toast(D.demoUser.company + " " + D.demoUser.name + "님, 골드 회원가가 적용됩니다"); location.hash = "#/mall"; }
     if (act === "menu") { var d = document.getElementById("drawer"); d.hidden = false; document.body.classList.add("lock"); if (!BG.reduced() && d.animate) d.firstElementChild.animate([{ transform: "translateX(100%)" }, { transform: "none" }], { duration: 380, easing: "cubic-bezier(.2,.7,.1,1)" }); }
     if (act === "menu-close") closeMenu();
-    if (act === "snext") { slideGo(slideAt + 1); clearInterval(slideTimer); if (!BG.reduced()) slideTimer = setInterval(function () { if (!document.getElementById("slides")) return clearInterval(slideTimer); if (!document.hidden) slideGo(slideAt + 1); }, 6000); }
     if (act === "save") { var on = S.toggleSave(a.dataset.id); a.classList.toggle("on", on); a.querySelector("span").textContent = on ? "관심 업체" : "관심 업체 저장"; BG.toast(on ? "관심 업체로 저장했습니다" : "저장을 취소했습니다"); }
     if (act === "cart") { var m = BG.MT[a.dataset.id]; S.addCart(m.id, 1, m.spec); BG.toast(m.name + " 1" + m.unit + ", 견적 목록에 담았습니다"); refreshCart(); }
     if (act === "estimate") BG.toast("견적서를 만들고 있습니다. 담당 매니저가 확인 후 연락드립니다");
@@ -272,18 +234,19 @@
   document.getElementById("ftCredit").textContent = BG.credit;
 
   var MOTION = [
-    [".hero .eyebrow", "up", { y: 12, delay: 150 }],
-    [".hero h1", "lines", { delay: 250, gap: 110, dur: 1000 }],
-    [".hero .sub, .hero .cta, .spager", "up", { y: 14, delay: 650, stagger: 120 }],
-    [".vdoor", "up", { y: 30, stagger: 110, delay: 650 }],
-    [".stat", "up", { y: 20, stagger: 90 }],
-    [".stat b", "count", { dur: 1300 }],
-    [".sec-t h2, .page-h h1", "lines", { gap: 100 }],
-    [".sec-t .eyebrow, .about-p, .page-h p", "up", { y: 14, lag: 150 }],
-    [".bcard", "card", { y: 36, stagger: 110 }],
-    [".ent h2", "lines", { gap: 110 }],
-    [".ent .feat li", "up", { y: 22, stagger: 110 }],
-    [".nlist li", "up", { y: 14, stagger: 60 }],
+    [".hero .eyebrow", "up", { y: 12, delay: 200 }],
+    [".hero h1", "lines", { delay: 320, gap: 130, dur: 1100 }],
+    [".intro h2", "lines", { gap: 100 }],
+    [".intro-p", "up", { y: 16, lag: 150 }],
+    [".stats li", "up", { y: 20, stagger: 100 }],
+    [".sart svg", "draw", { dur: 1200 }],
+    [".snum b", "count", { dur: 1300 }],
+    [".sec-h h2, .page-h h1", "lines", { gap: 100 }],
+    [".nlist li", "up", { y: 14, stagger: 80 }],
+    [".band-in a", "up", { y: 24, stagger: 120 }],
+    [".pj", "card", { y: 30, stagger: 90 }],
+    [".cta h2", "lines", { gap: 110 }],
+    [".cta-b a", "up", { y: 18, stagger: 100 }],
     [".tbl tbody tr", "up", { y: 14, stagger: 40, max: 10 }],
     [".mcardc", "up", { y: 18, stagger: 60, max: 6 }],
     [".pcard", "card", { y: 22, stagger: 50, max: 8 }],
