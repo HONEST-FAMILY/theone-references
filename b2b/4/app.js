@@ -17,19 +17,14 @@
     close: '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>',
     save: '<svg viewBox="0 0 24 24"><path d="M6 4h12v17l-6-4-6 4z"/></svg>'
   };
-  var ALLIN = [
-    { src: "../assets/photos/d_hall_line.jpg?v=1", k: "설계", d: "인허가와 도면을 맡을 설계사무소·건축사" },
-    { ph: "n_crew", k: "시공", d: "면허를 확인한 종합·전문건설사" },
-    { ph: "n_glassbox", k: "분양", d: "준공부터 분양·매입까지 한 흐름으로" }
-  ];
+  var POP = [["구조기술사", "#/experts?q=구조기술사"], ["방수·도장", "#/experts?work=water"], ["설계·인허가", "#/experts?work=design"], ["기계설비", "#/experts?work=mech"], ["철골", "#/experts?work=steel"]];
   var DOAWORK = [
     { k: "PM", d: "사업 관리" }, { k: "시행", d: "개발 사업 추진" }, { k: "시공", d: "건축·토목 공사" }, { k: "금융", d: "사업비 조달" }, { k: "자재", d: "현장 자재 공급" }
   ];
-  var FAQ = [
-    { q: "누가 가입할 수 있나요?", a: "사업자등록번호가 있는 건설사·설계사무소·자재 공급사와 기업 담당자가 가입합니다. 개인 고객용 서비스가 아닙니다." },
-    { q: "전문가는 어떻게 찾나요?", a: "맨 위 검색창에 공종이나 자격을 적거나, 아래 분야 버튼을 누르면 그 분야 전문가 목록이 바로 나옵니다." },
-    { q: "견적 요청은 몇 곳에 가나요?", a: "공종·지역·규모를 남기면 담당 매니저가 확인한 뒤 맞는 업체와 전문가를 골라 요청합니다." },
-    { q: "회원가는 어떻게 정해지나요?", a: "가입한 사업자 회원의 등급에 따라 자재 가격이 달라집니다. 로그인하면 자재몰 가격이 회원가로 바뀝니다." }
+  var STEPS = [
+    { t: "공종 · 지역 · 규모를 남깁니다", l: "견적 요청서 쓰기", ph: "n_plan" },
+    { t: "담당 매니저가 맞는 업체와 전문가를 골라 요청합니다", l: "면허 · 사업자 · 보험 확인", ph: "n_room" },
+    { t: "받은 견적을 같은 기준으로 비교하고 계약합니다", l: "금액 · 공사 기간 한 표로 비교", ph: "n_slab2" }
   ];
   function doaMark(cls) { return '<svg class="' + (cls || "mk") + '" viewBox="0 0 104 55" aria-hidden="true"><rect class="fr" x="1" y="1" width="102" height="53" rx="6" pathLength="1"/><path class="an" d="' + window.DOA.ant + '" pathLength="1"/><path class="tx" d="' + window.DOA.text + '"/></svg>'; }
 
@@ -43,32 +38,37 @@
   function pill(text, href, cls) { return '<a class="pill' + (cls ? " " + cls : "") + '" href="' + href + '"><span>' + esc(text) + '</span><i aria-hidden="true"></i></a>'; }
 
   function home() {
-    var chips = D.works.map(function (w) { var n = D.experts.filter(function (x) { return x.works.indexOf(w.id) >= 0; }).length + D.companies.filter(function (c) { return c.works.indexOf(w.id) >= 0; }).length; return '<a class="chip" href="#/experts?work=' + w.id + '">' + esc(w.name) + "<b>" + n + "</b></a>"; }).join("");
+    var stats = [
+      { k: "2023년까지 도아가<br>직접 설계한 건수", n: 109, u: "건" },
+      { k: "도아가 직접 하는 사업 분야<br>PM · 시행 · 시공 · 금융 · 자재", n: DOAWORK.length, u: "개" },
+      { k: "BUILDGO에서 공종별로<br>찾을 수 있는 분야", n: D.works.length, u: "개" }
+    ].map(function (x) { return '<div class="bs-c"><p>' + x.k + '</p><span class="bs-n"><b>' + x.n + "</b><small>" + x.u + "</small></span></div>"; }).join("");
     var exs = D.experts.slice().sort(function (a, b) { return b.years - a.years; }).slice(0, 6).map(function (x) {
-      return '<a class="ex" href="#/expert/' + x.id + '"><span class="ex-av">' + esc(BG.initial(x.name)) + '</span><span class="ex-n"><b>' + esc(x.name) + "</b>" + esc(x.title) + '</span><span class="ex-w">' + workNames(x.works).slice(0, 2).map(function (w) { return "<i>" + esc(w) + "</i>"; }).join("") + '</span><span class="ex-m"><em>' + esc(x.region) + "</em><em>경력 " + x.years + "년</em></span><span class=\"ex-go\">" + I.arrow + "</span></a>";
+      return '<a class="br" href="#/expert/' + x.id + '"><span class="br-t">' + esc(x.name) + " <em>" + esc(x.title) + '</em></span><span class="br-m">' + esc(workNames(x.works).join(" · ")) + "<br>" + esc(x.region) + " · 경력 " + x.years + '년</span><span class="br-a">' + I.arrow + "</span></a>";
     }).join("");
-    var cos = D.companies.slice().sort(function (a, b) { return (b.checks.length - a.checks.length) || (b.count - a.count); }).slice(0, 4).map(function (c) {
-      return '<a class="co" href="#/company/' + c.id + '"><span class="co-ph">' + c.projects.map(function (p) { return '<img loading="lazy" src="' + photo(p.ph) + '" alt="">'; }).join("") + '</span><span class="co-b"><b>' + esc(c.name) + "</b><span>" + esc(typeName(c.type) + " · " + c.region + " " + c.city) + "</span><span>" + esc(workNames(c.works).join(", ")) + "</span>" + checks(c) + "</span></a>";
+    var cos = D.companies.slice().sort(function (a, b) { return (b.checks.length - a.checks.length) || (b.count - a.count); }).slice(0, 5).map(function (c) {
+      return '<a class="br" href="#/company/' + c.id + '"><span class="br-t">' + esc(c.name) + '</span><span class="br-m">' + esc(typeName(c.type)) + "<br>" + esc(c.region + " " + c.city + " · " + workNames(c.works).slice(0, 2).join(", ")) + '</span><span class="br-im"><img loading="lazy" src="' + photo(c.projects[0].ph) + '" alt=""></span><span class="br-a">' + I.arrow + "</span></a>";
     }).join("");
-    var allin = ALLIN.map(function (a, i) { return '<li><div class="ai-im"><img loading="lazy" src="' + (a.src || photo(a.ph)) + '" alt=""></div><p><b>0' + (i + 1) + "</b>" + esc(a.k) + "</p><span>" + esc(a.d) + "</span></li>"; }).join("");
-    var works = DOAWORK.map(function (w) { return "<li><b>" + w.k + "</b><span>" + w.d + "</span></li>"; }).join("");
-    var faq = FAQ.map(function (f, i) { return "<details" + (i ? "" : " open") + "><summary><i>Q</i>" + esc(f.q) + '<span aria-hidden="true"></span></summary><p><i>A</i>' + esc(f.a) + "</p></details>"; }).join("");
+    var biz = DOAWORK.map(function (w) { return "<li><b>" + w.k + "</b><span>" + w.d + "</span></li>"; }).join("");
+    var steps = STEPS.map(function (x, i) { return '<a class="bn-r" href="#/quote"><div class="bn-b"><p class="bn-d">0' + (i + 1) + '</p><h3>' + esc(x.t) + '</h3><span class="bl-go">' + esc(x.l) + '</span></div><div class="bn-im"><img loading="lazy" src="' + photo(x.ph) + '" alt=""></div></a>'; }).join("");
     app.innerHTML =
-      '<section class="sh"><canvas id="wave" aria-hidden="true"></canvas><div class="sh-in"><p class="sh-k">도아 BUILDGO · 사업자 전용 건설 거래</p><h1 class="sh-t">어떤 분야의 전문가를<br>찾고 계신가요?</h1>' +
-      '<form class="hs" id="hs"><label class="hs-q">' + I.search + '<input name="q" type="search" placeholder="공종이나 자격으로 찾기 (예: 구조기술사, 방수, 철골)" aria-label="찾을 전문가" autocomplete="off"></label><label class="hs-r">' + I.pin + '<select name="region" aria-label="지역"><option value="">전국</option>' + D.regions.map(function (r) { return "<option>" + esc(r) + "</option>"; }).join("") + '</select>' + I.down + '</label><button type="submit">찾기</button></form>' +
-      '<p class="hs-pop"><span>많이 찾는 분야</span><a href="#/experts?q=구조기술사">구조기술사</a><a href="#/experts?work=water">방수</a><a href="#/experts?work=design">감리·인허가</a><a href="#/experts?work=mech">기계설비</a></p><div class="chips">' + chips + "</div></div></section>" +
-      '<section class="blk"><div class="blk-h"><p class="lbl">전문가</p><h2>지금 바로 연결할 수 있는 전문가</h2><a class="more" href="#/experts">전체 ' + D.experts.length + "명 보기 " + I.arrow + '</a></div><div class="exs">' + exs + "</div></section>" +
-      '<section class="blk"><div class="blk-h"><p class="lbl">업체</p><h2>면허·사업자·보험을 확인한 업체</h2><a class="more" href="#/companies">전체 ' + D.companies.length + "곳 보기 " + I.arrow + '</a></div><div class="cos">' + cos + "</div></section>" +
-      '<section class="allin"><p class="lbl">도아가 다른 이유</p><h2>설계 · 시공 · 분양을<br>한 회사가 한 번에.</h2><p class="al-p">단계마다 다른 회사를 거치지 않으니 중간에 붙는 비용이 줄어듭니다. 도아는 처음 설계부터 분양까지 한 흐름으로 맡아, 같은 품질을 더 합리적인 비용으로 만듭니다.</p><ol class="ai">' + allin + "</ol></section>" +
-      '<section class="who"><div class="who-l">' + doaMark("who-mk") + '<p>LH 민간신축매입약정사업 전문기업</p></div><div class="who-r"><h2>현장을 직접 해 온 회사가<br>만든 거래 사이트</h2><p>도아는 (주)더원파트너스의 브랜드입니다. 사업 관리부터 시행·시공·금융·자재까지 직접 해 온 일을, 현장소장과 기업 담당자가 한 곳에서 쓰도록 BUILDGO에 담았습니다.</p><ul class="dw">' + works + "</ul></div></section>" +
-      '<section class="blk faqs"><h2 class="fq-t">자주 묻는 질문</h2><div class="fq">' + faq + "</div></section>" +
-      '<section class="end"><h2>지금 필요한 공사를 남겨 주세요.</h2><div class="btns"><a class="pill" href="#/quote"><span>견적 요청하기</span><i aria-hidden="true"></i></a><button type="button" class="pill ghost" data-act="replay"><span>인트로 다시 보기</span><i aria-hidden="true"></i></button></div></section>';
+      '<section class="bh"><img class="bh-im" src="' + photo("n_crane") + '" alt=""><div class="bh-in"><h1 class="bh-t">어떤 분야의 전문가를<br>찾고 계신가요?</h1>' +
+      '<form class="bh-s" id="hs"><label class="bh-q">' + I.search + '<input name="q" type="search" placeholder="공종이나 자격으로 찾기 (예: 구조기술사, 방수, 철골)" aria-label="찾을 전문가" autocomplete="off"></label><label class="bh-r"><select name="region" aria-label="지역"><option value="">전국</option>' + D.regions.map(function (r) { return "<option>" + esc(r) + "</option>"; }).join("") + "</select>" + I.down + '</label><button type="submit">찾기 ' + I.arrow + "</button></form>" +
+      '<p class="bh-pop"><span>많이 찾는 분야</span>' + POP.map(function (x) { return '<a href="' + x[1] + '">' + esc(x[0]) + "</a>"; }).join("") + "</p></div></section>" +
+      '<section class="bi"><p class="bl-h"><span>BUILDGO 소개</span><span>도아</span></p><p class="bi-p">설계부터 시공, 분양까지 한 회사가 맡아 온 도아가 현장소장과 기업 담당자를 위해, 믿고 맡길 업체와 전문가를 한곳에 모았습니다.</p></section>' +
+      '<section class="bs"><div class="bs-c bs-x" aria-hidden="true"><svg viewBox="0 0 100 100" preserveAspectRatio="none"><path d="M0 100 100 0"/></svg></div>' + stats + "</section>" +
+      '<section class="bw"><img loading="lazy" src="' + photo("n_hall") + '" alt="철골 구조의 넓은 창고 내부"></section>' +
+      '<section class="bl"><p class="bl-h"><span>전문가 찾기</span><a href="#/experts">전체 ' + D.experts.length + "명 보기</a></p>" + exs + "</section>" +
+      '<section class="bl"><p class="bl-h"><span>업체 찾기</span><a href="#/companies">전체 ' + D.companies.length + "곳 보기</a></p>" + cos + "</section>" +
+      '<section class="bv"><div class="bv-im"><img loading="lazy" src="' + photo("n_crew") + '" alt="현장에서 도면을 확인하는 작업자들"></div><div class="bv-b"><h2>설계 · 시공 · 분양을<br>한 회사가 한 번에.</h2><p>단계마다 다른 회사를 거치지 않으니 중간에 붙는 비용이 줄어듭니다. 도아는 사업 관리부터 시행 · 시공 · 금융 · 자재까지 직접 해 온 회사입니다.</p><ul>' + biz + '</ul><a class="bl-go" href="#/quote">견적 문의하기</a></div></section>' +
+      '<section class="bn"><p class="bl-h"><span>이렇게 진행합니다</span><a href="#/quote">견적 요청하기</a></p>' + steps + "</section>" +
+      '<section class="bx"><img loading="lazy" src="' + photo("hero_night") + '" alt=""><div class="bx-in"><h2>복잡한 현장을,<br>한 번의 요청으로.</h2><p class="bx-a"><a href="#/quote">견적 요청하기 ' + I.arrow + '</a><button type="button" data-act="replay">인트로 다시 보기 ' + I.arrow + "</button></p></div></section>";
+    if (window.matchMedia && matchMedia("(max-width: 700px)").matches) document.querySelector("#hs input").placeholder = "예: 구조기술사, 방수, 철골";
     document.getElementById("hs").onsubmit = function (ev) {
       ev.preventDefault();
       var f = this, q = f.q.value.trim(), w = D.works.filter(function (x) { return q && (x.name.indexOf(q) >= 0 || q.indexOf(x.name) >= 0); })[0];
       location.hash = "#/experts" + BG.qs({ q: w ? "" : q, work: w ? w.id : "", region: f.region.value });
     };
-    wave();
   }
   function intro(force) {
     var seen = false;
@@ -94,8 +94,7 @@
       el.classList.add("out");
       document.body.classList.remove("lock");
       setTimeout(function () { el.remove(); document.body.classList.remove("has-intro"); }, 1100);
-      var t = document.querySelector(".sh-in");
-      if (t && t.animate) BG.mo.play([document.querySelector(".sh-t"), document.querySelector(".hs"), document.querySelector(".hs-pop"), document.querySelector(".chips")], "up", { y: 34, stagger: 120, delay: 450, dur: 1000 });
+      BG.mo.play([document.querySelector(".bh-t"), document.querySelector(".bh-s"), document.querySelector(".bh-pop")], "up", { y: 30, stagger: 120, delay: 450, dur: 1000 });
     }
     el.addEventListener("click", function (ev) { if (ev.target.closest('[data-act="skip"]')) finish(); });
     el.querySelector(".in-bar b").animate([{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }], { duration: 8600, easing: "linear", fill: "forwards" });
@@ -106,35 +105,6 @@
     at(5300, function () { el.classList.remove("w2"); el.classList.add("w3"); });
     at(6300, function () { el.classList.remove("w3"); el.classList.add("fin"); });
     at(8600, finish);
-  }
-  function wave() {
-    var cv = document.getElementById("wave"); if (!cv || !cv.getContext) return;
-    var ctx = cv.getContext("2d"), dpr = Math.min(2, window.devicePixelRatio || 1), W = 0, H = 0, t0 = performance.now(), raf = 0, live = true;
-    var small = window.innerWidth < 760, ROWS = small ? 44 : 64;
-    function size() { var r = cv.getBoundingClientRect(); W = r.width; H = r.height; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
-    function draw(t) {
-      ctx.clearRect(0, 0, W, H);
-      var f = H * .9, hy = H * .5, cam = 1.25, cx = W / 2, step = small ? 3.6 : 3.4;
-      for (var j = 0; j < ROWS; j++) {
-        var q = j / (ROWS - 1), z = 1 + Math.pow(q, 1.35) * 6.5, gap = step * (1 + q * 1.6), fade = Math.max(0, 1 - q * 1.05);
-        for (var sx = (j % 2) * gap / 2; sx <= W; sx += gap) {
-          var x = (sx - cx) * z / f;
-          var y = Math.sin(x * .62 + t * .32 + z * .5) * .5 + Math.sin(x * .27 - t * .2 + z * 1.05) * .42 + Math.cos(z * 1.6 + t * .28 + x * .1) * .2;
-          var sy = hy + (cam - y * 1.6) * f / z * .52;
-          if (sy < 0 || sy > H + 2) continue;
-          var a = fade * (.14 + Math.max(0, y + .55) * .34), r = Math.max(.6, 2 / Math.sqrt(z));
-          if (a < .03) continue;
-          ctx.fillStyle = "rgba(230,230,236," + Math.min(.6, a).toFixed(3) + ")";
-          ctx.fillRect(sx - r / 2, sy - r / 2, r, r);
-        }
-      }
-    }
-    function loop(now) { if (!document.getElementById("wave")) return; if (live && !document.hidden) draw((now - t0) / 1000); raf = requestAnimationFrame(loop); }
-    size(); draw(0);
-    window.addEventListener("resize", function () { if (document.getElementById("wave")) { size(); draw((performance.now() - t0) / 1000); } });
-    if (BG.reduced()) return;
-    if (window.IntersectionObserver) new IntersectionObserver(function (es) { live = es[0].isIntersecting; }).observe(cv);
-    raf = requestAnimationFrame(loop);
   }
   function pageHead(title, sub, crumb, extra) {
     return '<section class="ph"><p class="crumb"><a href="#/">홈</a><span>›</span>' + esc(crumb || title) + "</p><h1>" + esc(title) + "</h1>" + (sub ? "<p>" + esc(sub) + "</p>" : "") + (extra || "") + "</section>";
@@ -278,6 +248,7 @@
     ["loginBtn", "loginBtn2"].forEach(function (id) { var b = document.getElementById(id); if (b) b.textContent = S.member ? "로그아웃" : "로그인"; });
     closeMenu();
     document.body.classList.remove("filters");
+    hdState();
   }
   function closeMenu() { var d = document.getElementById("drawer"); if (d && !d.hidden) { d.hidden = true; document.body.classList.remove("lock"); } }
   function go(kind) {
@@ -313,7 +284,8 @@
     go(f ? f.dataset.side : s.dataset.sort);
     setTimeout(function () { window.scrollTo(0, y); }, 0);
   });
-  window.addEventListener("scroll", function () { document.body.classList.toggle("scrolled", window.scrollY > 40); }, { passive: true });
+  function hdState() { var h = document.querySelector(".bh"); document.body.classList.toggle("past-hero", !h || window.scrollY > h.offsetHeight - 90); }
+  window.addEventListener("scroll", function () { document.body.classList.toggle("scrolled", window.scrollY > 40); hdState(); }, { passive: true });
   function subSpy() {
     var nav = document.getElementById("sub"); if (!nav) return;
     var ids = ["top", "lineup", "flow", "strong", "faq"], y = window.scrollY + window.innerHeight * .4, cur = "top";
@@ -322,20 +294,25 @@
   }
   window.addEventListener("scroll", subSpy, { passive: true });
   document.getElementById("ftCredit").textContent = BG.credit;
-  var lgm = document.getElementById("lgm"); if (lgm) lgm.innerHTML = doaMark("lg-svg");
+  ["lgm", "lgm2"].forEach(function (id) { var m = document.getElementById(id); if (m) m.innerHTML = doaMark("lg-svg"); });
 
   var MOTION = [
-    [".sh-k", "up", { y: 12, delay: 100 }],
-    [".sh-t", "lines", { delay: 200, gap: 140, dur: 1100 }],
-    [".hs", "up", { y: 24, delay: 500 }],
-    [".hs-pop, .chips", "up", { y: 16, delay: 700, stagger: 120 }],
-    [".blk-h h2, .allin h2, .who h2, .fq-t, .end h2", "lines", { gap: 110 }],
-    [".ex", "up", { y: 22, stagger: 70 }],
-    [".co", "card", { y: 30, stagger: 100 }],
-    [".al-p", "up", { y: 16, lag: 200 }],
-    [".ai li", "card", { y: 36, stagger: 140 }],
-    [".who-l, .who-r p, .dw li", "up", { y: 16, stagger: 60 }],
-    [".fq details", "up", { y: 14, stagger: 70 }],
+    [".bh-im", "settle", { s: 1.08, dur: 2600 }],
+    [".bh-t", "lines", { delay: 200, gap: 140, dur: 1100 }],
+    [".bh-s", "up", { y: 24, delay: 520 }],
+    [".bh-pop", "up", { y: 14, delay: 700 }],
+    [".bl-h", "up", { y: 10 }],
+    [".bi-p", "up", { y: 30, dur: 1100 }],
+    [".bs-c:not(.bs-x)", "up", { y: 24, stagger: 120 }],
+    [".bs-x path", "draw", { dur: 1400 }],
+    [".br", "up", { y: 18, stagger: 70 }],
+    [".bw", "wipe", { dur: 1400 }],
+    [".bv-im", "wipe", { dur: 1300 }],
+    [".bv h2", "lines", { gap: 110 }],
+    [".bv-b > p, .bv li, .bv-b > .bl-go", "up", { y: 14, stagger: 60 }],
+    [".bn-r", "up", { y: 24, stagger: 110 }],
+    [".bx img", "settle", { s: 1.1, dur: 2400 }],
+    [".bx h2", "lines", { gap: 120 }],
     [".rcard", "up", { y: 18, stagger: 50, max: 8 }],
     [".mcard", "card", { y: 22, stagger: 50, max: 9 }],
     [".pj figure", "wipe", { stagger: 110 }]
