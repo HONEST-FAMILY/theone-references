@@ -33,7 +33,7 @@
     { d: "2026.09.25", t: "업체 등록 때 확인하는 면허·사업자·보험" }
   ];
   var BIZ = [
-    { ph: "hero_glass", t: "부동산 개발·공급", d: "1998년부터 이어 온 더원파트너스의 본업입니다. 개발 현장의 경험이 BUILDGO의 기준이 됩니다.", tags: ["부동산개발", "공급"], href: "#intro" },
+    { ph: "hero_glass", t: "LH 민간신축매입약정", d: "도아의 본업입니다. 민간이 짓고 LH가 매입하는 신축 사업을 설계부터 분양까지 맡습니다.", tags: ["민간신축매입", "PM", "시행"], href: "#intro" },
     { ph: "n_crew", t: "시공 업체 연결", d: "종합·전문건설사를 공종과 지역으로 찾고, 면허와 실적을 확인한 뒤 견적을 요청합니다.", tags: ["종합건설", "전문건설"], href: "#/companies" },
     { ph: "n_draft", t: "설계·감리 전문가", d: "건축사, 구조기술사, 감리원과 현장소장급 기술자를 경력과 실적으로 고릅니다.", tags: ["설계", "감리", "기술자"], href: "#/experts" },
     { ph: "n_steel", t: "회원 자재 공급", d: "철근·형강부터 마감재까지, 사업자 회원은 등급별 회원가로 삽니다.", tags: ["철강", "마감재"], href: "#/mall" },
@@ -55,7 +55,7 @@
 
   function home() {
     var stats = [
-      { k: "설립 1998년부터", n: BG.years(D.company.since), u: "년", art: ART.tower },
+      { k: "도아 사업 분야", n: 5, u: "개", art: ART.tower },
       { k: "면허·사업자 확인", n: D.companies.length, u: "곳", art: ART.doc },
       { k: "자격 확인 전문가", n: D.experts.length, u: "명", art: ART.helmet },
       { k: "사업자 회원 자재", n: D.materials.length, u: "종", art: ART.beam }
@@ -66,8 +66,8 @@
     }).join("");
     var biz = BIZ.map(function (b, i) { return '<article class="pj' + (i % 3 === 1 ? " tall" : "") + '"><a href="' + b.href + '"><div class="pj-im"><img loading="lazy" src="' + photo(b.ph) + '" alt="' + esc(b.t) + '"></div><h3>' + esc(b.t) + "</h3><p>" + esc(b.d) + '</p><p class="tags">' + b.tags.map(function (t) { return "#" + esc(t); }).join(" ") + "</p></a></article>"; }).join("");
     app.innerHTML =
-      '<section class="hero" id="hero"><img src="' + photo("n_aerial") + '" alt=""><div class="shade"></div><div class="hero-in"><p class="eyebrow">THE ONE PARTNERS · SINCE 1998</p><h1 id="htitle">현장을 아는 회사가<br>만든 건설 거래</h1></div><a class="hscroll" href="#intro" aria-label="아래로">SCROLL</a></section>' +
-      '<section class="intro" id="intro"><div class="wrap"><h2>더원파트너스는 현장에서 답을 찾습니다</h2><p class="intro-p">1998년 설립 이후 부동산을 개발하고 공급해 왔습니다. 개발 현장에서 직접 겪은 일 — 믿을 만한 업체를 찾고, 견적을 비교하고, 자재를 제때 구하는 일 — 을<br>기업 고객이 한 곳에서 할 수 있도록 BUILDGO를 만들었습니다.</p><ul class="stats">' + stats + "</ul></div></section>" +
+      '<section class="hero" id="hero"><img src="' + photo("n_aerial") + '" alt=""><div class="shade"></div><div class="hero-in"><p class="eyebrow">THE ONE PARTNERS · 도아</p><h1 id="htitle">현장을 아는 회사가<br>만든 건설 거래</h1></div><a class="hscroll" href="#intro" aria-label="아래로">SCROLL</a></section>' +
+      '<section class="intro" id="intro"><div class="wrap"><h2>더원파트너스는 현장에서 답을 찾습니다</h2><p class="intro-p">LH 민간신축매입약정사업을 전문으로, 설계부터 시공·분양까지 한 회사가 맡습니다. 개발 현장에서 직접 겪은 일 — 믿을 만한 업체를 찾고, 견적을 비교하고, 자재를 제때 구하는 일 — 을<br>기업 고객이 한 곳에서 할 수 있도록 BUILDGO를 만들었습니다.</p><ul class="stats">' + stats + "</ul></div></section>" +
       '<section class="news"><div class="wrap"><div class="sec-h"><h2>BUILDGO 소식</h2><a href="#/quote">+ more</a></div><ul class="nlist">' + news + "</ul></div></section>" +
       '<section class="band"><div class="wrap band-in">' + doors + "</div></section>" +
       '<section class="biz"><div class="wrap"><div class="sec-h"><h2>사업 분야</h2></div><div class="mason">' + biz + "</div></div></section>" +

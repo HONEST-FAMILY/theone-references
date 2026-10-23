@@ -17,56 +17,21 @@
     close: '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>',
     save: '<svg viewBox="0 0 24 24"><path d="M6 4h12v17l-6-4-6 4z"/></svg>'
   };
-  var LINEUP = [
-    { ic: "co", t: "업체 찾기", d: "종합·전문건설사, 설계사무소, 자재 공급사를 공종과 지역으로 찾습니다. 면허·사업자·보험을 확인한 업체만 올라옵니다.", href: "#/companies", ph: "n_crew" },
-    { ic: "ex", t: "전문가 찾기", d: "건축사·구조기술사·감리원·현장소장급 기술자를 경력과 대표 실적으로 고릅니다.", href: "#/experts", ph: "n_draft" },
-    { ic: "mt", t: "회원 자재몰", d: "철근·형강부터 마감재까지 사업자 회원은 등급별 회원가로 삽니다. 수도권 일부 품목은 당일 출고합니다.", href: "#/mall", ph: "n_steel" },
-    { ic: "qt", t: "견적 요청", d: "공종·지역·규모를 한 번 남기면 담당 매니저가 맞는 업체를 골라 견적을 모아 드립니다.", href: "#/quote", ph: "n_slab" }
+  var ALLIN = [
+    { src: "../assets/photos/d_hall_line.jpg?v=1", k: "설계", d: "인허가와 도면을 맡을 설계사무소·건축사" },
+    { ph: "n_crew", k: "시공", d: "면허를 확인한 종합·전문건설사" },
+    { ph: "n_glassbox", k: "분양", d: "준공부터 분양·매입까지 한 흐름으로" }
   ];
-  var STEPS4 = [
-    { t: "공종·지역 고르기", d: "필요한 공사와 현장 지역을 고르면 목록이 바로 좁혀집니다.", ui: "chips" },
-    { t: "업체 비교", d: "면허·실적·확인 항목을 같은 기준으로 나란히 봅니다.", ui: "rows" },
-    { t: "견적 요청", d: "규모와 착공 시기를 남기면 여러 곳에 한 번에 요청합니다.", ui: "form" },
-    { t: "담당 매니저 연결", d: "받은 견적을 정리하고 일정 조율까지 한 사람이 챙깁니다.", ui: "chat" },
-    { t: "견적 비교·결정", d: "같은 조건으로 받은 금액과 공기를 비교해 고릅니다.", ui: "bars" },
-    { t: "자재 주문", d: "현장 자재는 회원가로 담아 견적서까지 한 번에 받습니다.", ui: "cart" }
-  ];
-  var STRONG = [
-    { g: "강점", ic: "bld", t: "28년 개발 현장의 기준", d: "1998년부터 부동산을 개발하고 공급해 온 더원파트너스가 업체를 고르는 기준을 세웠습니다." },
-    { g: "강점", ic: "chk", t: "확인한 업체만", d: "면허·사업자·보험을 확인한 업체만 목록에 올라갑니다.", hot: true },
-    { g: "강점", ic: "mgr", t: "담당 매니저", d: "견적 정리부터 계약·일정 조율까지 한 사람이 맡습니다." },
-    { g: "안심", ic: "won", t: "사업자 전용 회원가", d: "가입한 사업자 회원에게만 등급별 자재 가격을 보여 줍니다." },
-    { g: "안심", ic: "truck", t: "수도권 당일 출고", d: "자재 상세에서 당일 출고 품목을 바로 확인합니다." },
-    { g: "안심", ic: "cmp", t: "같은 기준의 견적", d: "같은 조건으로 받은 견적을 한 화면에서 나란히 봅니다." }
+  var DOAWORK = [
+    { k: "PM", d: "사업 관리" }, { k: "시행", d: "개발 사업 추진" }, { k: "시공", d: "건축·토목 공사" }, { k: "금융", d: "사업비 조달" }, { k: "자재", d: "현장 자재 공급" }
   ];
   var FAQ = [
     { q: "누가 가입할 수 있나요?", a: "사업자등록번호가 있는 건설사·설계사무소·자재 공급사와 기업 담당자가 가입합니다. 개인 고객용 서비스가 아닙니다." },
-    { q: "회원가는 어떻게 정해지나요?", a: "가입한 사업자 회원의 등급에 따라 자재 가격이 달라집니다. 로그인하면 자재몰 가격이 회원가로 바뀝니다." },
-    { q: "견적 요청은 몇 곳에 가나요?", a: "공종·지역·규모를 남기면 담당 매니저가 확인한 뒤 맞는 업체를 골라 요청합니다." },
-    { q: "업체 등록은 어떻게 하나요?", a: "면허·사업자·보험 서류를 확인한 뒤 목록에 올라갑니다. 업체 등록 문의를 남겨 주세요." },
-    { q: "당일 출고는 어디까지 되나요?", a: "수도권 일부 품목이 대상입니다. 자재 상세 화면에서 출고 안내를 확인하세요." }
+    { q: "전문가는 어떻게 찾나요?", a: "맨 위 검색창에 공종이나 자격을 적거나, 아래 분야 버튼을 누르면 그 분야 전문가 목록이 바로 나옵니다." },
+    { q: "견적 요청은 몇 곳에 가나요?", a: "공종·지역·규모를 남기면 담당 매니저가 확인한 뒤 맞는 업체와 전문가를 골라 요청합니다." },
+    { q: "회원가는 어떻게 정해지나요?", a: "가입한 사업자 회원의 등급에 따라 자재 가격이 달라집니다. 로그인하면 자재몰 가격이 회원가로 바뀝니다." }
   ];
-  var IC = {
-    co: '<svg viewBox="0 0 24 24"><path d="M3 21h18M5 21V8l7-4 7 4v13M9 21v-5h6v5M9 11h.01M15 11h.01"/></svg>',
-    ex: '<svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.5"/><path d="M5 20c1.2-4 4-6 7-6s5.8 2 7 6"/></svg>',
-    mt: '<svg viewBox="0 0 24 24"><path d="M3 7h18M3 12h18M3 17h18M7 7v10M17 7v10"/></svg>',
-    qt: '<svg viewBox="0 0 24 24"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h5"/></svg>',
-    bld: '<svg viewBox="0 0 24 24"><path d="M4 21V6l8-3v18M12 21V9l8 3v9M3 21h18M7 9h2M7 13h2M7 17h2M15 14h2M15 18h2"/></svg>',
-    chk: '<svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 3.4 8.3 8 9 4.6-.7 8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></svg>',
-    mgr: '<svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z"/><path d="M8 10h8M8 13h5"/></svg>',
-    won: '<svg viewBox="0 0 24 24"><path d="M4 7l3 10 3-8 2 6 2-6 3 8 3-10M3 11h18M3 14h18"/></svg>',
-    truck: '<svg viewBox="0 0 24 24"><path d="M3 6h11v10H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg>',
-    cmp: '<svg viewBox="0 0 24 24"><path d="M5 20V10M10 20V4M15 20v-7M20 20v-4"/></svg>'
-  };
-  function mockUi(k) {
-    var ck = '<i class="ck"><svg viewBox="0 0 24 24"><path d="m6 12.5 4 4 8-9"/></svg></i>';
-    if (k === "chips") return '<div class="mk chips"><span class="on">철근콘크리트' + ck + '</span><span>방수·도장</span><span class="on">서울' + ck + '</span><span>경기</span><span>철골</span><span class="on">종합건설' + ck + "</span></div>";
-    if (k === "rows") return '<div class="mk rows">' + ["한", "대", "정"].map(function (c, i) { return '<div class="r"><b>' + c + '</b><i class="bar" style="--w:' + [86, 70, 58][i] + '%"></i>' + (i < 2 ? ck : '<i class="x">×</i>') + "</div>"; }).join("") + "</div>";
-    if (k === "form") return '<div class="mk form"><p><span>공종</span><b>철근콘크리트</b></p><p><span>지역</span><b>서울 강동구</b></p><p><span>규모</span><b>연면적 1,200㎡</b></p><i class="send">요청 보내기</i></div>';
-    if (k === "chat") return '<div class="mk chat"><div class="av">담당</div><p class="b1">견적 3건이 도착했어요. 같은 조건으로 정리해 드릴게요.</p><p class="b2">좋습니다. 내일 오전에 통화해요.</p></div>';
-    if (k === "bars") return '<div class="mk bars">' + [[62, "A사"], [48, "B사"], [74, "C사"]].map(function (b, i) { return '<div class="c' + (i === 1 ? " pick" : "") + '"><i style="--h:' + b[0] + '%"></i><span>' + b[1] + "</span></div>"; }).join("") + "</div>";
-    return '<div class="mk cart"><p><span>철근 SD400 · 3톤</span><b>2,876,400원</b></p><p><span>H형강 SS275 · 10본</span><b>6,768,000원</b></p><p class="t"><span>회원가 합계</span><b>9,644,400원</b></p></div>';
-  }
+  function doaMark(cls) { return '<svg class="' + (cls || "mk") + '" viewBox="0 0 104 55" aria-hidden="true"><rect class="fr" x="1" y="1" width="102" height="53" rx="6" pathLength="1"/><path class="an" d="' + window.DOA.ant + '" pathLength="1"/><path class="tx" d="' + window.DOA.text + '"/></svg>'; }
 
   function typeName(id) { return BG.TYPE[id] ? BG.TYPE[id].name : ""; }
   function workNames(ws) { return ws.map(function (w) { return BG.WORK[w].name; }); }
@@ -78,20 +43,69 @@
   function pill(text, href, cls) { return '<a class="pill' + (cls ? " " + cls : "") + '" href="' + href + '"><span>' + esc(text) + '</span><i aria-hidden="true"></i></a>'; }
 
   function home() {
-    var lineup = LINEUP.map(function (l) { return '<a class="lu" href="' + l.href + '"><span class="lu-bg"><img loading="lazy" src="' + photo(l.ph) + '" alt=""></span><span class="lu-ic">' + IC[l.ic] + "</span><b>" + esc(l.t) + "</b><p>" + esc(l.d) + '</p><span class="more">자세히 보기<i>' + I.plus + "</i></span></a>"; }).join("");
-    var steps = STEPS4.map(function (s, i) { return '<article class="st"><span class="sp">STEP 0' + (i + 1) + "</span><h3>" + esc(s.t) + "</h3><p>" + esc(s.d) + '</p><div class="st-ui">' + mockUi(s.ui) + "</div></article>"; }).join("");
-    var strong = ["강점", "안심"].map(function (g) { return '<p class="sg">' + g + '</p><div class="sgrid">' + STRONG.filter(function (s) { return s.g === g; }).map(function (s) { return '<article class="sc' + (s.hot ? " hot" : "") + '"><span class="sc-ic">' + IC[s.ic] + "</span><b>" + esc(s.t) + "</b><p>" + esc(s.d) + "</p></article>"; }).join("") + "</div>"; }).join("");
-    var faq = FAQ.map(function (f, i) { return '<details' + (i ? "" : " open") + '><summary><i>Q</i>' + esc(f.q) + '<span aria-hidden="true"></span></summary><p><i>A</i>' + esc(f.a) + "</p></details>"; }).join("");
+    var chips = D.works.map(function (w) { var n = D.experts.filter(function (x) { return x.works.indexOf(w.id) >= 0; }).length + D.companies.filter(function (c) { return c.works.indexOf(w.id) >= 0; }).length; return '<a class="chip" href="#/experts?work=' + w.id + '">' + esc(w.name) + "<b>" + n + "</b></a>"; }).join("");
+    var exs = D.experts.slice().sort(function (a, b) { return b.years - a.years; }).slice(0, 6).map(function (x) {
+      return '<a class="ex" href="#/expert/' + x.id + '"><span class="ex-av">' + esc(BG.initial(x.name)) + '</span><span class="ex-n"><b>' + esc(x.name) + "</b>" + esc(x.title) + '</span><span class="ex-w">' + workNames(x.works).slice(0, 2).map(function (w) { return "<i>" + esc(w) + "</i>"; }).join("") + '</span><span class="ex-m"><em>' + esc(x.region) + "</em><em>경력 " + x.years + "년</em></span><span class=\"ex-go\">" + I.arrow + "</span></a>";
+    }).join("");
+    var cos = D.companies.slice().sort(function (a, b) { return (b.checks.length - a.checks.length) || (b.count - a.count); }).slice(0, 4).map(function (c) {
+      return '<a class="co" href="#/company/' + c.id + '"><span class="co-ph">' + c.projects.map(function (p) { return '<img loading="lazy" src="' + photo(p.ph) + '" alt="">'; }).join("") + '</span><span class="co-b"><b>' + esc(c.name) + "</b><span>" + esc(typeName(c.type) + " · " + c.region + " " + c.city) + "</span><span>" + esc(workNames(c.works).join(", ")) + "</span>" + checks(c) + "</span></a>";
+    }).join("");
+    var allin = ALLIN.map(function (a, i) { return '<li><div class="ai-im"><img loading="lazy" src="' + (a.src || photo(a.ph)) + '" alt=""></div><p><b>0' + (i + 1) + "</b>" + esc(a.k) + "</p><span>" + esc(a.d) + "</span></li>"; }).join("");
+    var works = DOAWORK.map(function (w) { return "<li><b>" + w.k + "</b><span>" + w.d + "</span></li>"; }).join("");
+    var faq = FAQ.map(function (f, i) { return "<details" + (i ? "" : " open") + "><summary><i>Q</i>" + esc(f.q) + '<span aria-hidden="true"></span></summary><p><i>A</i>' + esc(f.a) + "</p></details>"; }).join("");
     app.innerHTML =
-      '<section class="hero" id="top"><canvas id="wave" aria-hidden="true"></canvas><div class="h-in"><h1 class="h-t">설계부터 시공, 자재까지<br>한 곳에서, BUILDGO</h1><p class="h-s">1998년부터 부동산을 개발해 온 더원파트너스가 <br>면허를 확인한 업체·전문가와 사업자 회원가 자재를 <br>한 곳에 모았습니다.</p></div></section>' +
-      '<nav class="sub" id="sub" aria-label="이 화면 바로가기"><a href="#top" class="on">처음</a><a href="#lineup">서비스</a><a href="#flow">이용 흐름</a><a href="#strong">왜 BUILDGO</a><a href="#faq">자주 묻는 질문</a></nav>' +
-      '<section class="say"><p class="say-p">공종과 지역만 고르면 면허와 실적을 확인한 업체가 나오고, <br>견적은 한 번에 여러 곳에, 자재는 사업자 회원가로. <br>개발 현장에서 직접 겪은 일을 그대로 풀었습니다.</p><h2>현장의 일, 더 빠르고 바르게.</h2><p class="say-s">현장소장과 기업 담당자를 위한 사업자 전용 거래 사이트입니다.</p></section>' +
-      '<section class="sec" id="lineup"><p class="lbl">BUILDGO 서비스</p><h2 class="h2"><b>업체를 찾는 일부터 자재 주문까지,</b><br>현장에 필요한 것을 한 곳에서.</h2><div class="lgrid">' + lineup + "</div></section>" +
-      '<section class="sec" id="flow"><p class="lbl">이용 흐름</p><h2 class="h2"><b>고르고, 비교하고, 맡기면</b><br>담당 매니저가 끝까지 챙깁니다.</h2><div class="sgrid6">' + steps + "</div></section>" +
-      '<section class="sec" id="strong"><p class="lbl">왜 BUILDGO</p><h2 class="h2"><b>28년 개발 현장의 기준으로,</b><br>믿고 맡길 수 있게.</h2>' + strong + "</section>" +
-      '<section class="sec faqs" id="faq"><h2 class="fq-t">자주 묻는 질문</h2><div class="fq">' + faq + "</div></section>" +
-      '<section class="end"><h2>지금 필요한 공사를<br>남겨 주세요.</h2><div class="btns"><a class="pill" href="#/quote"><span>견적 요청하기</span><i aria-hidden="true"></i></a><a class="pill ghost" href="#/companies"><span>업체 먼저 보기</span><i aria-hidden="true"></i></a></div></section>';
+      '<section class="sh"><canvas id="wave" aria-hidden="true"></canvas><div class="sh-in"><p class="sh-k">도아 BUILDGO · 사업자 전용 건설 거래</p><h1 class="sh-t">어떤 분야의 전문가를<br>찾고 계신가요?</h1>' +
+      '<form class="hs" id="hs"><label class="hs-q">' + I.search + '<input name="q" type="search" placeholder="공종이나 자격으로 찾기 (예: 구조기술사, 방수, 철골)" aria-label="찾을 전문가" autocomplete="off"></label><label class="hs-r">' + I.pin + '<select name="region" aria-label="지역"><option value="">전국</option>' + D.regions.map(function (r) { return "<option>" + esc(r) + "</option>"; }).join("") + '</select>' + I.down + '</label><button type="submit">찾기</button></form>' +
+      '<p class="hs-pop"><span>많이 찾는 분야</span><a href="#/experts?q=구조기술사">구조기술사</a><a href="#/experts?work=water">방수</a><a href="#/experts?work=design">감리·인허가</a><a href="#/experts?work=mech">기계설비</a></p><div class="chips">' + chips + "</div></div></section>" +
+      '<section class="blk"><div class="blk-h"><p class="lbl">전문가</p><h2>지금 바로 연결할 수 있는 전문가</h2><a class="more" href="#/experts">전체 ' + D.experts.length + "명 보기 " + I.arrow + '</a></div><div class="exs">' + exs + "</div></section>" +
+      '<section class="blk"><div class="blk-h"><p class="lbl">업체</p><h2>면허·사업자·보험을 확인한 업체</h2><a class="more" href="#/companies">전체 ' + D.companies.length + "곳 보기 " + I.arrow + '</a></div><div class="cos">' + cos + "</div></section>" +
+      '<section class="allin"><p class="lbl">도아가 다른 이유</p><h2>설계 · 시공 · 분양을<br>한 회사가 한 번에.</h2><p class="al-p">단계마다 다른 회사를 거치지 않으니 중간에 붙는 비용이 줄어듭니다. 도아는 처음 설계부터 분양까지 한 흐름으로 맡아, 같은 품질을 더 합리적인 비용으로 만듭니다.</p><ol class="ai">' + allin + "</ol></section>" +
+      '<section class="who"><div class="who-l">' + doaMark("who-mk") + '<p>LH 민간신축매입약정사업 전문기업</p></div><div class="who-r"><h2>현장을 직접 해 온 회사가<br>만든 거래 사이트</h2><p>도아는 (주)더원파트너스의 브랜드입니다. 사업 관리부터 시행·시공·금융·자재까지 직접 해 온 일을, 현장소장과 기업 담당자가 한 곳에서 쓰도록 BUILDGO에 담았습니다.</p><ul class="dw">' + works + "</ul></div></section>" +
+      '<section class="blk faqs"><h2 class="fq-t">자주 묻는 질문</h2><div class="fq">' + faq + "</div></section>" +
+      '<section class="end"><h2>지금 필요한 공사를 남겨 주세요.</h2><div class="btns"><a class="pill" href="#/quote"><span>견적 요청하기</span><i aria-hidden="true"></i></a><button type="button" class="pill ghost" data-act="replay"><span>인트로 다시 보기</span><i aria-hidden="true"></i></button></div></section>';
+    document.getElementById("hs").onsubmit = function (ev) {
+      ev.preventDefault();
+      var f = this, q = f.q.value.trim(), w = D.works.filter(function (x) { return q && (x.name.indexOf(q) >= 0 || q.indexOf(x.name) >= 0); })[0];
+      location.hash = "#/experts" + BG.qs({ q: w ? "" : q, work: w ? w.id : "", region: f.region.value });
+    };
     wave();
+  }
+  function intro(force) {
+    var seen = false;
+    try { seen = sessionStorage.getItem("doa-intro") === "1"; } catch (e) {}
+    document.documentElement.classList.remove("intro-pending");
+    if ((seen && !force) || BG.reduced()) return;
+    try { sessionStorage.setItem("doa-intro", "1"); } catch (e) {}
+    var el = document.createElement("div");
+    el.className = "intro"; el.id = "intro";
+    el.innerHTML = '<div class="in-bg"><img src="../assets/photos/d_hall_line.jpg?v=1" alt=""><img src="' + photo("n_crew") + '" alt=""><img src="' + photo("n_glassbox") + '" alt=""></div><div class="in-shade"></div>' +
+      '<div class="in-logo">' + doaMark("in-mk") + '<p class="in-tag">LH 민간신축매입약정사업 전문기업</p></div>' +
+      '<p class="in-word" aria-hidden="true"><span>설계</span><span>시공</span><span>분양</span></p>' +
+      '<div class="in-end"><p class="in-e1">설계부터 시공, 분양까지</p><p class="in-e2">한 회사가 한 번에 하니까<br><b>더 합리적인 가격으로.</b></p><div class="in-e3">' + doaMark("in-mk2") + '<span>BUILDGO</span></div></div>' +
+      '<button type="button" class="in-skip" data-act="skip">건너뛰기</button><div class="in-bar"><b></b></div>';
+    document.body.appendChild(el);
+    document.body.classList.add("lock", "has-intro");
+    var T = [], done = false;
+    function at(ms, fn) { T.push(setTimeout(fn, ms)); }
+    function show(sel, on) { var n = el.querySelector(sel); if (n) n.classList.toggle("on", on !== false); }
+    function finish() {
+      if (done) return; done = true;
+      T.forEach(clearTimeout);
+      el.classList.add("out");
+      document.body.classList.remove("lock");
+      setTimeout(function () { el.remove(); document.body.classList.remove("has-intro"); }, 1100);
+      var t = document.querySelector(".sh-in");
+      if (t && t.animate) BG.mo.play([document.querySelector(".sh-t"), document.querySelector(".hs"), document.querySelector(".hs-pop"), document.querySelector(".chips")], "up", { y: 34, stagger: 120, delay: 450, dur: 1000 });
+    }
+    el.addEventListener("click", function (ev) { if (ev.target.closest('[data-act="skip"]')) finish(); });
+    el.querySelector(".in-bar b").animate([{ transform: "scaleX(0)" }, { transform: "scaleX(1)" }], { duration: 8600, easing: "linear", fill: "forwards" });
+    at(80, function () { show(".in-logo"); });
+    at(2300, function () { show(".in-tag"); });
+    at(3300, function () { show(".in-logo", false); el.classList.add("w1"); });
+    at(4300, function () { el.classList.remove("w1"); el.classList.add("w2"); });
+    at(5300, function () { el.classList.remove("w2"); el.classList.add("w3"); });
+    at(6300, function () { el.classList.remove("w3"); el.classList.add("fin"); });
+    at(8600, finish);
   }
   function wave() {
     var cv = document.getElementById("wave"); if (!cv || !cv.getContext) return;
@@ -100,17 +114,17 @@
     function size() { var r = cv.getBoundingClientRect(); W = r.width; H = r.height; cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr); ctx.setTransform(dpr, 0, 0, dpr, 0, 0); }
     function draw(t) {
       ctx.clearRect(0, 0, W, H);
-      var f = H * .9, hy = H * .46, cam = 1.25, cx = W / 2, step = small ? 3.4 : 3.2;
+      var f = H * .9, hy = H * .5, cam = 1.25, cx = W / 2, step = small ? 3.6 : 3.4;
       for (var j = 0; j < ROWS; j++) {
         var q = j / (ROWS - 1), z = 1 + Math.pow(q, 1.35) * 6.5, gap = step * (1 + q * 1.6), fade = Math.max(0, 1 - q * 1.05);
         for (var sx = (j % 2) * gap / 2; sx <= W; sx += gap) {
           var x = (sx - cx) * z / f;
-          var y = Math.sin(x * .62 + t * .55 + z * .5) * .5 + Math.sin(x * .27 - t * .32 + z * 1.05) * .42 + Math.cos(z * 1.6 + t * .45 + x * .1) * .2;
-          var sy = hy + (cam - y * 1.7) * f / z * .52;
+          var y = Math.sin(x * .62 + t * .32 + z * .5) * .5 + Math.sin(x * .27 - t * .2 + z * 1.05) * .42 + Math.cos(z * 1.6 + t * .28 + x * .1) * .2;
+          var sy = hy + (cam - y * 1.6) * f / z * .52;
           if (sy < 0 || sy > H + 2) continue;
-          var a = fade * (.28 + Math.max(0, y + .55) * .62), r = Math.max(.7, 2.3 / Math.sqrt(z));
+          var a = fade * (.14 + Math.max(0, y + .55) * .34), r = Math.max(.6, 2 / Math.sqrt(z));
           if (a < .03) continue;
-          ctx.fillStyle = "rgba(236,236,240," + Math.min(.92, a).toFixed(3) + ")";
+          ctx.fillStyle = "rgba(230,230,236," + Math.min(.6, a).toFixed(3) + ")";
           ctx.fillRect(sx - r / 2, sy - r / 2, r, r);
         }
       }
@@ -283,6 +297,7 @@
     if (act === "do-login") { S.member = true; S.save(); BG.toast(D.demoUser.company + " " + D.demoUser.name + "님, 골드 회원가가 적용됩니다"); location.hash = "#/mall"; }
     if (act === "menu") { var d = document.getElementById("drawer"); d.hidden = false; document.body.classList.add("lock"); if (!BG.reduced() && d.animate) d.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 260 }); }
     if (act === "menu-close") closeMenu();
+    if (act === "replay") { window.scrollTo(0, 0); intro(true); }
     if (act === "topbar-x") { var tb = document.getElementById("topbar"); if (tb) tb.remove(); }
     if (act === "filters") document.body.classList.toggle("filters");
     if (act === "save") { var on = S.toggleSave(a.dataset.id); a.classList.toggle("on", on); a.querySelector("span").textContent = on ? "관심 업체" : "관심 업체 저장"; BG.toast(on ? "관심 업체로 저장했습니다" : "저장을 취소했습니다"); }
@@ -307,24 +322,24 @@
   }
   window.addEventListener("scroll", subSpy, { passive: true });
   document.getElementById("ftCredit").textContent = BG.credit;
+  var lgm = document.getElementById("lgm"); if (lgm) lgm.innerHTML = doaMark("lg-svg");
 
   var MOTION = [
-    [".h-t", "lines", { delay: 250, gap: 160, dur: 1200 }],
-    [".h-s", "up", { y: 18, delay: 800 }],
-    [".say-p", "up", { y: 18 }],
-    [".say h2", "lines", { gap: 100, lag: 200 }],
-    [".say-s", "up", { y: 14, lag: 300 }],
-    [".lbl", "up", { y: 12 }],
-    [".h2", "lines", { gap: 110, lag: 100 }],
-    [".lu", "card", { y: 36, stagger: 110 }],
-    [".st", "card", { y: 36, stagger: 90 }],
-    [".sc", "up", { y: 26, stagger: 90 }],
-    [".fq-t", "lines", { gap: 100 }],
+    [".sh-k", "up", { y: 12, delay: 100 }],
+    [".sh-t", "lines", { delay: 200, gap: 140, dur: 1100 }],
+    [".hs", "up", { y: 24, delay: 500 }],
+    [".hs-pop, .chips", "up", { y: 16, delay: 700, stagger: 120 }],
+    [".blk-h h2, .allin h2, .who h2, .fq-t, .end h2", "lines", { gap: 110 }],
+    [".ex", "up", { y: 22, stagger: 70 }],
+    [".co", "card", { y: 30, stagger: 100 }],
+    [".al-p", "up", { y: 16, lag: 200 }],
+    [".ai li", "card", { y: 36, stagger: 140 }],
+    [".who-l, .who-r p, .dw li", "up", { y: 16, stagger: 60 }],
     [".fq details", "up", { y: 14, stagger: 70 }],
-    [".end h2", "lines", { gap: 110 }],
     [".rcard", "up", { y: 18, stagger: 50, max: 8 }],
     [".mcard", "card", { y: 22, stagger: 50, max: 9 }],
     [".pj figure", "wipe", { stagger: 110 }]
   ];
   BG.router({ home: home, companies: companies, company: company, experts: experts, expert: expert, mall: mall, item: item, cart: cart, quote: quote, login: login }, function (r) { sync(r); BG.mo.scan(app, MOTION); });
+  if (BG.parseHash().name === "home") intro();
 })();

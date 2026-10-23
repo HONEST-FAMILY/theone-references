@@ -54,8 +54,8 @@
     app.innerHTML =
       '<section class="hero" id="hero"><div class="slides" id="slides">' + bgs + '</div><div class="veil"></div><div class="dots" aria-hidden="true"></div>' +
       '<h1 class="h-title" id="htitle">현장을 아는<br>건설 B2B.</h1><nav class="h-idx" id="hidx" aria-label="바로 가기">' + idx + '</nav><div class="h-bar"><b id="hbar"></b></div></section>' +
-      '<section class="intro"><div class="in-l"><h2>1998년부터,<br>개발 현장에서.</h2><p class="since">SINCE 1998 · 부동산 개발·공급</p></div>' +
-      '<div class="in-r"><p class="lead">더원파트너스는 1998년 설립 이후 부동산을 개발하고 공급해 온 회사입니다.</p><p>개발 현장에서 직접 겪은 일 — 믿을 만한 업체를 찾고, 견적을 비교하고, 자재를 제때 구하는 일 — 을 기업 고객이 한 곳에서 할 수 있도록 BUILDGO를 만들었습니다. 현장소장과 기업 담당자를 위한 사업자 전용 거래 사이트입니다.</p>' +
+      '<section class="intro"><div class="in-l"><h2>설계부터 분양까지,<br>한 회사가.</h2><p class="since">도아 · LH 민간신축매입약정사업 전문기업</p></div>' +
+      '<div class="in-r"><p class="lead">도아는 LH 민간신축매입약정사업을 전문으로 하는 (주)더원파트너스의 브랜드입니다.</p><p>개발 현장에서 직접 겪은 일 — 믿을 만한 업체를 찾고, 견적을 비교하고, 자재를 제때 구하는 일 — 을 기업 고객이 한 곳에서 할 수 있도록 BUILDGO를 만들었습니다. 현장소장과 기업 담당자를 위한 사업자 전용 거래 사이트입니다.</p>' +
       '<div class="btns">' + pill("업체 찾기", "#/companies") + pill("견적 문의", "#/quote", "ghost") + "</div></div></section>" +
       '<div class="panels">' + panels + "</div>" +
       '<section class="feature"><img loading="lazy" src="' + photo("n_slab") + '" alt=""><div class="veil"></div><div class="ft-txt"><p class="lab">견적 문의</p><h2>한 번의 요청으로<br>맞는 업체까지.</h2><p>공종과 현장 지역, 규모를 남기면 담당 매니저가 면허와 실적을 확인한 업체를 골라 연결합니다. 받은 견적은 같은 기준으로 나란히 비교합니다.</p><div class="btns">' + pill("견적 요청하기", "#/quote") + pill("업체 먼저 보기", "#/companies", "ghost") + '</div></div><a class="orb" href="#/quote" aria-label="견적 요청하기">' + I.arrow + "</a></section>" +

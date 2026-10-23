@@ -84,7 +84,7 @@ h1 { margin: 0; font-size: clamp(34px, 5.4vw, 56px); line-height: 1.15; letter-s
   <ul>
     <li><b>세 시안 모두 실제로 눌러 볼 수 있습니다.</b> 업체 찾기에서 공종·지역을 고르면 목록이 바뀌고, 견적 요청 칸을 채우면 보낸 뒤 화면까지 볼 수 있습니다(실제로 전송되지는 않습니다).</li>
     <li><b>‘로그인’을 누르면 예시 회원으로 들어갑니다.</b> 자재몰 가격이 골드 회원가로 바뀌고, 담은 자재로 견적 목록이 만들어집니다.</li>
-    <li>회사 소개는 공개 자료로 확인한 내용(1998년 설립, 부동산 개발·공급)으로 썼습니다. 실제 소개 문구와 실적 사진을 주시면 그대로 바꿔 넣습니다.</li>
+    <li>회사 정보는 고객 사이트(doadoa.kr)에 공개된 내용(도아 · (주)더원파트너스 · LH 민간신축매입약정사업 전문기업)으로 맞췄습니다. 소개 문구와 실적 사진을 주시면 그대로 바꿔 넣습니다.</li>
     <li>업체·전문가·자재 이름, 가격, 실적 건수는 모두 예시입니다. 사진은 무료 사진(Unsplash)입니다.</li>
   </ul>
 </div></section>
@@ -94,7 +94,7 @@ h1 { margin: 0; font-size: clamp(34px, 5.4vw, 56px); line-height: 1.15; letter-s
 (function () {
   var D = [
     { n: 1, feat: true, tag: "1안 · 권장", title: "Spence 구성 그대로 — 어두운 현장 사진과 큰 문장", desc: "영국 건설사 Spence를 직접 재서 같은 순서와 비례로 만들었습니다. 큰 사진 첫 화면 오른쪽에 업체 찾기·전문가 찾기·자재몰 세 갈래가 있고, 아래로 회사 소개와 세 칸 안내가 이어집니다. 업체 목록은 Procore처럼 왼쪽 체크 칸과 두 줄 카드입니다." },
-    { n: 4, tag: "4안 · 한컴AI 결", title: "검정 바탕에 움직이는 점 물결, 화면 그림 카드", desc: "한컴AI(ai.hancom.com) 구성을 그대로 따랐습니다. 가운데 큰 제목 아래로 점 물결이 흐르고, 이용 흐름 6단계는 실제 화면처럼 그린 카드로 보여 줍니다." },
+    { n: 4, tag: "4안 · 도아 인트로 → 전문가 검색", title: "도아 로고가 그려지는 인트로, 이어서 큰 검색창", desc: "도아 로고가 선으로 그려지고 ‘설계·시공·분양까지 한 회사가 한 번에, 더 합리적인 가격으로’를 보여 준 뒤 사이트가 열립니다. 첫 화면 맨 위에 ‘어떤 분야의 전문가를 찾고 계신가요?’ 검색창이 있습니다." },
     { n: 5, tag: "5안 · 설계에서 준공까지", title: "내리면 도면이 건물 사진으로 바뀌는 화면", desc: "건축사무소 Kononenko(Awwwards 오늘의 사이트)처럼 흰 바탕에 아주 큰 글자와 사진으로 정리했습니다. 가운데 ‘도면에서 건물로’ 구간은 스크롤하면 선 도면이 실제 사진으로 채워집니다." },
     { n: 2, tag: "2안 · 밝고 단정하게", title: "TANDEM 구성 그대로 — 밝은 바탕과 화면 가득한 큰 글자", desc: "미국 개발사 TANDEM처럼 가운데 큰 문장과 사진 띠로 시작해, 화면을 채우는 큰 글자로 단락을 나눕니다. 세 갈래는 무늬 카드 세 장, 업체 목록은 Architizer처럼 줄마다 실적 사진이 붙습니다." },
     { n: 3, tag: "3안 · 국내 대형 건설사 결", title: "현대건설 구성 그대로 — 기업 홈페이지에 B2B를 붙인 화면", desc: "현대건설 홈페이지의 순서(첫 사진 → 소개와 숫자 → 소식 → 바로가기 띠 → 사업 분야)를 그대로 따르고, 초록 자리에 BUILDGO 파랑을 썼습니다. 업체·전문가 목록은 표로 정리했습니다." }
@@ -103,7 +103,7 @@ h1 { margin: 0; font-size: clamp(34px, 5.4vw, 56px); line-height: 1.15; letter-s
   function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   document.getElementById("list").innerHTML = D.map(function (d) {
     return '<article class="card' + (d.feat ? " feat" : "") + '">' +
-      '<a class="shot" href="' + d.n + '/" aria-label="' + esc(d.tag) + ' 열기"><img class="pc" src="assets/thumbs/d' + d.n + '.jpg?v=3" alt="' + esc(d.tag) + ' PC 첫 화면"' + (d.feat ? "" : ' loading="lazy"') + '><img class="m" src="assets/thumbs/d' + d.n + '_m.jpg?v=3" alt="' + esc(d.tag) + ' 폰 첫 화면"' + (d.feat ? "" : ' loading="lazy"') + "></a>" +
+      '<a class="shot" href="' + d.n + '/" aria-label="' + esc(d.tag) + ' 열기"><img class="pc" src="assets/thumbs/d' + d.n + '.jpg?v=4" alt="' + esc(d.tag) + ' PC 첫 화면"' + (d.feat ? "" : ' loading="lazy"') + '><img class="m" src="assets/thumbs/d' + d.n + '_m.jpg?v=4" alt="' + esc(d.tag) + ' 폰 첫 화면"' + (d.feat ? "" : ' loading="lazy"') + "></a>" +
       '<div class="info"><span class="tag">' + esc(d.tag) + "</span><h2>" + esc(d.title) + "</h2><p>" + esc(d.desc) + "</p>" +
       '<div class="act"><a class="open" href="' + d.n + '/">시안 열어보기 ↗</a><button type="button" class="cp" data-copy="' + d.n + '">링크 복사</button></div>' +
       '<p class="url">' + esc(abs(d.n).replace(/^https?:\/\//, "")) + "</p></div></article>";

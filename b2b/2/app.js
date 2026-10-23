@@ -25,7 +25,7 @@
     { ph: "n_hall", c: "철골 · 자재 공급" }
   ];
   var FACTS = [
-    { t: "1998년 설립", d: "부동산 개발·공급을 해 온 더원파트너스가 만들었습니다." },
+    { t: "설계·시공·분양", d: "한 회사가 처음부터 끝까지 맡는 도아가 만들었습니다." },
     { t: "사업자 전용", d: "현장소장과 기업 담당자를 위한 B2B 거래 사이트입니다." },
     { t: "확인한 업체만", d: "면허·사업자·보험을 확인한 업체가 목록에 올라옵니다." },
     { t: "회원가 자재", d: "등급별 회원가와 수도권 당일 출고 품목을 갖췄습니다." }
@@ -59,10 +59,10 @@
     }).join("");
     var steps = STEPS.map(function (s, i) { return '<li><span class="sn">0' + (i + 1) + '</span><span class="stt">' + esc(s.t) + '</span><span class="sd">' + esc(s.d) + '</span><span class="si"><img loading="lazy" src="' + photo(s.ph) + '" alt=""></span></li>'; }).join("");
     app.innerHTML =
-      '<section class="top"><p class="kick">부동산 개발 · 설계 · 시공 · 자재 — 1998년부터</p><h1 class="state">믿고 맡길 업체를 찾는 일,<br>현장을 아는 회사가<br>바르게 만듭니다.</h1></section>' +
+      '<section class="top"><p class="kick">설계 · 시공 · 분양 — LH 민간신축매입약정사업 전문기업 도아</p><h1 class="state">믿고 맡길 업체를 찾는 일,<br>현장을 아는 회사가<br>바르게 만듭니다.</h1></section>' +
       '<section class="strip">' + strip + "</section>" +
       '<h2 class="giant g1">함께 짓는 거래</h2>' +
-      '<section class="about"><p class="big">더원파트너스는 1998년 설립 이후 부동산을 개발하고 공급해 왔습니다. 현장에서 직접 겪은 일 — 믿을 만한 업체를 찾고, 견적을 비교하고, 자재를 제때 구하는 일 — 을 기업 고객이 한 곳에서 하도록 BUILDGO를 만들었습니다.</p>' +
+      '<section class="about"><p class="big">도아는 LH 민간신축매입약정사업을 전문으로 하는 (주)더원파트너스의 브랜드입니다. 현장에서 직접 겪은 일 — 믿을 만한 업체를 찾고, 견적을 비교하고, 자재를 제때 구하는 일 — 을 기업 고객이 한 곳에서 하도록 BUILDGO를 만들었습니다.</p>' +
       '<div class="wide"><img loading="lazy" src="' + photo("n_wide") + '" alt="바다 가까이 올라가는 아파트 신축 현장"></div>' +
       '<div class="facts4">' + FACTS.map(function (f) { return "<div><b>" + esc(f.t) + "</b><p>" + esc(f.d) + "</p></div>"; }).join("") + "</div></section>" +
       '<h2 class="giant g2">무엇을 찾으세요</h2><p class="gsub">고르시면 바로 목록이 나옵니다.</p><section class="doors">' + doors + "</section>" +
