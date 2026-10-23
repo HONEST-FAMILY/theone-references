@@ -73,7 +73,7 @@
       '<h2 class="giant g3">이렇게 진행합니다</h2><ol class="steps">' + steps + "</ol>" +
       '<section class="reach"><h2>편하게 연락 주세요.<br>담당 매니저가 바로 답합니다.</h2><div class="rc2">' +
       '<a class="rcd" href="#/quote"><div><b>견적 문의</b><p>공종·지역·규모를 남기면 맞는 업체를 골라 연결합니다.</p><span class="go">견적 요청하기 ' + I.arrow + '</span></div><img loading="lazy" src="' + photo("n_pair") + '" alt=""></a>' +
-      '<a class="rcd" href="#/quote"><div><b>사업자 회원 가입 문의</b><p>사업자등록번호로 가입하면 등급별 회원가와 견적 목록을 씁니다.</p><span class="go">가입 문의하기 ' + I.arrow + '</span></div><img loading="lazy" src="' + photo("n_plan") + '" alt=""></a></div><button type="button" class="replay" data-act="replay">인트로 다시 보기 ' + I.arrow + "</button></section>";
+      '<a class="rcd" href="#/quote"><div><b>사업자 회원 가입 문의</b><p>사업자등록번호로 가입하면 등급별 회원가와 견적 목록을 씁니다.</p><span class="go">가입 문의하기 ' + I.arrow + '</span></div><img loading="lazy" src="' + photo("n_plan") + '" alt=""></a></div></section>';
     if (window.matchMedia && matchMedia("(max-width: 600px)").matches) document.querySelector("#hs input").placeholder = "예: 구조기술사, 방수, 철골";
     document.getElementById("hs").onsubmit = function (ev) {
       ev.preventDefault();
@@ -270,7 +270,6 @@
     if (act === "do-login") { S.member = true; S.save(); BG.toast(D.demoUser.company + " " + D.demoUser.name + "님, 골드 회원가가 적용됩니다"); location.hash = "#/mall"; }
     if (act === "menu") { var d = document.getElementById("drawer"); d.hidden = false; document.body.classList.add("lock"); if (!BG.reduced() && d.animate) d.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 260 }); }
     if (act === "menu-close") closeMenu();
-    if (act === "replay") { window.scrollTo(0, 0); opening(true); }
     if (act === "filters") document.body.classList.toggle("filters");
     if (act === "save") { var on = S.toggleSave(a.dataset.id); a.classList.toggle("on", on); a.querySelector("span").textContent = on ? "관심 업체" : "관심 업체 저장"; BG.toast(on ? "관심 업체로 저장했습니다" : "저장을 취소했습니다"); }
     if (act === "cart") { var m = BG.MT[a.dataset.id]; S.addCart(m.id, 1, m.spec); BG.toast(m.name + " 1" + m.unit + ", 견적 목록에 담았습니다"); refreshCart(); }
@@ -307,5 +306,5 @@
     [".pj figure", "wipe", { stagger: 110 }]
   ];
   BG.router({ home: home, companies: companies, company: company, experts: experts, expert: expert, mall: mall, item: item, cart: cart, quote: quote, login: login }, function (r) { sync(r); BG.mo.scan(app, MOTION); });
-  if (BG.parseHash().name === "home") opening();
+  if (window.DOA_INTRO_ONLY) opening(true);
 })();

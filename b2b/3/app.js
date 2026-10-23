@@ -77,7 +77,7 @@
       '<section class="cta"><img loading="lazy" src="' + photo("n_slab") + '" alt=""><div class="shade2"></div><div class="wrap cta-in"><h2>기업 고객을 위한 건설 거래,<br>BUILDGO와 시작하세요</h2><div class="cta-b">' +
       '<a href="#/quote"><span aria-hidden="true">' + ART.doc + "</span><b>견적 요청</b><i>바로 가기</i></a>" +
       '<a href="#/quote"><span aria-hidden="true">' + ART.helmet + "</span><b>사업자 회원 가입 문의</b><i>바로 가기</i></a>" +
-      '<a href="#/quote"><span aria-hidden="true">' + ART.tower + "</span><b>업체 등록 문의</b><i>바로 가기</i></a></div>" + '<button type="button" class="replay" data-act="replay">인트로 다시 보기</button></div></section>';
+      '<a href="#/quote"><span aria-hidden="true">' + ART.tower + "</span><b>업체 등록 문의</b><i>바로 가기</i></a></div></div></section>";
     var im = app.querySelector(".hero img");
     BG.mo.play([im], "settle", { s: 1.08, dur: 3000 });
     if (window.matchMedia && matchMedia("(max-width: 760px)").matches) document.querySelector("#hs input").placeholder = "예: 구조기술사, 방수, 철골";
@@ -250,7 +250,6 @@
     if (act === "do-login") { S.member = true; S.save(); BG.toast(D.demoUser.company + " " + D.demoUser.name + "님, 골드 회원가가 적용됩니다"); location.hash = "#/mall"; }
     if (act === "menu") { var d = document.getElementById("drawer"); d.hidden = false; document.body.classList.add("lock"); if (!BG.reduced() && d.animate) d.firstElementChild.animate([{ transform: "translateX(100%)" }, { transform: "none" }], { duration: 380, easing: "cubic-bezier(.2,.7,.1,1)" }); }
     if (act === "menu-close") closeMenu();
-    if (act === "replay") { window.scrollTo(0, 0); opening(true); }
     if (act === "save") { var on = S.toggleSave(a.dataset.id); a.classList.toggle("on", on); a.querySelector("span").textContent = on ? "관심 업체" : "관심 업체 저장"; BG.toast(on ? "관심 업체로 저장했습니다" : "저장을 취소했습니다"); }
     if (act === "cart") { var m = BG.MT[a.dataset.id]; S.addCart(m.id, 1, m.spec); BG.toast(m.name + " 1" + m.unit + ", 견적 목록에 담았습니다"); refreshCart(); }
     if (act === "estimate") BG.toast("견적서를 만들고 있습니다. 담당 매니저가 확인 후 연락드립니다");
@@ -290,5 +289,5 @@
     [".pjgrid figure", "wipe", { stagger: 100 }]
   ];
   BG.router({ home: home, companies: companies, company: company, experts: experts, expert: expert, mall: mall, item: item, cart: cart, quote: quote, login: login }, function (r) { sync(r); BG.mo.scan(app, MOTION); });
-  if (BG.parseHash().name === "home") opening();
+  if (window.DOA_INTRO_ONLY) opening(true);
 })();

@@ -62,7 +62,7 @@
       '<section class="bl"><p class="bl-h"><span>업체 찾기</span><a href="#/companies">전체 ' + D.companies.length + "곳 보기</a></p>" + cos + "</section>" +
       '<section class="bv"><div class="bv-im"><img loading="lazy" src="' + photo("n_crew") + '" alt="현장에서 도면을 확인하는 작업자들"></div><div class="bv-b"><h2>설계 · 시공 · 분양을<br>한 회사가 한 번에.</h2><p>단계마다 다른 회사를 거치지 않으니 중간에 붙는 비용이 줄어듭니다. 도아는 사업 관리부터 시행 · 시공 · 금융 · 자재까지 직접 해 온 회사입니다.</p><ul>' + biz + '</ul><a class="bl-go" href="#/quote">견적 문의하기</a></div></section>' +
       '<section class="bn"><p class="bl-h"><span>이렇게 진행합니다</span><a href="#/quote">견적 요청하기</a></p>' + steps + "</section>" +
-      '<section class="bx"><img loading="lazy" src="' + photo("hero_night") + '" alt=""><div class="bx-in"><h2>복잡한 현장을,<br>한 번의 요청으로.</h2><p class="bx-a"><a href="#/quote">견적 요청하기 ' + I.arrow + '</a><button type="button" data-act="replay">인트로 다시 보기 ' + I.arrow + "</button></p></div></section>";
+      '<section class="bx"><img loading="lazy" src="' + photo("hero_night") + '" alt=""><div class="bx-in"><h2>복잡한 현장을,<br>한 번의 요청으로.</h2><p class="bx-a"><a href="#/quote">견적 요청하기 ' + I.arrow + "</a></p></div></section>";
     if (window.matchMedia && matchMedia("(max-width: 700px)").matches) document.querySelector("#hs input").placeholder = "예: 구조기술사, 방수, 철골";
     document.getElementById("hs").onsubmit = function (ev) {
       ev.preventDefault();
@@ -74,15 +74,16 @@
     var seen = false;
     try { seen = sessionStorage.getItem("doa-intro") === "1"; } catch (e) {}
     document.documentElement.classList.remove("intro-pending");
-    if ((seen && !force && !/[?&]intro\b/.test(location.search)) || BG.reduced()) return;
-    try { sessionStorage.setItem("doa-intro", "1"); } catch (e) {}
+    var only = !!window.DOA_INTRO_ONLY;
+    if (!only && ((seen && !force && !/[?&]intro\b/.test(location.search)) || BG.reduced())) return;
+    if (!only) try { sessionStorage.setItem("doa-intro", "1"); } catch (e) {}
     var el = document.createElement("div");
     el.className = "intro"; el.id = "intro";
     el.innerHTML = '<div class="in-bg"><img src="../assets/photos/d_hall_line.jpg?v=1" alt=""><img src="' + photo("n_crew") + '" alt=""><img src="' + photo("n_glassbox") + '" alt=""></div><div class="in-shade"></div>' +
       '<div class="in-logo">' + doaMark("in-mk") + '<p class="in-tag">LH 민간신축매입약정사업 전문기업</p></div>' +
       '<p class="in-word" aria-hidden="true"><span>설계</span><span>시공</span><span>분양</span></p>' +
       '<div class="in-end"><p class="in-e1">설계부터 시공, 분양까지</p><p class="in-e2">한 회사가 한 번에 하니까<br><b>더 합리적인 가격으로.</b></p><div class="in-e3">' + doaMark("in-mk2") + '<span>BUILDGO</span></div></div>' +
-      '<button type="button" class="in-skip" data-act="skip">건너뛰기</button><div class="in-bar"><b></b></div>';
+      (only ? "" : '<button type="button" class="in-skip" data-act="skip">건너뛰기</button>') + '<div class="in-bar"><b></b></div>';
     document.body.appendChild(el);
     document.body.classList.add("lock", "has-intro");
     var T = [], done = false;
@@ -104,7 +105,14 @@
     at(4300, function () { el.classList.remove("w1"); el.classList.add("w2"); });
     at(5300, function () { el.classList.remove("w2"); el.classList.add("w3"); });
     at(6300, function () { el.classList.remove("w3"); el.classList.add("fin"); });
-    at(8600, finish);
+    at(8600, function () {
+      if (!only) return finish();
+      var box = document.createElement("div");
+      box.className = "op-end";
+      box.innerHTML = '<button type="button">다시 보기</button><a href="' + new URL("../", location.href).href + '">인트로 모아 보기</a>';
+      box.querySelector("button").addEventListener("click", function () { location.reload(); });
+      el.appendChild(box);
+    });
   }
   function pageHead(title, sub, crumb, extra) {
     return '<section class="ph"><p class="crumb"><a href="#/">홈</a><span>›</span>' + esc(crumb || title) + "</p><h1>" + esc(title) + "</h1>" + (sub ? "<p>" + esc(sub) + "</p>" : "") + (extra || "") + "</section>";
@@ -268,7 +276,6 @@
     if (act === "do-login") { S.member = true; S.save(); BG.toast(D.demoUser.company + " " + D.demoUser.name + "님, 골드 회원가가 적용됩니다"); location.hash = "#/mall"; }
     if (act === "menu") { var d = document.getElementById("drawer"); d.hidden = false; document.body.classList.add("lock"); if (!BG.reduced() && d.animate) d.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 260 }); }
     if (act === "menu-close") closeMenu();
-    if (act === "replay") { window.scrollTo(0, 0); intro(true); }
     if (act === "topbar-x") { var tb = document.getElementById("topbar"); if (tb) tb.remove(); }
     if (act === "filters") document.body.classList.toggle("filters");
     if (act === "save") { var on = S.toggleSave(a.dataset.id); a.classList.toggle("on", on); a.querySelector("span").textContent = on ? "관심 업체" : "관심 업체 저장"; BG.toast(on ? "관심 업체로 저장했습니다" : "저장을 취소했습니다"); }
@@ -318,5 +325,5 @@
     [".pj figure", "wipe", { stagger: 110 }]
   ];
   BG.router({ home: home, companies: companies, company: company, experts: experts, expert: expert, mall: mall, item: item, cart: cart, quote: quote, login: login }, function (r) { sync(r); BG.mo.scan(app, MOTION); });
-  if (BG.parseHash().name === "home") intro();
+  if (window.DOA_INTRO_ONLY) intro(true);
 })();

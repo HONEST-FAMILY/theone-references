@@ -60,7 +60,7 @@
       '<section class="draw" id="draw"><div class="dw-pin"><h2 class="dw-t">도면에서<br>건물로</h2><div class="dw-fig"><img class="dw-line" src="../assets/photos/d_hall_line.jpg?v=1" alt="철골 창고의 선 도면"><img class="dw-photo" src="../assets/photos/d_hall_photo.jpg?v=1" alt="완성된 철골 창고" style="--p:0"><span class="dw-bar" style="--p:0"></span></div><ol class="dw-st">' + stages + "</ol></div></section>" +
       '<section class="cl two"><h2 class="big5">현장의 경험이<br>거래의 기준이 됩니다.</h2><div class="cl-p"><p>공종과 지역만 고르면 확인을 마친 업체가 나옵니다. 견적은 한 번의 요청으로 여러 곳에, 받은 금액과 공기는 같은 표로 비교합니다.</p><p>담당 매니저가 계약과 일정 조율까지 함께하고, 현장 자재는 회원 자재몰에서 견적서까지 한 번에 받습니다.</p></div></section>' +
       '<section class="fds"><h2 class="fds-t">BUILDGO에서 찾는 것 <sup>(3)</sup></h2><div class="fd-g">' + finds + "</div></section>" +
-      '<section class="bye"><h2 class="big5">함께 짓겠습니다.</h2><div class="bye-g"><a href="#/quote"><span>견적 요청</span><b>공종·지역·규모 남기기 ' + I.arrow + '</b></a><a href="#/quote"><span>사업자 회원</span><b>가입 문의하기 ' + I.arrow + '</b></a><a href="#/quote"><span>업체 등록</span><b>등록 문의하기 ' + I.arrow + "</b></a></div>" + '<button type="button" class="replay" data-act="replay">(인트로 다시 보기)</button></section>';
+      '<section class="bye"><h2 class="big5">함께 짓겠습니다.</h2><div class="bye-g"><a href="#/quote"><span>견적 요청</span><b>공종·지역·규모 남기기 ' + I.arrow + '</b></a><a href="#/quote"><span>사업자 회원</span><b>가입 문의하기 ' + I.arrow + '</b></a><a href="#/quote"><span>업체 등록</span><b>등록 문의하기 ' + I.arrow + "</b></a></div></section>";
     drawSetup();
     if (window.matchMedia && matchMedia("(max-width: 600px)").matches) document.querySelector("#hs input").placeholder = "예: 구조기술사, 방수, 철골";
     document.getElementById("hs").onsubmit = function (ev) {
@@ -282,7 +282,6 @@
     if (act === "do-login") { S.member = true; S.save(); BG.toast(D.demoUser.company + " " + D.demoUser.name + "님, 골드 회원가가 적용됩니다"); location.hash = "#/mall"; }
     if (act === "menu") { var d = document.getElementById("drawer"); d.hidden = false; document.body.classList.add("lock"); if (!BG.reduced() && d.animate) d.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 260 }); }
     if (act === "menu-close") closeMenu();
-    if (act === "replay") { window.scrollTo(0, 0); opening(true); }
     if (act === "filters") document.body.classList.toggle("filters");
     if (act === "save") { var on = S.toggleSave(a.dataset.id); a.classList.toggle("on", on); a.querySelector("span").textContent = on ? "관심 업체" : "관심 업체 저장"; BG.toast(on ? "관심 업체로 저장했습니다" : "저장을 취소했습니다"); }
     if (act === "cart") { var m = BG.MT[a.dataset.id]; S.addCart(m.id, 1, m.spec); BG.toast(m.name + " 1" + m.unit + ", 견적 목록에 담았습니다"); refreshCart(); }
@@ -321,5 +320,5 @@
     [".pj figure", "wipe", { stagger: 110 }]
   ];
   BG.router({ home: home, companies: companies, company: company, experts: experts, expert: expert, mall: mall, item: item, cart: cart, quote: quote, login: login }, function (r) { sync(r); BG.mo.scan(app, MOTION); });
-  if (BG.parseHash().name === "home") opening();
+  if (window.DOA_INTRO_ONLY) opening(true);
 })();

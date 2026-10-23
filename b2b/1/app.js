@@ -65,7 +65,7 @@
       '<div class="panels">' + panels + "</div>" +
       '<section class="feature"><img loading="lazy" src="' + photo("n_slab") + '" alt=""><div class="veil"></div><div class="ft-txt"><p class="lab">견적 문의</p><h2>한 번의 요청으로<br>맞는 업체까지.</h2><p>공종과 현장 지역, 규모를 남기면 담당 매니저가 면허와 실적을 확인한 업체를 골라 연결합니다. 받은 견적은 같은 기준으로 나란히 비교합니다.</p><div class="btns">' + pill("견적 요청하기", "#/quote") + pill("업체 먼저 보기", "#/companies", "ghost") + '</div></div><a class="orb" href="#/quote" aria-label="견적 요청하기">' + I.arrow + "</a></section>" +
       '<section class="guides"><p class="lab">이용 안내</p><h2>처음 쓰시는 분께</h2><div class="gg">' + guides + "</div></section>" +
-      '<section class="join"><div class="dots" aria-hidden="true"></div><h2>BUILDGO와 함께 일할<br>업체를 찾습니다</h2><p>면허와 사업자 정보를 갖춘 시공사·설계사무소·자재 공급사라면 업체 등록을 신청하세요. 확인을 마치면 목록에 올라갑니다.</p><div class="btns">' + pill("업체 등록 문의", "#/quote") + '<button type="button" class="pill ghost" data-act="replay"><span>인트로 다시 보기</span><i aria-hidden="true"></i></button></div></section>';
+      '<section class="join"><div class="dots" aria-hidden="true"></div><h2>BUILDGO와 함께 일할<br>업체를 찾습니다</h2><p>면허와 사업자 정보를 갖춘 시공사·설계사무소·자재 공급사라면 업체 등록을 신청하세요. 확인을 마치면 목록에 올라갑니다.</p>' + pill("업체 등록 문의", "#/quote") + "</section>";
     slideSetup();
     if (window.matchMedia && matchMedia("(max-width: 640px)").matches) document.querySelector("#hs input").placeholder = "예: 구조기술사, 방수, 철골";
     document.getElementById("hs").onsubmit = function (ev) {
@@ -304,7 +304,6 @@
     if (act === "do-login") { S.member = true; S.save(); BG.toast(D.demoUser.company + " " + D.demoUser.name + "님, 골드 회원가가 적용됩니다"); location.hash = "#/mall"; }
     if (act === "menu") { var d = document.getElementById("drawer"); d.hidden = false; document.body.classList.add("lock"); if (!BG.reduced() && d.animate) d.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 260 }); }
     if (act === "menu-close") closeMenu();
-    if (act === "replay") { window.scrollTo(0, 0); opening(true); }
     if (act === "filters") document.body.classList.toggle("filters");
     if (act === "save") { var on = S.toggleSave(a.dataset.id); a.classList.toggle("on", on); a.querySelector("span").textContent = on ? "관심 업체" : "관심 업체 저장"; BG.toast(on ? "관심 업체로 저장했습니다" : "저장을 취소했습니다"); }
     if (act === "cart") { var m = BG.MT[a.dataset.id]; S.addCart(m.id, 1, m.spec); BG.toast(m.name + " 1" + m.unit + ", 견적 목록에 담았습니다"); refreshCart(); }
@@ -345,5 +344,5 @@
     [".pj figure", "wipe", { stagger: 110 }]
   ];
   BG.router({ home: home, companies: companies, company: company, experts: experts, expert: expert, mall: mall, item: item, cart: cart, quote: quote, login: login }, function (r) { sync(r); BG.mo.scan(app, MOTION); });
-  if (BG.parseHash().name === "home") opening();
+  if (window.DOA_INTRO_ONLY) opening(true);
 })();
