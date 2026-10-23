@@ -87,18 +87,15 @@
         var shut = ins({ t: b.t, l: b.l, w: 0, h: b.h }), open = ins(b), full = "inset(0px 0px 0px 0px)";
         var pShut = "inset(" + (b.t + b.h - K.top) + "px 0px 0px 0px)", pOpen = "inset(" + (b.t - K.top) + "px 0px 0px 0px)";
         box.style.clipPath = shut; pho.style.clipPath = pShut;
-        at(2450, function () {
-          var mk = el.querySelector(".o5-mk"), dst = document.querySelector("#hdm svg");
-          if (!dst) return;
+        var mk = el.querySelector(".o5-mk"), dst = document.querySelector("#hdm svg");
+        if (dst) {
           var a = mk.getBoundingClientRect(), d = dst.getBoundingClientRect();
-          anim(mk, [{ transform: "none" }, { transform: "translate(" + (d.left - a.left) + "px," + (d.top - a.top) + "px) scale(" + (d.width / a.width) + ")" }], { duration: 900, easing: E, fill: "forwards" });
-        });
-        at(3000, function () { anim(box, [{ clipPath: shut }, { clipPath: open }], { duration: 950, easing: E, fill: "forwards" }); });
-        at(4300, function () { anim(pho, [{ clipPath: pShut }, { clipPath: pOpen }], { duration: 1700, easing: "cubic-bezier(.45,0,.2,1)", fill: "forwards" }); });
-        at(7500, function () {
-          anim(box, [{ clipPath: open }, { clipPath: full }], { duration: 1000, easing: E, fill: "forwards" });
-          anim(pho, [{ clipPath: pOpen }, { clipPath: full }], { duration: 1000, easing: E, fill: "forwards" });
-        });
+          anim(mk, [{ transform: "none" }, { transform: "translate(" + (d.left - a.left) + "px," + (d.top - a.top) + "px) scale(" + (d.width / a.width) + ")" }], { duration: 900, delay: 2450, easing: E, fill: "forwards" });
+        }
+        anim(box, [{ clipPath: shut }, { clipPath: open }], { duration: 950, delay: 3000, easing: E, fill: "forwards" });
+        anim(pho, [{ clipPath: pShut }, { clipPath: pOpen }], { duration: 1700, delay: 4300, easing: "cubic-bezier(.45,0,.2,1)", fill: "forwards" });
+        anim(box, [{ clipPath: open }, { clipPath: full }], { duration: 1000, delay: 7500, easing: E, fill: "forwards" });
+        anim(pho, [{ clipPath: pOpen }, { clipPath: full }], { duration: 1000, delay: 7500, easing: E, fill: "forwards" });
       },
       exit: function (el, skipped) {
         if (skipped) el.classList.add("out");

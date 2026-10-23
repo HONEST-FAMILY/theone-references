@@ -114,10 +114,7 @@
       '<div class="o1-end">' + BG.doaMark("o1-mk") + '<p class="o1-e1"><span>설계 · 시공 · 분양까지 한 번에, 그래서</span></p><p class="o1-e2"><span>더 저렴합니다<i>.</i></span></p></div>';
     return BG.opening({
       key: "doa-op-1", cls: "op1", html: html, total: 7700, force: force,
-      start: function (el, at, anim) {
-        at(2750, function () { merge(el, anim); });
-        at(5500, function () { [].forEach.call(el.querySelectorAll(".o1-dot"), function (d) { anim(d, [{ transform: d.__t + " scale(1)" }, { transform: d.__t + " scale(0)" }], { duration: 360, easing: "cubic-bezier(.5,0,.75,0)", fill: "forwards" }); }); });
-      },
+      start: function (el, at, anim) { merge(el, anim, 2750, 5500); },
       exit: function (el) {
         el.classList.add("out");
         BG.mo.play([document.querySelector(".h-k"), document.querySelector(".h-title"), document.querySelector(".h-s"), document.querySelector(".h-pop")], "up", { y: 30, stagger: 110, delay: 380, dur: 1000 });
@@ -126,7 +123,7 @@
       }
     });
   }
-  function merge(el, anim) {
+  function merge(el, anim, t0, t1) {
     var ws = [].slice.call(el.querySelectorAll(".o1-w")), dots = el.querySelectorAll(".o1-dot"), box = el.getBoundingClientRect();
     var rs = ws.map(function (w) { return w.getBoundingClientRect(); });
     var sep = parseFloat(getComputedStyle(ws[0]).fontSize) * .85, total = sep * 2;
@@ -134,12 +131,12 @@
     var k = Math.min(1, (box.width - 48) / total), x = (box.width - total * k) / 2, cy = box.height * (box.width > 640 ? .4 : .37);
     ws.forEach(function (w, i) {
       var r = rs[i];
-      anim(w, [{ transform: "none" }, { transform: "translate(" + (x - r.left) + "px," + (cy - r.height * k / 2 - r.top) + "px) scale(" + k + ")" }], { duration: 950, easing: "cubic-bezier(.76,0,.24,1)", fill: "forwards" });
+      anim(w, [{ transform: "none" }, { transform: "translate(" + (x - r.left) + "px," + (cy - r.height * k / 2 - r.top) + "px) scale(" + k + ")" }], { duration: 950, delay: t0, easing: "cubic-bezier(.76,0,.24,1)", fill: "forwards" });
       x += r.width * k;
       if (i < 2) {
         var t = "translate(" + (x + sep * k / 2 - 7) + "px," + (cy - 7) + "px)";
-        dots[i].__t = t;
-        anim(dots[i], [{ transform: t + " scale(0)" }, { transform: t + " scale(1)" }], { duration: 420, delay: 650, easing: "cubic-bezier(.2,.7,.1,1)", fill: "both" });
+        anim(dots[i], [{ transform: t + " scale(0)" }, { transform: t + " scale(1)" }], { duration: 420, delay: t0 + 650, easing: "cubic-bezier(.2,.7,.1,1)", fill: "forwards" });
+        anim(dots[i], [{ transform: t + " scale(1)" }, { transform: t + " scale(0)" }], { duration: 360, delay: t1, easing: "cubic-bezier(.5,0,.75,0)", fill: "forwards" });
         x += sep * k;
       }
     });

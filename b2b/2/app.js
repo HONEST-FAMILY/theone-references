@@ -93,9 +93,11 @@
         function frame() { var r = mk.getBoundingClientRect(), k = r.width / 104; return { l: r.left, t: r.top, w: r.width, h: r.height, b: 2.8 * k, r: 6.4 * k }; }
         function big() { var W = el.clientWidth, H = el.clientHeight, m = W <= 640, w = m ? W - 40 : Math.round(W * .6), h = Math.round(H * (m ? .46 : .56)); return { l: (W - w) / 2, t: Math.round(H * (m ? .12 : .1)), w: w, h: h, b: 2, r: m ? 18 : 26 }; }
         function kf(g) { return { left: g.l + "px", top: g.t + "px", width: g.w + "px", height: g.h + "px", borderWidth: g.b + "px", borderRadius: g.r + "px" }; }
-        at(2500, function () { var a = frame(), b = big(); win.__b = b; el.classList.add("open"); anim(win, [kf(a), kf(b)], { duration: 820, easing: E, fill: "forwards" }); });
-        at(6100, function () { anim(win, [kf(win.__b), kf(frame())], { duration: 800, easing: E, fill: "forwards" }); });
-        at(6900, function () { el.classList.add("shut"); });
+        var a = frame(), b = big(), fr = mk.querySelector(".fr");
+        anim(win, [{ visibility: "visible" }, { visibility: "visible" }], { duration: 4400, delay: 2500 });
+        anim(fr, [{ visibility: "hidden" }, { visibility: "hidden" }], { duration: 4400, delay: 2500 });
+        anim(win, [kf(a), kf(b)], { duration: 820, delay: 2500, easing: E, fill: "forwards" });
+        anim(win, [kf(b), kf(a)], { duration: 800, delay: 6100, easing: E, fill: "forwards" });
       },
       exit: function (el, skipped, anim) {
         var mk = el.querySelector(".o2-mk"), dst = document.querySelector("#hdm svg");

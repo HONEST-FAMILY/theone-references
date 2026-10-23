@@ -100,10 +100,8 @@
         var eq = el.querySelector(".o3-eq"), b = el.querySelector(".o3-b"), col = getComputedStyle(eq).flexDirection === "column", gap = parseFloat(getComputedStyle(eq).columnGap) || 0;
         if (col) eq.style.setProperty("--dy", (b.offsetHeight + (parseFloat(getComputedStyle(eq).rowGap) || 0)) / 2 + "px");
         else eq.style.setProperty("--dx", (b.offsetWidth + gap) / 2 + "px");
-        at(4480, function () {
-          var n = el.querySelector(".o3-num b"), t0 = performance.now();
-          (function step(t) { var k = Math.min(1, (t - t0) / 1150); n.textContent = Math.round(109 * (1 - Math.pow(1 - k, 3))); if (k < 1 && document.body.contains(n)) requestAnimationFrame(step); })(t0);
-        });
+        var n = el.querySelector(".o3-num b"), clock = el.querySelector(".o3-ln").animate([{ opacity: 1 }, { opacity: 1 }], { duration: 5630 });
+        (function step() { var k = Math.min(1, Math.max(0, ((clock.currentTime || 0) - 4480) / 1150)); n.textContent = Math.round(109 * (1 - Math.pow(1 - k, 3))); if (clock.playState !== "finished" && document.body.contains(n)) requestAnimationFrame(step); else n.textContent = "109"; })();
       },
       exit: function (el) {
         el.classList.add("out");
