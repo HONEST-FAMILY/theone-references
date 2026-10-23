@@ -441,7 +441,7 @@ body:not(.on-home) #app { padding-top: 90px; }
 .o5-box img { object-fit: cover; }
 .o5-mkw { --mw: clamp(240px, 30vw, 440px); position: absolute; left: calc(50% - var(--mw) / 2); top: calc(50% - var(--mw) * .2644); width: var(--mw); }
 .o5-mk { display: block; width: 100%; height: auto; overflow: visible; transform-origin: 0 0; color: #fff; mix-blend-mode: difference; }
-.o5-mk .fr, .o5-mk .an, .o5-mk .tx { fill: rgba(255, 255, 255, 0); stroke: #fff; stroke-width: .35; stroke-dasharray: 1; stroke-dashoffset: 1; stroke-linecap: butt; }
+.o5-mk .fr, .o5-mk .an, .o5-mk .tx { fill: rgba(255, 255, 255, 0); stroke: #fff; stroke-width: .35; stroke-dasharray: 1 2; stroke-dashoffset: 1.01; stroke-linecap: butt; }
 .o5-tag { position: absolute; left: 0; right: 0; top: calc(50% + var(--mw, clamp(240px, 30vw, 440px)) * .2644 + 26px); margin: 0; overflow: hidden; text-align: center; font-size: clamp(15px, 1.25vw, 18px); color: var(--ink); }
 .o5-tag span { display: block; transform: translateY(110%); }
 .o5-no { position: absolute; left: var(--px); top: calc(34% - 42px); margin: 0; height: 1.4em; overflow: hidden; font-size: 15px; line-height: 1.4; }

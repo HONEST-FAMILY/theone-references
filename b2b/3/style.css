@@ -537,7 +537,7 @@ body.on-home.scrolled .hd .dm-w { color: var(--ink); }
 .o3-a > * { transform: translateY(calc(100% + 16vh)); }
 .o3-b { clip-path: inset(-20% 100% -20% 0); }
 .o3-mk { width: clamp(96px, 9.5vw, 138px); height: auto; overflow: visible; }
-.o3-mk .fr { fill: none; stroke: var(--ink); stroke-width: 2.8; stroke-dasharray: 1; stroke-dashoffset: 1; stroke-linecap: butt; }
+.o3-mk .fr { fill: none; stroke: var(--ink); stroke-width: 2.8; stroke-dasharray: 1 2; stroke-dashoffset: 1.01; stroke-linecap: butt; }
 .o3-mk .an, .o3-mk .tx { fill: var(--ink); clip-path: inset(0 100% 0 0); }
 .o3-num { display: inline-flex; align-items: baseline; gap: 8px; font-family: var(--font-point); color: var(--blue); }
 .o3-num b { font-weight: 700; font-size: clamp(88px, 12vw, 172px); line-height: 1; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; }
