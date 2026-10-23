@@ -74,7 +74,7 @@
     var seen = false;
     try { seen = sessionStorage.getItem("doa-intro") === "1"; } catch (e) {}
     document.documentElement.classList.remove("intro-pending");
-    if ((seen && !force) || BG.reduced()) return;
+    if ((seen && !force && !/[?&]intro\b/.test(location.search)) || BG.reduced()) return;
     try { sessionStorage.setItem("doa-intro", "1"); } catch (e) {}
     var el = document.createElement("div");
     el.className = "intro"; el.id = "intro";

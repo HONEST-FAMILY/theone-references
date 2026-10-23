@@ -17,6 +17,7 @@
     close: '<svg viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>',
     save: '<svg viewBox="0 0 24 24"><path d="M6 4h12v17l-6-4-6 4z"/></svg>'
   };
+  var POP = [["구조기술사", "#/experts?q=구조기술사"], ["방수·도장", "#/experts?work=water"], ["설계·인허가", "#/experts?work=design"], ["기계설비", "#/experts?work=mech"], ["철골", "#/experts?work=steel"]];
   var STAGES = [
     { n: "01", t: "설계", d: "도면과 인허가를 맡길 건축사·구조기술사를 찾습니다." },
     { n: "02", t: "업체 선정", d: "공종과 지역으로 면허를 확인한 시공사를 고릅니다." },
@@ -48,7 +49,10 @@
     var stages = STAGES.map(function (s, i) { return '<li data-i="' + i + '"><b>' + s.n + "</b><span>" + esc(s.t) + "</span><em>" + esc(s.d) + "</em></li>"; }).join("");
     var finds = FINDS.map(function (f, i) { return '<a class="fd f' + (i + 1) + '" href="' + f.href + '"><div class="fd-im"><img loading="lazy" src="' + photo(f.ph) + '" alt="' + esc(f.t) + '"></div><p class="fd-c"><b>' + esc(f.t) + "</b><span>" + esc(f.c) + '</span><span class="no">0' + (i + 1) + "</span></p></a>"; }).join("");
     app.innerHTML =
-      '<section class="kv"><img src="' + photo("n_glassbox") + '" alt="유리 커튼월 건물의 모서리"><h1 class="kv-t"><span>BUILDGO</span><span>설계에서 준공까지</span></h1><p class="kv-m">THE ONE PARTNERS<br>도아</p></section>' +
+      '<section class="kv"><img src="' + photo("n_glassbox") + '" alt="유리 커튼월 건물의 모서리">' +
+      '<form class="kv-s" id="hs"><p class="kv-sl">(전문가 찾기)</p><p class="kv-qm">어떤 분야의 전문가를<br>찾고 계신가요?</p><div class="kv-q"><input name="q" type="search" placeholder="어떤 분야의 전문가를 찾고 계신가요?" aria-label="어떤 분야의 전문가를 찾고 계신가요?" autocomplete="off"><button type="submit">찾기 ' + I.arrow + "</button></div>" +
+      '<div class="kv-sb"><label class="kv-r"><select name="region" aria-label="지역"><option value="">전국</option>' + D.regions.map(function (r) { return "<option>" + esc(r) + "</option>"; }).join("") + "</select>" + I.down + '</label><p class="kv-pop"><span>많이 찾는 분야 —</span>' + POP.map(function (x, i) { return '<a href="' + x[1] + '">' + esc(x[0]) + (i < POP.length - 1 ? "," : "") + "</a>"; }).join("") + "</p></div></form>" +
+      '<h1 class="kv-t"><span>BUILDGO</span><span>설계에서 준공까지</span></h1><p class="kv-m">THE ONE PARTNERS<br>도아</p></section>' +
       '<section class="cl"><h2 class="mega">설계에서<br>준공까지</h2><div class="cl-p"><p>도아는 LH 민간신축매입약정사업을 전문으로 하는 (주)더원파트너스의 브랜드입니다.</p><p>BUILDGO는 그 현장에서 쓰던 기준으로 업체·전문가·자재를 한 곳에 모은 사업자 전용 거래 사이트입니다.</p></div></section>' +
       '<section class="full"><img loading="lazy" src="' + photo("hero_glass") + '" alt="크레인 옆에 올라가는 유리 고층 건물"></section>' +
       '<section class="info"><dl class="meta"><div><dt>브랜드</dt><dd>도아 · (주)더원파트너스</dd></div><div><dt>본업</dt><dd>LH 민간신축매입약정</dd></div><div><dt>대상</dt><dd>현장소장 · 기업 담당자</dd></div><div><dt>거래</dt><dd>사업자 회원 전용</dd></div></dl><p class="info-p">믿을 만한 업체를 찾고, 견적을 비교하고, 자재를 제때 구하는 일. 개발 현장에서 매번 겪던 일을 한 화면으로 옮겼습니다. 면허·사업자·보험을 확인한 업체만 올리고, 견적은 같은 기준으로 비교하며, 자재는 등급별 회원가로 삽니다.</p></section>' +
@@ -56,8 +60,53 @@
       '<section class="draw" id="draw"><div class="dw-pin"><h2 class="dw-t">도면에서<br>건물로</h2><div class="dw-fig"><img class="dw-line" src="../assets/photos/d_hall_line.jpg?v=1" alt="철골 창고의 선 도면"><img class="dw-photo" src="../assets/photos/d_hall_photo.jpg?v=1" alt="완성된 철골 창고" style="--p:0"><span class="dw-bar" style="--p:0"></span></div><ol class="dw-st">' + stages + "</ol></div></section>" +
       '<section class="cl two"><h2 class="big5">현장의 경험이<br>거래의 기준이 됩니다.</h2><div class="cl-p"><p>공종과 지역만 고르면 확인을 마친 업체가 나옵니다. 견적은 한 번의 요청으로 여러 곳에, 받은 금액과 공기는 같은 표로 비교합니다.</p><p>담당 매니저가 계약과 일정 조율까지 함께하고, 현장 자재는 회원 자재몰에서 견적서까지 한 번에 받습니다.</p></div></section>' +
       '<section class="fds"><h2 class="fds-t">BUILDGO에서 찾는 것 <sup>(3)</sup></h2><div class="fd-g">' + finds + "</div></section>" +
-      '<section class="bye"><h2 class="big5">함께 짓겠습니다.</h2><div class="bye-g"><a href="#/quote"><span>견적 요청</span><b>공종·지역·규모 남기기 ' + I.arrow + '</b></a><a href="#/quote"><span>사업자 회원</span><b>가입 문의하기 ' + I.arrow + '</b></a><a href="#/quote"><span>업체 등록</span><b>등록 문의하기 ' + I.arrow + "</b></a></div></section>";
+      '<section class="bye"><h2 class="big5">함께 짓겠습니다.</h2><div class="bye-g"><a href="#/quote"><span>견적 요청</span><b>공종·지역·규모 남기기 ' + I.arrow + '</b></a><a href="#/quote"><span>사업자 회원</span><b>가입 문의하기 ' + I.arrow + '</b></a><a href="#/quote"><span>업체 등록</span><b>등록 문의하기 ' + I.arrow + "</b></a></div>" + '<button type="button" class="replay" data-act="replay">(인트로 다시 보기)</button></section>';
     drawSetup();
+    if (window.matchMedia && matchMedia("(max-width: 600px)").matches) document.querySelector("#hs input").placeholder = "예: 구조기술사, 방수, 철골";
+    document.getElementById("hs").onsubmit = function (ev) {
+      ev.preventDefault();
+      var f = this, q = f.q.value.trim(), w = D.works.filter(function (x) { return q && (x.name.indexOf(q) >= 0 || q.indexOf(x.name) >= 0); })[0];
+      location.hash = "#/experts" + BG.qs({ q: w ? "" : q, work: w ? w.id : "", region: f.region.value });
+    };
+  }
+  function opening(force) {
+    var html = '<div class="o5-grid" aria-hidden="true"><i class="gh"></i><i class="gv"></i></div>' +
+      '<div class="o5-box" aria-hidden="true"><img class="o5-line" src="../assets/photos/n_glassbox_line.jpg?v=1" alt=""><div class="o5-pho"><img src="' + photo("n_glassbox") + '" alt=""></div></div>' +
+      '<div class="o5-mkw">' + BG.doaMark("o5-mk") + '</div><p class="o5-tag"><span>LH 민간신축매입약정사업 전문기업</span></p>' +
+      '<p class="o5-no"><span class="o5-st"><b>(01/03)</b><b>(02/03)</b><b>(03/03)</b></span></p>' +
+      '<h2 class="o5-w"><span class="o5-st"><b>설계.</b><b>시공.</b><b>분양.</b></span></h2>' +
+      '<div class="o5-copy"><p class="o5-c1"><span>세 단계를 한 회사가 맡으니까</span></p><p class="o5-c2"><span>더 저렴합니다.</span></p></div>';
+    return BG.opening({
+      key: "doa-op-5", cls: "op5", html: html, total: 8500, force: force,
+      start: function (el, at, anim) {
+        var kv = document.querySelector(".kv"), K = kv.getBoundingClientRect(), W = el.clientWidth, H = el.clientHeight, m = W <= 600, E = "cubic-bezier(.76,0,.24,1)";
+        var box = el.querySelector(".o5-box"), pho = el.querySelector(".o5-pho");
+        box.style.left = K.left + "px"; box.style.top = K.top + "px"; box.style.width = K.width + "px"; box.style.height = K.height + "px";
+        var b = m ? { t: Math.round(H * .2), l: 16, w: W - 32, h: Math.round(H * .36) } : { t: Math.round(H * .14), l: Math.round(W * .5), w: Math.round(W * .5) - 23, h: Math.round(H * .66) };
+        function ins(r) { return "inset(" + (r.t - K.top) + "px " + (K.left + K.width - r.l - r.w) + "px " + (K.top + K.height - r.t - r.h) + "px " + (r.l - K.left) + "px)"; }
+        var shut = ins({ t: b.t, l: b.l, w: 0, h: b.h }), open = ins(b), full = "inset(0px 0px 0px 0px)";
+        var pShut = "inset(" + (b.t + b.h - K.top) + "px 0px 0px 0px)", pOpen = "inset(" + (b.t - K.top) + "px 0px 0px 0px)";
+        box.style.clipPath = shut; pho.style.clipPath = pShut;
+        at(2450, function () {
+          var mk = el.querySelector(".o5-mk"), dst = document.querySelector("#hdm svg");
+          if (!dst) return;
+          var a = mk.getBoundingClientRect(), d = dst.getBoundingClientRect();
+          anim(mk, [{ transform: "none" }, { transform: "translate(" + (d.left - a.left) + "px," + (d.top - a.top) + "px) scale(" + (d.width / a.width) + ")" }], { duration: 900, easing: E, fill: "forwards" });
+        });
+        at(3000, function () { anim(box, [{ clipPath: shut }, { clipPath: open }], { duration: 950, easing: E, fill: "forwards" }); });
+        at(4300, function () { anim(pho, [{ clipPath: pShut }, { clipPath: pOpen }], { duration: 1700, easing: "cubic-bezier(.45,0,.2,1)", fill: "forwards" }); });
+        at(7500, function () {
+          anim(box, [{ clipPath: open }, { clipPath: full }], { duration: 1000, easing: E, fill: "forwards" });
+          anim(pho, [{ clipPath: pOpen }, { clipPath: full }], { duration: 1000, easing: E, fill: "forwards" });
+        });
+      },
+      exit: function (el, skipped) {
+        if (skipped) el.classList.add("out");
+        BG.mo.play(document.querySelectorAll(".hd .lg-tx, .hd .gnb a, .hd-r > *"), "up", { y: 8, stagger: 40, delay: skipped ? 300 : 0, dur: 700 });
+        BG.mo.play([document.querySelector(".kv-s")].concat([].slice.call(document.querySelectorAll(".kv-t span, .kv-m"))), "up", { y: 26, stagger: 110, delay: skipped ? 380 : 120, dur: 1000 });
+        return skipped ? 650 : 0;
+      }
+    });
   }
   function drawSetup() {
     var sec = document.getElementById("draw"); if (!sec) return;
@@ -236,6 +285,7 @@
     if (act === "do-login") { S.member = true; S.save(); BG.toast(D.demoUser.company + " " + D.demoUser.name + "님, 골드 회원가가 적용됩니다"); location.hash = "#/mall"; }
     if (act === "menu") { var d = document.getElementById("drawer"); d.hidden = false; document.body.classList.add("lock"); if (!BG.reduced() && d.animate) d.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 260 }); }
     if (act === "menu-close") closeMenu();
+    if (act === "replay") { window.scrollTo(0, 0); opening(true); }
     if (act === "filters") document.body.classList.toggle("filters");
     if (act === "save") { var on = S.toggleSave(a.dataset.id); a.classList.toggle("on", on); a.querySelector("span").textContent = on ? "관심 업체" : "관심 업체 저장"; BG.toast(on ? "관심 업체로 저장했습니다" : "저장을 취소했습니다"); }
     if (act === "cart") { var m = BG.MT[a.dataset.id]; S.addCart(m.id, 1, m.spec); BG.toast(m.name + " 1" + m.unit + ", 견적 목록에 담았습니다"); refreshCart(); }
@@ -252,10 +302,12 @@
   });
   window.addEventListener("scroll", function () { document.body.classList.toggle("scrolled", window.scrollY > 40); }, { passive: true });
   document.getElementById("ftCredit").textContent = BG.credit;
+  var hdm = document.getElementById("hdm"); if (hdm) hdm.innerHTML = BG.doaMark("dm-h");
 
   var MOTION = [
     [".kv > img", "settle", { s: 1.08, dur: 2600 }],
     [".kv-t span", "up", { y: 30, delay: 300, stagger: 140, dur: 1100 }],
+    [".kv-s", "up", { y: 24, delay: 200, dur: 1000 }],
     [".mega", "lines", { gap: 140, dur: 1200 }],
     [".cl-p p", "up", { y: 16, lag: 300, stagger: 120 }],
     [".full", "wipe", { dur: 1400 }],
@@ -272,4 +324,5 @@
     [".pj figure", "wipe", { stagger: 110 }]
   ];
   BG.router({ home: home, companies: companies, company: company, experts: experts, expert: expert, mall: mall, item: item, cart: cart, quote: quote, login: login }, function (r) { sync(r); BG.mo.scan(app, MOTION); });
+  if (BG.parseHash().name === "home") opening();
 })();

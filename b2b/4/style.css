@@ -66,8 +66,8 @@ h1, h2, h3 { margin: 0; font-family: var(--font-point); letter-spacing: -0.03em;
 .in-logo.on { opacity: 1; }
 .fin .in-logo, .w1 .in-logo, .w2 .in-logo, .w3 .in-logo { opacity: 0; transform: translate(-50%, -62%) scale(.92); }
 .in-mk { width: min(46vw, 420px); height: auto; overflow: visible; }
-.in-mk .fr { fill: none; stroke: #fff; stroke-width: 1.2; stroke-dasharray: 1; stroke-dashoffset: 1; }
-.in-mk .an { fill: rgba(255, 255, 255, 0); stroke: #fff; stroke-width: .5; stroke-dasharray: 1; stroke-dashoffset: 1; }
+.in-mk .fr { fill: none; stroke: #fff; stroke-width: 1.2; stroke-dasharray: 1; stroke-dashoffset: 1; stroke-linecap: butt; }
+.in-mk .an { fill: rgba(255, 255, 255, 0); stroke: #fff; stroke-width: .5; stroke-dasharray: 1; stroke-dashoffset: 1; stroke-linecap: butt; }
 .in-mk .tx { fill: #fff; clip-path: inset(0 100% 0 0); }
 .in-logo.on .in-mk .fr { animation: draw 1.3s cubic-bezier(.65, 0, .35, 1) .1s forwards; }
 .in-logo.on .in-mk .an { animation: draw 1.1s cubic-bezier(.65, 0, .35, 1) .5s forwards, fillin .6s ease 1.3s forwards; }
