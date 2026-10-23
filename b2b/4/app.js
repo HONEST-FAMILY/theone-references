@@ -109,7 +109,7 @@
       if (!only) return finish();
       var box = document.createElement("div");
       box.className = "op-end";
-      box.innerHTML = '<button type="button">다시 보기</button><a href="' + new URL("../", location.href).href + '">인트로 모아 보기</a>';
+      box.innerHTML = '<button type="button">다시 보기</button>';
       box.querySelector("button").addEventListener("click", function () { location.reload(); });
       el.appendChild(box);
     });
