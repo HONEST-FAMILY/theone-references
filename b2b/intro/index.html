@@ -93,7 +93,7 @@ h1 { margin: 0; font-size: clamp(34px, 5.4vw, 56px); line-height: 1.15; letter-s
   var still = window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
   document.getElementById("list").innerHTML = D.map(function (d) {
     var v = function (cls, src, poster) { return '<video class="' + cls + '" src="' + src + '" poster="' + poster + '" muted loop playsinline preload="metadata"' + (still ? " controls" : "") + ' aria-label="' + esc(d.tag) + (cls === "m" ? " 폰 화면" : " PC 화면") + '"></video>'; };
-    return '<article class="card"><div class="stage">' + v("pc", "v" + d.n + ".mp4", "p" + d.n + ".jpg") + v("m", "v" + d.n + "_m.mp4", "p" + d.n + "_m.jpg") + "</div>" +
+    return '<article class="card"><div class="stage">' + v("pc", "v" + d.n + ".mp4?v=2", "p" + d.n + ".jpg?v=2") + v("m", "v" + d.n + "_m.mp4?v=2", "p" + d.n + "_m.jpg?v=2") + "</div>" +
       '<div class="info"><span class="tag">' + esc(d.tag) + "</span><h2>" + esc(d.title) + "</h2><ol>" + d.steps.map(function (s) { return "<li>" + s + "</li>"; }).join("") + "</ol>" +
       '<div class="act"><a class="open" href="../' + d.n + '/?intro=1">시안에서 인트로 보기 ↗</a><button type="button" class="cp" data-copy="' + d.n + '">링크 복사</button></div></div></article>';
   }).join("");
