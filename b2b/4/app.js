@@ -196,7 +196,7 @@
     var side = '<form class="side" data-side="experts"><div class="side-h"><b>조건</b><a href="#/experts">초기화</a></div>' + checksList("work", "분야", D.works, works) + checksList("region", "지역", D.regions, regions) + '<input type="hidden" name="q" value="' + esc(kw) + '"></form>';
     app.innerHTML = '<div class="lp">' + pageHead("전문가 찾기", "", "전문가 찾기", searchBar("experts", q, "이름이나 자격으로 찾기 (예: 건축사, 감리)")) +
       '<div class="lp-body">' + side + '<section class="res"><div class="res-h"><p>검색 결과 <b>' + res.length + '</b>명</p><button type="button" class="btn line-l sm fbtn" data-act="filters">' + I.filter + "조건 고르기</button></div>" +
-      (res.length ? '<div class="rgrid">' + cards + "</div>" : '<p class="empty">조건에 맞는 전문가가 없습니다.</p>') + "</section></div></div>";
+      (res.length ? '<div class="rgrid">' + cards + "</div>" : '<p class="empty">조건에 맞는 전문가가 없습니다. <a href="#/companies' + BG.qs({ work: works.join(","), region: regions.join(","), q: kw }) + '">같은 조건의 업체 보기 →</a></p>') + "</section></div></div>";
   }
   function expert(r) {
     var x = BG.EX[r.id] || D.experts[0];
