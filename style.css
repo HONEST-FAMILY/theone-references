@@ -362,7 +362,7 @@ footer {
 .rival b { display: block; font-size: 17px; margin-bottom: 6px; }
 .rival p { margin: 0 0 12px; color: #cfcfcb; font-size: 15px; }
 .drafts { display: grid; gap: 18px; grid-template-columns: 1fr; }
-@media (min-width: 760px) { .drafts { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 760px) { .drafts { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 .draft { display: flex; flex-direction: column; background: #141416; border: 1px solid var(--line); border-radius: 16px; overflow: hidden; text-decoration: none; color: inherit; }
 .draft img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; object-position: top; display: block; border-bottom: 1px solid var(--line); }
 .draft .ctag { align-self: flex-start; margin: 16px 16px 0; }
