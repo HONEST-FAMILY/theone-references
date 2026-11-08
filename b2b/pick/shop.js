@@ -74,6 +74,28 @@
   function user() { return A.keep("user"); }
   function reqs() { var r = A.keep("requests"); return Array.isArray(r) ? r : []; }
   function myQuotes() { var r = A.keep("myquotes"); return Array.isArray(r) ? r : []; }
+  var SIG = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 90"><path d="M14 62c10-26 22-40 30-36 9 5-6 40 4 41 9 1 14-30 24-29 8 1 2 24 10 25 10 1 16-22 27-21 9 1 3 18 12 18 12 0 22-14 36-15 14-1 24 6 40 3" fill="none" stroke="#1e1e1c" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
+  var SAMPLE_RQ = [
+    { id: "rq-s1", to: "c1", kind: "company", rows: [["맡기실 일", "신축 시공, 철근콘크리트 공사"], ["현장 지역", "경기 화성시"], ["규모", "990~3,300㎡ (300~1,000평)"], ["LH 매입약정 단계", "약정 체결"]], at: "2026-10-30T10:20:00+09:00", st: "연결 완료" },
+    { id: "rq-s2", to: "x3", kind: "expert", rows: [["맡기실 일", "구조 검토"], ["현장 지역", "서울 마포구"], ["규모", "330~990㎡ (100~300평)"], ["착공 희망 시기", "3개월 안"]], at: "2026-10-27T15:40:00+09:00", st: "상담 일정 확정" },
+    { id: "rq-s3", to: "pm", kind: "pm", rows: [["사업 단계", "사업성 분석"], ["현장 지역", "인천 미추홀구"], ["총사업비", "10억~50억 원"], ["PM 시작 시기", "3개월 안"]], at: "2026-10-21T09:10:00+09:00", st: "연결 완료" }
+  ];
+  var SAMPLE_CART = [["m1", 3, "D13 · 8m"], ["m7", 56, "25kg"], ["m9", 20, "50T · 450×1200 (10장)"]];
+  function reqsShown() { return reqs().concat(SAMPLE_RQ).sort(function (a, b) { return new Date(b.at) - new Date(a.at); }); }
+  function sampleQuote() {
+    var items = [["m2", 10, "200×200×8×12 · 10m"], ["m6", 40, "40kg"], ["m13", 20, "15A · 6m"]].filter(function (r) { return MT[r[0]]; }).map(function (r) { var m = MT[r[0]], c = CO[m.seller]; return { id: m.id, name: m.name, seller: c ? c.name : "도아", sellerId: m.seller, spec: r[2], qty: r[1], unitName: m.unit, unit: m.price, list: m.price * r[1], amt: m.price * r[1] }; });
+    var sum = items.reduce(function (s, x) { return s + x.amt; }, 0);
+    return { no: "DOA-261029-001", at: new Date("2026-10-29T14:00:00+09:00").getTime(), buyer: D.demoUser.company, signer: D.demoUser.name, phone: "", site: "경기 화성시 신축 현장", items: items, list: sum, pay: sum, member: false, sig: SIG };
+  }
+  function quotesShown() { return myQuotes().concat([sampleQuote()]); }
+  function seedCart() {
+    var k = S.prefix + "-seed";
+    try { if (sessionStorage.getItem(k)) return; sessionStorage.setItem(k, "1"); } catch (e) { return; }
+    if (S.cart.length) return;
+    SAMPLE_CART.forEach(function (r) { if (MT[r[0]]) S.cart.push({ id: r[0], qty: r[1], spec: r[2] }); });
+    S.save();
+    changed();
+  }
   function minQty(m) { var p = /\((\d+)/.exec(m.moq); if (p) return +p[1]; var n = parseInt(m.moq, 10); return n > 0 ? n : 1; }
   function stepQty(m) { return /\(/.test(m.moq) ? minQty(m) : 1; }
   function fixQty(m, v) { var s = stepQty(m), n = parseInt(v, 10) || 0; n = Math.round(n / s) * s; return Math.max(minQty(m), n); }
@@ -330,6 +352,7 @@
       (S.member ? "" : '<p class="s-sumb-n"><a href="#/join">회원가입</a>하면 회원가로 다시 계산됩니다.</p>') + '<a class="btn s-wide" href="#/sign">계약서 쓰고 견적서 받기</a><p class="s-sumb-n">대금은 견적 확정 뒤 판매 업체와 협의합니다. 이 사이트에서는 결제하지 않습니다.</p></aside>';
   }
   function cart() {
+    seedCart();
     var rows = cartRows();
     app.innerHTML = '<div class="s-pg s-cartp">' + head("자재 견적 목록", "담은 자재를 입점 업체별로 모았습니다. 계약서에 서명하면 견적서가 나옵니다.", [["자재몰", "#/mall"], ["자재 견적 목록"]]) +
       (rows.length ? '<div class="s-cart"><div class="s-cl">' + bySeller(rows).map(function (g) {
@@ -395,6 +418,7 @@
     return { empty: function () { return !strokes.length; }, clear: function () { strokes = []; draw(); onInk(); }, data: function () { return cv.toDataURL("image/png"); }, fit: fit };
   }
   function sign() {
+    seedCart();
     var rows = cartRows();
     if (!rows.length) {
       app.innerHTML = '<div class="s-pg">' + head("계약서 쓰고 견적서 받기", "", [["견적서 받기", "#/quote"], ["계약서 서명"]]) + '<div class="s-empty"><p>견적 목록에 담은 자재가 없습니다. 자재를 먼저 담아 주세요.</p><a class="btn" href="#/mall">자재몰로 가기</a></div></div>';
@@ -448,7 +472,7 @@
     });
   }
   function done(r) {
-    var list = myQuotes(), qd = r.query.no ? list.filter(function (x) { return x.no === r.query.no; })[0] : list[0];
+    var list = quotesShown(), qd = r.query.no ? list.filter(function (x) { return x.no === r.query.no; })[0] : list[0];
     if (!qd) {
       app.innerHTML = '<div class="s-pg">' + head("견적서", "", [["견적서 받기", "#/quote"], ["견적서"]]) + '<div class="s-empty"><p>아직 받은 견적서가 없습니다.</p><a class="btn" href="#/quote">견적서 받기로 가기</a></div></div>';
       return;
@@ -484,7 +508,8 @@
   function quote(r) {
     if (r.id === "done") return done(r);
     if (r.query.to && A.views.match) { location.replace("#/match?to=" + encodeURIComponent(r.query.to)); return; }
-    var rows = cartRows(), rq = reqs().slice().sort(function (a, b) { return new Date(b.at) - new Date(a.at); }), qs = myQuotes(), t = S.cartTotals(), emptyAll = !rows.length && !rq.length && !qs.length;
+    seedCart();
+    var rows = cartRows(), rq = reqsShown(), qs = quotesShown(), t = S.cartTotals(), emptyAll = !rows.length && !rq.length && !qs.length;
     var html = '<div class="s-pg s-hub">' + head("견적서 받기", emptyAll ? "업체 찾기·전문가 찾기·자재몰을 한곳에서 받습니다. 먼저 찾으실 것을 골라 주세요." : "업체·전문가 상담 요청과 자재 견적을 한곳에서 확인합니다. 담당 매니저가 확인한 뒤 연락드립니다.", [["견적서 받기"]]);
     if (emptyAll) {
       html += doorsHtml(true) + '<p class="s-hub-n">고르신 업체·전문가에 상담을 요청하거나 자재를 담으면 이 화면에 모입니다. 담당 매니저가 확인한 뒤 연락드립니다.</p>';
@@ -494,7 +519,7 @@
         (rows.length ? '<ul class="s-mini">' + rows.map(function (x) { return '<li><img src="' + photo(x.m.ph) + '" alt=""><p><b>' + esc(x.m.name) + "</b><span>" + esc((CO[x.m.seller] ? CO[x.m.seller].name + " · " : "") + x.spec + " · " + won(x.qty) + x.m.unit) + "</span></p><strong>" + won(x.amt) + "원</strong></li>"; }).join("") + '</ul><div class="s-hs-f"><p>견적 금액 <b>' + won(t.pay) + '원</b></p><a class="btn" href="#/sign">계약서 쓰고 견적서 받기</a></div>' : '<p class="s-hs-e">담은 자재가 없습니다. <a href="#/mall">자재몰</a>에서 담으면 여기에 모입니다.</p>') + "</section>";
       html += '<section class="s-hs"><div class="s-hs-h"><h2>업체·전문가 상담 요청</h2></div>' + (rq.length ? '<ul class="s-rqs">' + rq.map(function (x) {
         var nm = reqName(x);
-        return '<li class="s-rq"><div class="s-rq-i"><p class="s-rq-k">' + esc(nm.k) + (x.at ? " · " + day(x.at) : "") + '</p><h3><a href="' + nm.href + '">' + esc(nm.n) + "</a></h3>" + (nm.s ? '<p class="s-rq-s">' + esc(nm.s) + "</p>" : "") + answers(x.answers, x.rows) + '</div><p class="s-rq-st">매니저 확인 중</p></li>';
+        return '<li class="s-rq"><div class="s-rq-i"><p class="s-rq-k">' + esc(nm.k) + (x.at ? " · " + day(x.at) : "") + '</p><h3><a href="' + nm.href + '">' + esc(nm.n) + "</a></h3>" + (nm.s ? '<p class="s-rq-s">' + esc(nm.s) + "</p>" : "") + answers(x.answers, x.rows) + '</div><p class="s-rq-st">' + esc(x.st || "매니저 확인 중") + '</p></li>';
       }).join("") + "</ul>" : '<p class="s-hs-e">아직 보낸 상담 요청이 없습니다. <a href="#/companies">업체 찾기</a>나 <a href="#/experts">전문가 찾기</a>에서 요청하면 여기에 모입니다.</p>') + "</section>";
       if (qs.length) html += '<section class="s-hs"><div class="s-hs-h"><h2>받은 견적서</h2></div><ul class="s-qs">' + qs.map(function (x) { return '<li><a href="#/quote/done?no=' + encodeURIComponent(x.no) + '"><b>' + esc(x.no) + "</b><span>" + day(x.at) + " · " + esc(x.items[0] ? x.items[0].name : "") + (x.items.length > 1 ? " 외 " + (x.items.length - 1) + "품목" : "") + "</span><strong>" + won(x.pay) + "원</strong>" + I.arrow + "</a></li>"; }).join("") + "</ul></section>";
       html += '<section class="s-hs"><div class="s-hs-h"><h2>더 담으러 가기</h2></div>' + doorsHtml(false) + "</section>";
@@ -597,9 +622,8 @@
   function doLogin(r) {
     var f = document.getElementById("s-lf"); if (!f) return;
     var u = user(), err = document.getElementById("s-lerr"), id = f.id.value.trim();
-    if (!u) { err.innerHTML = '가입한 정보가 없습니다. 회원가입을 먼저 해 주세요. <a href="#/join">회원가입</a>'; return; }
     if (!id || !f.pw.value) { err.textContent = "아이디와 비밀번호를 적어 주세요."; return; }
-    if (u.id && id !== u.id) { err.textContent = "아이디나 비밀번호를 다시 확인해 주세요."; return; }
+    if (!u) A.keep("user", { kind: "biz", name: D.demoUser.name, company: D.demoUser.company, purposes: ["build", "mat"], referrer: "", points: [{ at: "2026-09-18T10:00:00+09:00", t: "park*** 님이 추천인으로 가입", kind: "ref", amt: 3000 }, { at: "2026-10-02T15:00:00+09:00", t: "입점 감사 포인트", kind: "admin", amt: 5000 }], id: id, phone: "010-2481-3579", field: "build", bizNo: "", at: new Date("2026-09-01T09:00:00+09:00").getTime() });
     S.member = true; S.save(); A.sync && A.sync(); changed();
     location.hash = (r && r.query.back) || "#/my";
   }
@@ -609,7 +633,7 @@
       app.innerHTML = '<div class="s-pg">' + head("내 정보", "", [["내 정보"]]) + '<div class="s-empty"><p>' + (u ? "로그인하면 내 정보와 포인트를 볼 수 있습니다." : "가입하면 내 정보와 포인트, 견적·상담 요청을 한곳에서 봅니다.") + '</p><div class="s-btns">' + (u ? '<a class="btn" href="#/login">로그인</a>' : '<a class="btn" href="#/join">회원가입</a><a class="btn line-l" href="#/login">로그인</a>') + "</div></div></div>";
       return;
     }
-    var pts = Array.isArray(u.points) ? u.points : [], total = pts.reduce(function (s, x) { return s + (+x.amt || 0); }, 0), rq = reqs(), qs = myQuotes();
+    var pts = Array.isArray(u.points) && u.points.length ? u.points : [{ at: u.at || Date.now(), t: "신규 가입 환영 포인트", kind: "admin", amt: 5000 }], total = pts.reduce(function (s, x) { return s + (+x.amt || 0); }, 0), rq = reqsShown(), qs = quotesShown();
     var names = PURPOSES.filter(function (x) { return (u.purposes || []).indexOf(x[0]) >= 0; }).map(function (x) { return x[1]; });
     var fname = (FIELDS.filter(function (x) { return x[0] === u.field; })[0] || [])[1];
     var phone = String(u.phone || "").replace(/\D/g, ""), ph = phone.length >= 10 ? phone.slice(0, 3) + "-****-" + phone.slice(-4) : u.phone || "";
@@ -619,7 +643,7 @@
       '<p class="s-pt-n">포인트는 가입 추천 적립과 관리자 지급으로만 쌓입니다. 내 아이디 <b>' + esc(u.id || "") + "</b>를 추천인으로 적고 가입한 회원이 생기면 적립됩니다.</p>" +
       '<table class="s-tbl s-ptt"><thead><tr><th>일자</th><th>내용</th><th>구분</th><th class="n">포인트</th></tr></thead><tbody>' + (pts.length ? pts.slice().sort(function (a, b) { return new Date(b.at) - new Date(a.at); }).map(function (x) { return "<tr><td>" + day(x.at) + "</td><td>" + esc(x.t || "") + "</td><td>" + esc(x.kind === "admin" || /관리자/.test(x.t || "") ? "관리자 지급" : "추천 가입 적립") + '</td><td class="n">' + (x.amt > 0 ? "+" : "") + won(x.amt || 0) + "</td></tr>"; }).join("") : '<tr><td colspan="4" class="s-none">아직 쌓인 포인트가 없습니다.</td></tr>') + "</tbody></table></section>" +
       '<section class="s-hs"><div class="s-hs-h"><h2>내 견적서</h2><a class="s-more" href="#/quote">견적서 받기 ' + I.arrow + "</a></div>" + (qs.length ? '<ul class="s-qs">' + qs.map(function (x) { return '<li><a href="#/quote/done?no=' + encodeURIComponent(x.no) + '"><b>' + esc(x.no) + "</b><span>" + day(x.at) + " · " + esc(x.items[0] ? x.items[0].name : "") + (x.items.length > 1 ? " 외 " + (x.items.length - 1) + "품목" : "") + "</span><strong>" + won(x.pay) + "원</strong>" + I.arrow + "</a></li>"; }).join("") + "</ul>" : '<p class="s-hs-e">아직 받은 견적서가 없습니다.</p>') + "</section>" +
-      '<section class="s-hs"><div class="s-hs-h"><h2>상담 요청</h2></div>' + (rq.length ? '<ul class="s-rqs">' + rq.map(function (x) { var nm = reqName(x); return '<li class="s-rq"><div class="s-rq-i"><p class="s-rq-k">' + esc(nm.k) + (x.at ? " · " + day(x.at) : "") + '</p><h3><a href="' + nm.href + '">' + esc(nm.n) + '</a></h3></div><p class="s-rq-st">매니저 확인 중</p></li>'; }).join("") + "</ul>" : '<p class="s-hs-e">아직 보낸 상담 요청이 없습니다.</p>') + "</section>" +
+      '<section class="s-hs"><div class="s-hs-h"><h2>상담 요청</h2></div>' + (rq.length ? '<ul class="s-rqs">' + rq.map(function (x) { var nm = reqName(x); return '<li class="s-rq"><div class="s-rq-i"><p class="s-rq-k">' + esc(nm.k) + (x.at ? " · " + day(x.at) : "") + '</p><h3><a href="' + nm.href + '">' + esc(nm.n) + '</a></h3></div><p class="s-rq-st">' + esc(x.st || "매니저 확인 중") + '</p></li>'; }).join("") + "</ul>" : '<p class="s-hs-e">아직 보낸 상담 요청이 없습니다.</p>') + "</section>" +
       '<div class="s-btns"><button type="button" class="btn line-l" data-act="s-logout">로그아웃</button></div></div></div>';
   }
 
