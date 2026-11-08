@@ -72,6 +72,7 @@
     D.__find = true;
     MORE.forEach(function (c) { D.companies.push(c); BG.CO[c.id] = c; });
     MOREX.forEach(function (x) { D.experts.push(x); BG.EX[x.id] = x; });
+    if (window.BGFILL) BGFILL.grow(D, CITY);
     D.companies.forEach(function (c, i) {
       c.cat = c.cat || (c.type === "su" ? "mat" : c.type === "dv" ? "dev" : "build");
       c.sido = c.sido || CITY[c.city] || c.region;
@@ -109,32 +110,33 @@
 
   function words(s) { return String(s || "").trim().split(/\s+/).filter(Boolean); }
   function hit(hay, kw) { var ws = words(kw); return ws.every(function (w) { return hay.indexOf(w) >= 0; }); }
-  function coHay(c) { return c.name + " " + c.intro + " " + c.city + " " + c.sido + " " + c.licenses.join(" ") + " " + A.workNames(c.works).join(" ") + " " + CAT[c.cat].name + " " + A.typeName(c.type) + " " + c.tags.join(" ") + " " + c.projects.map(function (p) { return p.t; }).join(" "); }
-  function exHay(x) { return x.name + " " + x.title + " " + x.intro + " " + x.affil + " " + x.sido + " " + A.workNames(x.works).join(" ") + " " + x.projects.join(" "); }
-  function mtHay(m) { return m.name + " " + m.spec + " " + (BG.MC[m.cat] ? BG.MC[m.cat].name : "") + " " + (BG.CO[m.seller] ? BG.CO[m.seller].name : ""); }
+  function coHay(c) { return "업체 " + c.name + " " + c.intro + " " + c.city + " " + c.sido + " " + c.licenses.join(" ") + " " + A.workNames(c.works).join(" ") + " " + CAT[c.cat].name + " " + A.typeName(c.type) + " " + c.tags.join(" ") + " " + c.projects.map(function (p) { return p.t; }).join(" "); }
+  function exHay(x) { return "전문가 " + x.name + " " + x.title + " " + x.intro + " " + x.affil + " " + x.sido + " " + A.workNames(x.works).join(" ") + " " + x.projects.join(" "); }
+  function mtHay(m) { return "자재 " + m.name + " " + m.spec + " " + (BG.MC[m.cat] ? BG.MC[m.cat].name : "") + " " + (BG.CO[m.seller] ? BG.CO[m.seller].name : ""); }
+  function ranked(list, q, hay) { return window.BGFILL ? BGFILL.rank(list, q, hay) : list.filter(function (x) { return !q || hit(hay(x), q); }); }
+  function byRel(a, b) { return (b.rel || 0) - (a.rel || 0); }
   function coFind(o) {
-    return D.companies.filter(function (c) {
+    return ranked(D.companies.filter(function (c) {
       if (o.cat && c.cat !== o.cat) return false;
       if (o.type && c.type !== o.type) return false;
       if (o.work && c.works.indexOf(o.work) < 0) return false;
       if (o.region && !o.sido && c.region !== o.region) return false;
       if (o.sido && c.sido !== o.sido) return false;
-      if (o.q && !hit(coHay(c), o.q)) return false;
       return true;
-    });
+    }), o.q, coHay);
   }
   function exFind(o) {
-    return D.experts.filter(function (x) {
+    return ranked(D.experts.filter(function (x) {
       if (o.work && x.works.indexOf(o.work) < 0) return false;
       if (o.region && !o.sido && x.region !== o.region) return false;
       if (o.sido && x.sido !== o.sido) return false;
-      if (o.q && !hit(exHay(x), o.q)) return false;
       return true;
-    });
+    }), o.q, exHay);
   }
-  function mtFind(q) { return D.materials.filter(function (m) { return !q || hit(mtHay(m), q); }); }
+  function mtFind(q) { return ranked(D.materials.slice(), q, mtHay).sort(byRel); }
+  function exSort(list) { return list.sort(function (a, b) { return byRel(a, b) || b.years - a.years; }); }
   function coSort(list, s) {
-    return list.sort(function (a, b) { return s === "count" ? b.count - a.count : s === "since" ? a.since - b.since : (b.checks.length - a.checks.length) || (b.count - a.count); });
+    return list.sort(function (a, b) { return byRel(a, b) || (s === "count" ? b.count - a.count : s === "since" ? a.since - b.since : (b.checks.length - a.checks.length) || (b.count - a.count)); });
   }
   function tally(cos, exs) {
     var t = {};
@@ -276,11 +278,11 @@
     var useCo = ["all", "dev", "build", "mat"].indexOf(tab) >= 0, useEx = tab === "all" || tab === "expert" || tab === "pm";
     var coAll = coFind({ q: kw }), exAll = exFind({ q: kw }), mts = mtFind(kw);
     var cnt = { all: 0, dev: 0, build: 0, mat: 0, expert: exAll.length, mall: mts.length };
-    coAll.forEach(function (c) { cnt[c.cat]++; });
+    ["dev", "build", "mat"].forEach(function (k) { cnt[k] = coFind({ q: kw, cat: k }).length; });
     cnt.all = coAll.length + exAll.length + mts.length;
     var coT = useCo ? coFind({ q: kw, cat: tab === "all" ? "" : tab }) : [], exT = useEx && tab !== "pm" ? exAll : tab === "pm" ? exFind({}).filter(function (x) { return /PM|시공기술사|도시계획/.test(x.title); }) : [];
     var t = tally(coT, exT);
-    var cos = coSort(coT.filter(function (c) { return !sd || c.sido === sd; }), "trust"), exs = exT.filter(function (x) { return !sd || x.sido === sd; }).sort(function (a, b) { return b.years - a.years; });
+    var cos = coSort(coT.filter(function (c) { return !sd || c.sido === sd; }), "trust"), exs = exSort(exT.filter(function (x) { return !sd || x.sido === sd; }));
     CUR = { name: "search", query: q, t: t };
     var tabs = TABS.map(function (x) {
       var n = cnt[x[0]];
@@ -333,7 +335,7 @@
     var res = coSort(coFind({ q: kw, cat: cat, type: q.type, work: q.work, region: q.region, sido: sd }), sort);
     CUR = { name: "companies", query: q, t: t };
     var n = { "": all.length, dev: 0, build: 0, mat: 0 };
-    all.forEach(function (c) { n[c.cat]++; });
+    ["dev", "build", "mat"].forEach(function (k) { n[k] = coFind({ q: kw, cat: k, type: q.type, work: q.work, region: q.region }).length; });
     var big = [["", "전체", "확인을 마친 업체 모두"], ["dev", "시행", CAT.dev.d], ["build", "시공", CAT.build.d], ["mat", "자재", CAT.mat.d]].map(function (x) {
       return '<a class="f-big' + (cat === x[0] ? " on" : "") + '" href="' + link("companies", { cat: x[0], q: kw, sido: sd }) + '"' + (cat === x[0] ? ' aria-current="page"' : "") + ">" + FI[x[0] || "all"] + '<span class="f-big-t"><b>' + x[1] + "</b><em>" + n[x[0]] + '</em></span><span class="f-big-d">' + x[2] + "</span></a>";
     }).join("");
@@ -348,7 +350,7 @@
     fresh("experts");
     var q = r.query, kw = (q.q || "").trim(), work = BG.WORK[q.work] ? q.work : "", sd = SIDO.indexOf(q.sido) >= 0 ? q.sido : "";
     var t = tally([], exFind({ q: kw, work: work }));
-    var res = exFind({ q: kw, work: work, region: q.region, sido: sd }).sort(function (a, b) { return b.years - a.years; });
+    var res = exSort(exFind({ q: kw, work: work, region: q.region, sido: sd }));
     CUR = { name: "experts", query: q, t: t };
     var ws = [{ id: "", name: "전체" }].concat(D.works).map(function (w) { var c = exFind({ q: kw, work: w.id, sido: sd }).length; return '<a class="f-wk' + (work === w.id ? " on" : "") + '" href="' + link("experts", { work: w.id, q: kw, sido: sd }) + '"' + (work === w.id ? ' aria-current="page"' : "") + "><span>" + esc(w.name) + "</span><b>" + c + "</b></a>"; }).join("");
     A.app.innerHTML = '<div class="f-pg f-hasf">' + head([["홈", "#/"], ["전문가 찾기"]], "전문가 찾기", "건축사 · 기술사 · 현장소장급 기술자의 자격증과 경력증명서를 도아가 확인했습니다.", sbar("experts", kw, "이름, 자격, 분야로 찾기", { work: work, sido: sd })) +
