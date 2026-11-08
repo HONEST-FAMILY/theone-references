@@ -395,6 +395,10 @@ html.h-dn-lock { overflow: hidden; }
 @media (max-width: 1440px) {
   .hd-join { display: none; }
 }
+@media (min-width: 1280px) and (max-width: 1439px) {
+  .h-hs { display: none; }
+  .hd-sm { display: inline-flex; }
+}
 @media (max-width: 1199px) {
   .h-quick { display: none; }
 }
