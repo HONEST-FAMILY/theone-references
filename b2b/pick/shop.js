@@ -6,8 +6,29 @@
     check: '<svg viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>',
     cam: '<svg viewBox="0 0 24 24"><path d="M3.5 8h3.2l1.8-2.6h7l1.8 2.6h3.2v11h-17z"/><circle cx="12" cy="13.2" r="3.4"/></svg>',
     chev: '<svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg>',
-    erase: '<svg viewBox="0 0 24 24"><path d="M4 20h16M8 16.5 4.5 13 13 4.5l6 6-6.5 6z"/></svg>'
+    erase: '<svg viewBox="0 0 24 24"><path d="M4 20h16M8 16.5 4.5 13 13 4.5l6 6-6.5 6z"/></svg>',
+    chat: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 5.5h16v10.5H10l-6 4.5z"/><path d="M8.5 10.8h7"/></svg>',
+    truck: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2.5 6.5h11v9h-11zM13.5 9.5h4.2l2.8 3.2v2.8h-7"/><circle cx="6.5" cy="17.4" r="1.8"/><circle cx="16.8" cy="17.4" r="1.8"/></svg>',
+    phone: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3.5h3.2l1.6 4.4-2.1 1.3a10.6 10.6 0 0 0 6.1 6.1l1.3-2.1 4.4 1.6v3.2c0 .9-.7 1.6-1.6 1.6A16 16 0 0 1 4.4 5.1c0-.9.7-1.6 1.6-1.6z"/></svg>'
   };
+  function mi(p) { return '<svg viewBox="0 0 24 24" aria-hidden="true">' + p + "</svg>"; }
+  var MI = {
+    all: mi('<rect x="4" y="4" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="4" width="6.5" height="6.5" rx="1"/><rect x="4" y="13.5" width="6.5" height="6.5" rx="1"/><rect x="13.5" y="13.5" width="6.5" height="6.5" rx="1"/>'),
+    steel: mi('<path d="M3.5 15.5 15.5 3.5M6 18 18 6M8.5 20.5l12-12"/><path d="m6.5 10.5 1.6 1.6M9.5 7.5l1.6 1.6M10 15l1.6 1.6M13 12l1.6 1.6"/>'),
+    wood: mi('<circle cx="8" cy="12" r="4.5"/><circle cx="8" cy="12" r="1.6"/><path d="M8 7.5h12v9H8"/>'),
+    cement: mi('<path d="M6.5 4h11l2 3.5V20h-15V7.5z"/><path d="M4.5 7.5h15M9 13h6M9 16h4"/>'),
+    board: mi('<rect x="4" y="4" width="16" height="16" rx="1"/><path d="M4 10c2.7 0 2.7 2.4 5.3 2.4s2.7-2.4 5.4-2.4 2.6 2.4 5.3 2.4"/>'),
+    stone: mi('<rect x="3.5" y="3.5" width="17" height="17" rx="1"/><path d="M3.5 12h17M12 3.5V12M8 12v8.5M16 12v8.5"/>'),
+    pipe: mi('<path d="M3.5 6.5H13a5.5 5.5 0 0 1 5.5 5.5v8.5M3.5 11.5H13a.5.5 0 0 1 .5.5v8.5"/><path d="M3.5 4.5v9M16 20.5h5"/>'),
+    finish: mi('<rect x="4" y="3.5" width="13" height="5" rx="1"/><path d="M17 6h2.5v5H11v3"/><rect x="9.5" y="14" width="3" height="6.5" rx=".8"/>')
+  };
+  var SIDO = ["서울", "부산", "대구", "인천", "광주", "대전", "울산", "세종", "경기", "강원", "충북", "충남", "전북", "전남", "경북", "경남", "제주"];
+  var KW = { "서울": "sd", "경기": "sd", "인천": "sd", "강원": "gw", "대전": "cc", "세종": "cc", "충북": "cc", "충남": "cc", "충청": "cc", "광주": "hn", "전북": "hn", "전남": "hn", "호남": "hn", "부산": "yn", "대구": "yn", "울산": "yn", "경북": "yn", "경남": "yn", "영남": "yn", "제주": "jj" };
+  var NEAR = { sd: ["gw", "cc"], gw: ["sd", "cc", "yn"], cc: ["sd", "gw", "hn", "yn"], hn: ["cc", "yn"], yn: ["gw", "cc", "hn"], jj: [] };
+  var ST = { "new": "매니저 확인 중", talk: "채팅 상담 중", call: "전화 상담 예정", rec: "업체 추천 완료", done: "진행 완료" };
+  var STEP = { "new": 0, talk: 1, call: 1, rec: 2, done: 3 };
+  var CATN = { dev: "시행", build: "시공", mat: "자재" };
+  var WEEK = ["일", "월", "화", "수", "목", "금", "토"];
   var SHORT = { m1: "철근", m2: "H형강", m3: "강관", m4: "구조목", m5: "합판", m6: "시멘트", m7: "레미탈", m8: "석고보드", m9: "단열재", m10: "천장틀", m11: "타일", m12: "판재", m13: "동관", m14: "이중벽관", m15: "방수재", m16: "도료" };
   var SITE = {
     steel: ["w_rebar", "n_rebarman", "frame_work"], wood: ["pf_wood", "mt_workshop", "pf_house"], cement: ["concrete1", "concrete2", "mt_plaster"],
@@ -52,9 +73,9 @@
     finance: { id: "finance", name: "금융 상담", desc: "PF 등 사업비 조달 구조를 사업 단계에 맞춰 함께 봅니다.", href: "#/finance", ph: "w_review" }
   };
   var DOORS = [
-    { t: "업체 찾기", d: "시행·시공·자재 업체를 분류와 지역으로 찾고, 채팅으로 상담을 요청합니다.", href: "#/companies", ph: "hero_rise" },
-    { t: "전문가 찾기", d: "건축사·기술사·현장소장급 기술자에게 경력과 실적을 보고 상담을 요청합니다.", href: "#/experts", ph: "w_measure" },
-    { t: "자재몰", d: "입점 업체의 자재를 담고 계약서에 서명하면 견적서가 바로 나옵니다.", href: "#/mall", ph: "mt_rebar" }
+    { t: "업체 찾기", d: "시행·시공·자재 분류를 누르면 바로 채팅 상담이 시작되고, 담당 매니저가 맞는 업체를 추천합니다.", href: "#/companies", ph: "hero_rise" },
+    { t: "전문가 찾기", d: "설계·인허가부터 설비·조경까지 분야를 고르면 바로 상담이 시작됩니다. 연결은 담당 매니저가 맡습니다.", href: "#/experts", ph: "w_measure" },
+    { t: "자재몰", d: "자재 분류를 누르면 견적 상담이 시작됩니다. 직접 담아 계약서에 서명하면 견적서가 바로 나옵니다.", href: "#/mall", ph: "mt_rebar" }
   ];
   var BASE = new Date(2026, 10, 8, 10, 0).getTime(), DAY = 864e5;
   var SEED = {};
@@ -75,13 +96,71 @@
   function reqs() { var r = A.keep("requests"); return Array.isArray(r) ? r : []; }
   function myQuotes() { var r = A.keep("myquotes"); return Array.isArray(r) ? r : []; }
   var SIG = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 90"><path d="M14 62c10-26 22-40 30-36 9 5-6 40 4 41 9 1 14-30 24-29 8 1 2 24 10 25 10 1 16-22 27-21 9 1 3 18 12 18 12 0 22-14 36-15 14-1 24 6 40 3" fill="none" stroke="#1e1e1c" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
-  var SAMPLE_RQ = [
-    { id: "rq-s1", to: "c1", kind: "company", rows: [["맡기실 일", "신축 시공, 철근콘크리트 공사"], ["현장 지역", "경기 화성시"], ["규모", "990~3,300㎡ (300~1,000평)"], ["LH 매입약정 단계", "약정 체결"]], at: "2026-10-30T10:20:00+09:00", st: "연결 완료" },
-    { id: "rq-s2", to: "x3", kind: "expert", rows: [["맡기실 일", "구조 검토"], ["현장 지역", "서울 마포구"], ["규모", "330~990㎡ (100~300평)"], ["착공 희망 시기", "3개월 안"]], at: "2026-10-27T15:40:00+09:00", st: "상담 일정 확정" },
-    { id: "rq-s3", to: "pm", kind: "pm", rows: [["사업 단계", "사업성 분석"], ["현장 지역", "인천 미추홀구"], ["총사업비", "10억~50억 원"], ["PM 시작 시기", "3개월 안"]], at: "2026-10-21T09:10:00+09:00", st: "연결 완료" }
-  ];
   var SAMPLE_CART = [["m1", 3, "D13 · 8m"], ["m7", 56, "25kg"], ["m9", 20, "50T · 450×1200 (10장)"]];
-  function reqsShown() { return reqs().concat(SAMPLE_RQ).sort(function (a, b) { return new Date(b.at) - new Date(a.at); }); }
+  function seedPicks() {
+    var me = D.demoUser.company;
+    function sc(c) { var s = c.sido || c.region; return (s === "경기" ? 4 : s === "서울" || s === "인천" ? 2 : 0) + ((c.works || []).indexOf("rc") >= 0 ? 5 : 0) + (c.type === "gc" ? 3 : 0); }
+    return D.companies.filter(function (c) { return c.name !== me && c.type !== "de" && catsOf(c).indexOf("build") >= 0; })
+      .map(function (c, i) { return { c: c, s: sc(c), i: i }; })
+      .sort(function (a, b) { return (b.s - a.s) || (b.c.count - a.c.count) || (a.i - b.i); })
+      .slice(0, 3).map(function (x) { return x.c.id; });
+  }
+  function seedRq() {
+    try {
+      if (localStorage.getItem("b2bpick-rq-seeded")) return;
+      var now = A.keep("requests");
+      if (Array.isArray(now) && now.length) return;
+      var who = D.demoUser.name + " · 010-****-1234", rc = seedPicks(), mg = "도아 담당 매니저";
+      A.keep("requests", [
+        { id: "rq-ex3", to: "m1", cat: "", work: "", mcat: "", kind: "material", title: "철근 SD400 견적 상담", label: "자재몰 · 철근", answers: {},
+          rows: [["자재", "철근 SD400 · D13 · 8m"], ["수량", "20톤"], ["납품 현장", "경기 평택시"], ["납품 희망일", "11월 넷째 주"], ["연락처", who]],
+          at: "2026-11-09T09:40:00+09:00", status: "new", mgr: mg, recommend: [],
+          messages: [{ from: "me", t: "철근 SD400 D13 · 8m 20톤 견적 부탁드립니다. 경기 평택시 현장이고, 11월 넷째 주에 받고 싶습니다.", at: "2026-11-09T09:40:00+09:00" }] },
+        { id: "rq-ex2", to: "", cat: "", work: "design", mcat: "", kind: "work", title: "설계·인허가 상담", label: "전문가 찾기 · 설계·인허가", answers: {},
+          rows: [["맡기실 일", "다세대 신축 설계·인허가"], ["현장 지역", "경기 용인시"], ["대지 면적", "330~990㎡"], ["진행 단계", "토지 보유 · 설계 전"], ["연락처", who]],
+          at: "2026-11-08T11:15:00+09:00", status: "call", mgr: mg, recommend: [], call: { at: "2026-11-10T14:00:00+09:00", memo: "" },
+          messages: [
+            { from: "me", t: "설계·인허가 상담 신청합니다. 경기 용인시에 토지가 있고 다세대 신축을 생각하고 있습니다. 아직 설계 전입니다.", at: "2026-11-08T11:15:00+09:00" },
+            { from: "mgr", t: "인허가 일정은 확인할 것이 많아 전화로 상담드리겠습니다. 11월 10일 오후 2시에 남기신 번호로 연락드릴게요.", at: "2026-11-08T13:05:00+09:00" }
+          ] },
+        { id: "rq-ex1", to: "", cat: "build", work: "", mcat: "", kind: "cat", title: "시공 업체 상담", label: "업체 찾기 · 시공", answers: {},
+          rows: [["맡기실 일", "신축 시공·철근콘크리트"], ["현장 지역", "경기 화성시"], ["규모", "990~3,300㎡"], ["LH 매입약정 단계", "조건부 통과"], ["착공 희망 시기", "3개월 안"], ["연락처", who]],
+          at: "2026-11-06T10:20:00+09:00", status: "rec", mgr: mg, recommend: rc, call: { at: "2026-11-06T14:00:00+09:00", memo: "" },
+          messages: [
+            { from: "me", t: "시공 업체 상담 신청합니다. 경기 화성시 신축(철근콘크리트), 990~3,300㎡이고 LH 매입약정은 조건부 통과했습니다. 3개월 안에 착공하고 싶습니다.", at: "2026-11-06T10:20:00+09:00" },
+            { from: "mgr", t: "남겨 주신 내용 확인했습니다. 골조 물량과 일정은 전화로 한 번 여쭙겠습니다.", at: "2026-11-06T10:52:00+09:00" },
+            { from: "mgr", t: "통화 감사합니다. 말씀하신 조건(경기 화성시 · 300~1,000평 · 3개월 안 착공)에 맞는 시공 업체 3곳을 추천드립니다.", at: "2026-11-06T15:30:00+09:00", rec: rc }
+          ] }
+      ]);
+      localStorage.setItem("b2bpick-rq-seeded", "1");
+    } catch (e) {}
+  }
+  seedRq();
+  function reqsShown() { return reqs().slice().sort(function (a, b) { return new Date(b.at) - new Date(a.at); }); }
+  function stOf(x) { return x && ST[x.status] ? x.status : "new"; }
+  function msgsOf(x) { return x && Array.isArray(x.messages) ? x.messages : []; }
+  function md(t) { var d = new Date(t); return (d.getMonth() + 1) + "월 " + d.getDate() + "일"; }
+  function hm(t) { var d = new Date(t), h = d.getHours(), m = d.getMinutes(); return (h < 12 ? "오전 " : "오후 ") + (h % 12 || 12) + "시" + (m ? " " + m + "분" : ""); }
+  function wk(t) { return md(t) + " (" + WEEK[new Date(t).getDay()] + ") " + hm(t); }
+  function ro(w) { var c = w.charCodeAt(w.length - 1) - 44032; return c >= 0 && c < 11172 && c % 28 && c % 28 !== 8 ? "으로" : "로"; }
+  function sdNow() { var v = A.keep("mall-sido"); return SIDO.indexOf(v) >= 0 ? v : ""; }
+  function sdOf(c) { return c ? c.sido || c.region || "" : ""; }
+  function dist(a, b) { var x = KW[a], y = KW[b]; if (!x || !y) return 2; if (x === y) return 0; if (x === "jj" || y === "jj") return 3; return NEAR[x].indexOf(y) >= 0 ? 1 : 2; }
+  function lead(m) { if (/주문/.test(m.ship)) return -1; if (/당일/.test(m.ship)) return 0; var n = /(\d+)일/.exec(m.ship); return n ? Math.max(0, +n[1] - 1) : 1; }
+  function shipOf(m, sd) {
+    var co = CO[m.seller], from = sdOf(co), l = lead(m);
+    if (!sd) return { t: m.ship, d: 0, from: from };
+    var d = dist(sd, from), t;
+    if (l < 0) t = "주문 제작 7일 뒤 출고";
+    else if (d === 3) t = "배편 운송 · 4~6일";
+    else { var n = d + l; t = n === 0 ? "당일 출고" : n === 1 ? "익일 출고" : n <= 3 ? "2~3일 안 출고" : "4~5일 안 출고"; }
+    return { t: t, d: d, from: from };
+  }
+  function shipLine(m, sd, cls, tag) {
+    var s = shipOf(m, sd), co = CO[m.seller], tg = tag || "p";
+    return "<" + tg + ' class="' + (cls || "s-ship") + '">' + SI.truck + "<b>" + esc(sd ? sd + " 배송" : "전국 배송") + "</b><span>" + esc(s.t) + "</span>" + (co ? "<em>" + esc(s.from + " " + co.city) + " 공급사</em>" : "") + "</" + tg + ">";
+  }
+  function sdOpts(sd) { return '<option value=""' + (sd ? "" : " selected") + ">전국</option>" + SIDO.map(function (s) { return '<option value="' + s + '"' + (s === sd ? " selected" : "") + ">" + s + "</option>"; }).join(""); }
   function sampleQuote() {
     var items = [["m2", 10, "200×200×8×12 · 10m"], ["m6", 40, "40kg"], ["m13", 20, "15A · 6m"]].filter(function (r) { return MT[r[0]]; }).map(function (r) { var m = MT[r[0]], c = CO[m.seller]; return { id: m.id, name: m.name, seller: c ? c.name : "도아", sellerId: m.seller, spec: r[2], qty: r[1], unitName: m.unit, unit: m.price, list: m.price * r[1], amt: m.price * r[1] }; });
     var sum = items.reduce(function (s, x) { return s + x.amt; }, 0);
@@ -109,9 +188,9 @@
   function reviewsOf(m) { var all = A.keep("reviews") || {}; return (all[m.id] || []).concat(SEED[m.id] || []); }
   function stat(list) { var c = [0, 0, 0, 0, 0, 0], s = 0; list.forEach(function (r) { c[r.stars] = (c[r.stars] || 0) + 1; s += r.stars; }); return { n: list.length, avg: list.length ? s / list.length : 0, c: c }; }
   function avg(st) { return st.avg.toFixed(1); }
-  function head(title, sub, crumbs) {
+  function head(title, sub, crumbs, extra) {
     crumbs = crumbs && crumbs.length ? crumbs : [[title]];
-    return '<section class="s-head"><p class="s-crumb"><a href="#/">홈</a>' + crumbs.map(function (c) { return '<span aria-hidden="true">›</span>' + (c[1] ? '<a href="' + c[1] + '">' + esc(c[0]) + "</a>" : "<em>" + esc(c[0]) + "</em>"); }).join("") + "</p><h1>" + esc(title) + "</h1>" + (sub ? '<p class="s-sub">' + esc(sub) + "</p>" : "") + "</section>";
+    return '<section class="s-head"><p class="s-crumb"><a href="#/">홈</a>' + crumbs.map(function (c) { return '<span aria-hidden="true">›</span>' + (c[1] ? '<a href="' + c[1] + '">' + esc(c[0]) + "</a>" : "<em>" + esc(c[0]) + "</em>"); }).join("") + "</p><h1>" + esc(title) + "</h1>" + (sub ? '<p class="s-sub">' + esc(sub) + "</p>" : "") + (extra || "") + "</section>";
   }
   function changed() { try { window.dispatchEvent(new CustomEvent("app:quote", { detail: quoteCount() })); } catch (e) {} }
   function quoteCount() { return S.cart.length + reqs().length; }
@@ -152,34 +231,61 @@
 
   var MALL = null;
   function mcard(m) {
-    var co = CO[m.seller], st = stat(reviewsOf(m));
+    var co = CO[m.seller], st = stat(reviewsOf(m)), sd = MALL ? MALL.sd : sdNow();
     return '<article class="s-card"><a class="s-card-im" href="#/item/' + m.id + '"><img loading="lazy" src="' + photo(m.ph) + '" alt="' + esc(m.name) + '"></a><div class="s-card-b">' +
-      '<p class="s-seller"><span>판매</span>' + (co ? '<a href="#/company/' + co.id + '">' + esc(co.name) + "</a> · " + esc(co.region + " " + co.city) : "도아") + "</p>" +
+      '<p class="s-seller"><span>판매</span>' + (co ? '<a href="#/company/' + co.id + '">' + esc(co.name) + "</a> · " + esc(sdOf(co) + " " + co.city) : "도아") + "</p>" +
       '<h3><a href="#/item/' + m.id + '">' + esc(m.name) + "</a></h3>" +
       '<p class="s-spec">' + esc(m.spec) + (m.specs.length > 1 ? " 외 " + (m.specs.length - 1) + "개 규격" : "") + " · 최소 " + esc(m.moq) + "</p>" + priceBlock(m) +
-      '<p class="s-meta">평점 ' + avg(st) + " · 리뷰 " + st.n + " · " + esc(m.ship) + "</p>" +
-      '<button type="button" class="btn line-l s-add" data-act="s-add" data-id="' + m.id + '"><span>견적 목록에 담기</span></button></div></article>';
+      shipLine(m, sd) +
+      '<p class="s-meta">평점 ' + avg(st) + " · 리뷰 " + st.n + "</p>" +
+      '<div class="s-card-a"><a class="btn s-chatb" href="#/match?to=' + m.id + '">' + SI.chat + "<span>채팅 견적 상담</span></a>" +
+      '<button type="button" class="btn line-l s-add" data-act="s-add" data-id="' + m.id + '"><span>목록에 담기</span></button></div></div></article>';
+  }
+  function mbigs(kw) {
+    var cats = [{ id: "all", name: "전체", n: D.materials.length, d: "자재 종류부터 함께 고릅니다" }].concat(D.matCats.map(function (x) {
+      var ms = D.materials.filter(function (m) { return m.cat === x.id; });
+      return { id: x.id, name: x.name, n: ms.length, d: ms.map(function (m) { return SHORT[m.id] || m.name; }).join(" · ") };
+    }));
+    return '<nav class="f-bigs" aria-label="자재 분류 바로 상담"><div class="f-bigs-in"><p class="f-bigs-h"><b>자재 분류를 누르면 바로 채팅 견적 상담이 시작됩니다</b><span>공급사 단가·재고는 도아 담당 매니저가 대신 확인해 드립니다</span></p><div class="f-bigs-row">' +
+      cats.map(function (x) { return '<a class="f-big" href="#/match?mcat=' + x.id + (kw ? "&q=" + encodeURIComponent(kw) : "") + '">' + (MI[x.id] || MI.all) + '<span class="f-big-t"><b>' + esc(x.name) + "</b><em>" + x.n + '</em></span><span class="f-big-d">' + esc(x.d) + '</span><span class="f-big-go">바로 상담</span></a>'; }).join("") +
+      "</div></div></nav>";
+  }
+  function sdChips(sd) {
+    return '<div class="s-sido" role="group" aria-label="배송 지역 고르기"><p class="s-sido-k"><b>배송 지역</b><span>고르시면 가까운 공급사 자재가 먼저 나오고 출고일이 바뀝니다</span></p><div class="s-sido-l">' +
+      [""].concat(SIDO).map(function (s) { return '<button type="button" class="s-sd' + (s === sd ? " on" : "") + '" data-act="s-sido" data-v="' + s + '" aria-pressed="' + (s === sd) + '">' + (s || "전국") + "</button>"; }).join("") + "</div></div>";
+  }
+  function hasKw(m, kw) {
+    var co = CO[m.seller], hay = [m.name, m.spec, m.specs.join(" "), MC[m.cat] ? MC[m.cat].name : "", SHORT[m.id] || "", co ? co.name : ""].join(" ").toLowerCase().replace(/\s+/g, "");
+    return kw.toLowerCase().split(/\s+/).filter(Boolean).some(function (w) { return hay.indexOf(w) >= 0; });
   }
   function moreBtn() {
     var left = MALL ? MALL.items.length - MALL.shown : 0;
     return left > 0 ? '<div class="s-more-w" id="s-more-w"><button type="button" class="btn line-l s-morebtn" data-act="s-more">더 보기 (남은 ' + left + "개)</button></div>" : "";
   }
   function mall(r) {
-    var q = r.query, c = MC[q.c] ? q.c : "", sort = q.sort || "";
-    var items = D.materials.filter(function (m) { return !c || m.cat === c; });
+    var q = r.query, cq = q.cat || q.c, c = MC[cq] ? cq : "", sort = q.sort || "", kw = (q.q || "").trim(), sd = sdNow();
+    var byC = D.materials.filter(function (m) { return !c || m.cat === c; }), hit = kw ? byC.filter(function (m) { return hasKw(m, kw); }) : byC, miss = kw && !hit.length;
+    var items = (miss ? byC : hit).slice();
+    if (sd && !sort) items = items.map(function (m, i) { return { m: m, d: shipOf(m, sd).d, i: i }; }).sort(function (a, b) { return (a.d - b.d) || (a.i - b.i); }).map(function (x) { return x.m; });
     if (sort === "low") items.sort(function (a, b) { return a.price - b.price; });
     if (sort === "review") items.sort(function (a, b) { return reviewsOf(b).length - reviewsOf(a).length; });
-    var tiles = [{ id: "", name: "전체", ph: "mt_warehouse", n: D.materials.length }].concat(D.matCats.map(function (x) { return { id: x.id, name: x.name, ph: x.ph, n: D.materials.filter(function (m) { return m.cat === x.id; }).length }; }));
+    var tiles = [{ id: "", name: "전체", n: (kw && !miss ? D.materials.filter(function (m) { return hasKw(m, kw); }) : D.materials).length }].concat(D.matCats.map(function (x) { return { id: x.id, name: x.name, n: D.materials.filter(function (m) { return m.cat === x.id && (!kw || miss || hasKw(m, kw)); }).length }; }));
     var u = user();
     var mem = S.member ? '<p class="s-mem">' + esc((u && (u.company || u.name)) || "회원") + "님 · 회원가로 보고 있습니다</p>" : '<p class="s-mem">정가로 보고 있습니다 · <a href="#/join">회원가입</a>하면 회원가로 견적을 받습니다</p>';
     var per = window.matchMedia && matchMedia("(max-width: 600px)").matches ? 6 : 12;
-    MALL = { items: items, per: per, shown: Math.min(per, items.length) };
+    MALL = { items: items, per: per, shown: Math.min(per, items.length), sd: sd, r: r };
     var cards = items.slice(0, MALL.shown).map(mcard).join("");
-    app.innerHTML = '<div class="s-pg s-mall">' + head("자재몰", "입점 업체가 직접 올린 건설 자재입니다. 견적 목록에 담고 계약서에 서명하면 견적서가 나옵니다.", [["자재몰"]]) +
-      '<nav class="s-cats" aria-label="자재 분류">' + tiles.map(function (t) { return '<a class="s-cat' + (c === t.id ? " on" : "") + '" href="#/mall' + BG.qs({ c: t.id, sort: sort }) + '"' + (c === t.id ? ' aria-current="page"' : "") + '><span class="s-cat-im"><img src="' + photo(t.ph) + '" alt=""></span><span class="s-cat-t">' + esc(t.name) + '</span><span class="s-cat-n">' + t.n + "종</span></a>"; }).join("") + "</nav>" +
-      '<div class="s-bar"><p class="s-cnt">' + esc(c ? MC[c].name : "전체 자재") + " <b>" + items.length + "</b>종</p>" + mem +
-      '<p class="s-sort">' + [["", "기본순"], ["low", "낮은 가격순"], ["review", "리뷰 많은 순"]].map(function (o) { return '<a href="#/mall' + BG.qs({ c: c, sort: o[0] }) + '" class="' + (sort === o[0] ? "on" : "") + '">' + o[1] + "</a>"; }).join("") + "</p></div>" +
-      '<div class="s-grid" id="s-grid">' + cards + "</div>" + moreBtn() + cbar() + "</div>";
+    var sf = '<form class="s-sbar" id="s-sf" role="search"><label><span class="s-sr">자재 검색</span><input type="search" name="q" value="' + esc(kw) + '" placeholder="자재 이름·규격 찾기 (예: 철근)" enterkeyhint="search"></label><button type="submit" aria-label="찾기">' + I.search + "</button></form>";
+    var note = miss ? '<p class="s-miss">‘' + esc(kw) + '’와 딱 맞는 자재가 없어 ' + esc(c ? MC[c].name : "전체") + ' 자재를 모두 보여 드립니다. <a href="#/match?mcat=' + (c || "all") + "&q=" + encodeURIComponent(kw) + '">채팅으로 물어보시면 매니저가 찾아 드립니다</a></p>' : "";
+    app.innerHTML = '<div class="s-mallw"><div class="s-pg s-mall s-mall-t">' + head("자재몰", "필요한 자재를 고르시면 도아 담당 매니저가 공급사 단가·재고를 확인해 견적을 드립니다.", [["자재몰"]], sf + sdChips(sd)) + "</div>" +
+      mbigs(kw) +
+      '<div class="s-pg s-mall s-mall-b"><div class="s-brw-h"><h2>자재 직접 둘러보기</h2><p>직접 담아 계약서에 서명하면 견적서가 바로 나옵니다.</p></div>' +
+      '<nav class="s-mchips" aria-label="자재 분류로 둘러보기">' + tiles.map(function (t) { return '<a class="s-mchip' + (c === t.id ? " on" : "") + '" href="#/mall' + BG.qs({ cat: t.id, sort: sort, q: kw }) + '"' + (c === t.id ? ' aria-current="page"' : "") + ">" + esc(t.name) + " <b>" + t.n + "</b></a>"; }).join("") + "</nav>" + note +
+      '<div class="s-bar"><p class="s-cnt">' + esc(kw && !miss ? "‘" + kw + "’ 찾은 자재" : c ? MC[c].name : "전체 자재") + " <b>" + items.length + "</b>종" + (sd ? '<span class="s-cnt-sd">' + esc(sd) + " 배송 기준 · 가까운 공급사 먼저</span>" : "") + "</p>" + mem +
+      '<p class="s-sort">' + [["", sd ? "가까운 순" : "기본순"], ["low", "낮은 가격순"], ["review", "리뷰 많은 순"]].map(function (o) { return '<a href="#/mall' + BG.qs({ cat: c, sort: o[0], q: kw }) + '" class="' + (sort === o[0] ? "on" : "") + '">' + o[1] + "</a>"; }).join("") + "</p></div>" +
+      '<div class="s-grid" id="s-grid">' + cards + "</div>" + moreBtn() + cbar() + "</div></div>";
+    var f = document.getElementById("s-sf");
+    f.addEventListener("submit", function (ev) { ev.preventDefault(); var v = f.q.value.trim(); location.hash = "#/mall" + BG.qs({ cat: c, sort: sort, q: v }); });
   }
 
   var cur = null;
@@ -194,7 +300,7 @@
       { q: "세금계산서 발행되나요?", a: "네. 견적이 확정되고 납품이 끝나면 가입 때 적으신 사업자 정보로 세금계산서를 발행합니다.", who: "jw***", at: BASE - 6 * DAY },
       { q: steel ? "현장 하차까지 해 주시나요?" : "층 올림도 되나요?", a: steel ? "5톤 이상은 크레인 차량으로 현장 하차해 드립니다. 현장 진입로는 담당 매니저가 출고 전에 전화로 확인합니다." : "1층 하차까지 견적에 들어 있습니다. 층 올림은 현장 여건을 보고 따로 견적을 드립니다.", who: "dh***", at: BASE - 19 * DAY },
       { q: m.specs.length > 1 ? "규격을 섞어서 주문해도 되나요?" : "다른 자재와 같이 받을 수 있나요?", a: "", secret: true, who: "sm***", at: BASE - 33 * DAY }
-    ].map(function (x) { x.by = co ? co.name : "도아"; return x; });
+    ].map(function (x) { x.by = "도아 담당 매니저"; return x; });
   }
   function rvItem(x) {
     return '<li class="s-rv"><div class="s-rv-top">' + stars(x.stars, "sm") + '<span class="s-rv-who">' + esc(x.who) + (x.role ? " · " + esc(x.role) : "") + (x.mine ? " · 내 리뷰" : "") + '</span><span class="s-rv-at">' + day(x.at) + '</span></div><p class="s-rv-opt">선택 ' + esc(x.spec) + '</p><p class="s-rv-t">' + esc(x.text) + "</p>" +
@@ -212,7 +318,7 @@
     drawItem();
   }
   function drawItem() {
-    var m = cur.m, co = CO[m.seller], list = reviewsOf(m), st = stat(list), qa = qaOf(m), th = thumbs(m), u = S.priceOf(m);
+    var m = cur.m, co = CO[m.seller], list = reviewsOf(m), st = stat(list), qa = qaOf(m), th = thumbs(m), u = S.priceOf(m), sd = sdNow();
     var phs = []; list.forEach(function (x) { (x.photos || []).slice(0, 1).forEach(function (p) { phs.push(p); }); });
     var bars = [5, 4, 3, 2, 1].map(function (k) { var n = st.c[k] || 0, w = st.n ? Math.round(n / st.n * 100) : 0; return '<li><span class="s-bk">' + k + '점</span><span class="s-bb"><i style="width:' + w + '%"></i></span><span class="s-bn">' + n + "</span></li>"; }).join("");
     var specs = m.specs.map(function (s) { return '<button type="button" class="s-sp' + (s === cur.spec ? " on" : "") + '" data-act="s-spec" data-v="' + esc(s) + '" aria-pressed="' + (s === cur.spec) + '">' + esc(s) + "</button>"; }).join("");
@@ -221,25 +327,28 @@
       '<div class="s-it"><div class="s-gal"><div class="s-gal-main" id="s-gm">' + timg(th[0]) + '</div><div class="s-gal-th" role="group" aria-label="사진 고르기">' + th.map(function (t, i) { return '<button type="button" class="' + (i === 0 ? "on" : "") + '" data-act="s-th" data-i="' + i + '" aria-label="' + esc(t.alt) + ' 보기">' + timg(t) + "</button>"; }).join("") + "</div></div>" +
       '<div class="s-info"><div class="s-vend"><p class="s-vend-k">판매 입점 업체</p><p class="s-vend-n">' + (co ? '<a href="#/company/' + co.id + '">' + esc(co.name) + SI.chev + "</a>" : "도아") + '</p><p class="s-vend-m">' + esc(vendMeta(co)) + '</p><p class="s-vend-c">' + SI.check + esc(okLine(co)) + "</p></div>" +
       "<h1>" + esc(m.name) + '</h1><a class="s-rate" href="#s-t-rv">' + stars(st.avg, "sm") + "<b>" + avg(st) + "</b><span>리뷰 " + st.n + "</span></a>" + priceBlock(m) +
+      '<div class="s-act0"><a class="btn s-act-main" href="#/match?to=' + m.id + '">' + SI.chat + '<span>채팅으로 견적 상담</span></a><p class="s-act-n">' + SI.check + '<span>도아 담당 매니저가 공급사 단가·재고를 대신 확인해 드립니다. 공급사와 따로 연락하실 필요가 없습니다.</span></p></div>' +
       '<div class="s-opt"><p class="s-lab">규격</p><div class="s-specs">' + specs + '</div><p class="s-lab">수량 <span>(' + esc(m.unit) + ")</span></p>" +
       '<div class="s-qrow"><div class="qty"><button type="button" data-act="s-q" data-d="-1" aria-label="수량 줄이기">' + I.minus + '</button><input id="s-qty" inputmode="numeric" value="' + cur.qty + '" aria-label="수량"><button type="button" data-act="s-q" data-d="1" aria-label="수량 늘리기">' + I.plus + '</button></div><p class="s-moq">최소 주문 ' + esc(m.moq) + "</p></div>" +
       '<p class="s-amt"><span>선택 금액</span><b id="s-amt">' + won(u * cur.qty) + "원</b></p></div>" +
-      '<table class="s-tbl"><tr><th>출고</th><td>' + esc(m.ship) + "</td></tr><tr><th>최소 주문</th><td>" + esc(m.moq) + "</td></tr><tr><th>배송</th><td>화물차 현장 납품 · 1층 하차 기준 (층 올림은 따로 견적)</td></tr><tr><th>대금</th><td>견적 확정 뒤 판매 업체와 협의 · 온라인 결제 없음</td></tr></table>" +
-      '<div class="s-act"><button type="button" class="btn line-l" data-act="s-add-it">견적 목록에 담기</button><button type="button" class="btn" data-act="s-buy">바로 견적서 받기</button></div><p class="s-added" id="s-added" hidden>' + SI.check + '견적 목록에 담았습니다 <a href="#/cart">견적 목록 보기</a></p></div></div>' +
+      '<table class="s-tbl"><tr><th>배송 지역</th><td><span class="selbox s-sdsel"><select id="s-sdsel" aria-label="배송 지역 고르기">' + sdOpts(sd) + "</select>" + I.down + '</span><div id="s-shipv">' + shipLine(m, sd, "s-ship s-ship-it") + "</div></td></tr><tr><th>최소 주문</th><td>" + esc(m.moq) + "</td></tr><tr><th>배송</th><td>화물차 현장 납품 · 1층 하차 기준 (층 올림은 따로 견적)</td></tr><tr><th>대금</th><td>견적 확정 뒤 담당 매니저가 안내 · 온라인 결제 없음</td></tr></table>" +
+      '<div class="s-act"><p class="s-act-k">고른 규격·수량으로 직접 담아 견적서 받기</p><div class="s-act2"><button type="button" class="btn line-l" data-act="s-add-it">견적 목록에 담기</button><button type="button" class="btn line-l" data-act="s-buy">바로 견적서 받기</button></div></div>' +
+      '<p class="s-added" id="s-added" hidden>' + SI.check + '견적 목록에 담았습니다 <a href="#/cart">견적 목록 보기</a></p></div></div>' +
       '<nav class="s-tabs" id="s-tabs" aria-label="상품 정보"><a href="#s-t-info" class="on">상세정보</a><a href="#s-t-rv">리뷰 <b>' + st.n + '</b></a><a href="#s-t-qa">문의 <b>' + qa.length + '</b></a><a href="#s-t-ret">교환·반품 안내</a></nav>' +
-      '<section class="s-sec" id="s-t-info"><h2>상세정보</h2><table class="s-tbl s-spec"><tr><th>품명</th><td>' + esc(m.name) + "</td></tr><tr><th>분류</th><td>" + esc(MC[m.cat].name) + "</td></tr><tr><th>규격</th><td>" + m.specs.map(esc).join("<br>") + "</td></tr><tr><th>단위</th><td>" + esc(m.unit) + "</td></tr><tr><th>최소 주문</th><td>" + esc(m.moq) + "</td></tr><tr><th>출고</th><td>" + esc(m.ship) + "</td></tr><tr><th>판매 업체</th><td>" + esc(co ? co.name + " · " + co.region + " " + co.city : "도아") + "</td></tr><tr><th>확인 항목</th><td>" + esc(okLine(co)) + "</td></tr><tr><th>견적 방식</th><td>견적 목록에 담고 계약서에 서명하면 견적서가 나옵니다. 대금은 견적 확정 뒤 판매 업체와 협의합니다.</td></tr></table>" +
+      '<section class="s-sec" id="s-t-info"><h2>상세정보</h2><table class="s-tbl s-spec"><tr><th>품명</th><td>' + esc(m.name) + "</td></tr><tr><th>분류</th><td>" + esc(MC[m.cat].name) + "</td></tr><tr><th>규격</th><td>" + m.specs.map(esc).join("<br>") + "</td></tr><tr><th>단위</th><td>" + esc(m.unit) + "</td></tr><tr><th>최소 주문</th><td>" + esc(m.moq) + "</td></tr><tr><th>출고</th><td>" + esc(m.ship) + "</td></tr><tr><th>판매 업체</th><td>" + esc(co ? co.name + " · " + co.region + " " + co.city : "도아") + "</td></tr><tr><th>확인 항목</th><td>" + esc(okLine(co)) + "</td></tr><tr><th>견적 방식</th><td>채팅으로 상담하시거나, 견적 목록에 담고 계약서에 서명하면 견적서가 나옵니다. 대금과 납품 일정은 담당 매니저가 공급사와 맞춰 안내합니다.</td></tr></table>" +
       '<ul class="s-notes">' + (NOTE[m.cat] || []).map(function (t) { return "<li>" + esc(t) + "</li>"; }).join("") + "</ul>" +
       '<figure class="s-big"><img loading="lazy" src="' + photo(m.ph) + '" alt="' + esc(m.name) + '"><figcaption>' + esc(m.name + " · " + m.spec) + '</figcaption></figure><figure class="s-big"><img loading="lazy" src="' + photo((SITE[m.cat] || [m.ph])[0]) + '" alt="' + esc(MC[m.cat].name) + ' 현장"><figcaption>' + esc(MC[m.cat].name) + " 시공 현장</figcaption></figure></section>" +
       '<section class="s-sec" id="s-t-rv"><div class="s-sec-h"><h2>리뷰 <b>' + st.n + '</b></h2><button type="button" class="btn s-wr" data-act="s-rv-open">리뷰 쓰기</button></div>' +
       '<div class="s-rv-sum"><div class="s-rv-avg"><b>' + avg(st) + "</b>" + stars(st.avg) + "<p>리뷰 " + st.n + '개 평균</p></div><ul class="s-rv-bars">' + bars + "</ul></div>" +
       (phs.length ? '<div class="s-rv-phs"><p class="s-lab">사진 리뷰 <span>' + phs.length + '</span></p><div class="s-rv-strip">' + phs.slice(0, 8).map(function (p, i) { return '<button type="button" data-act="s-rv-photo" aria-label="사진 리뷰만 보기 ' + (i + 1) + '"><img loading="lazy" src="' + esc(src(p)) + '" alt=""></button>'; }).join("") + "</div></div>" : "") +
       '<p class="s-rv-sort" role="group" aria-label="리뷰 정렬">' + [["new", "최신순"], ["rate", "평점순"], ["photo", "사진 리뷰만"]].map(function (o) { return '<button type="button" data-act="s-rv-sort" data-v="' + o[0] + '" class="' + (cur.sort === o[0] ? "on" : "") + '" aria-pressed="' + (cur.sort === o[0]) + '">' + o[1] + "</button>"; }).join("") + '</p><ul class="s-rv-list" id="s-rvl">' + rvList() + "</ul></section>" +
-      '<section class="s-sec" id="s-t-qa"><div class="s-sec-h"><h2>문의 <b>' + qa.length + '</b></h2><button type="button" class="btn line-l s-wr" data-act="s-qa">상품 문의하기</button></div><ul class="s-qa">' + qa.map(function (x) {
-        return '<li><p class="s-qa-q"><span>질문</span>' + esc(x.q) + '</p><p class="s-qa-m">' + esc(x.who) + " · " + day(x.at) + " · 답변 완료</p>" + (x.secret ? '<p class="s-qa-a s-qa-s">비밀 답변입니다. 질문한 회원과 판매 업체만 볼 수 있습니다.</p>' : '<p class="s-qa-a"><span>답변 · ' + esc(x.by) + "</span>" + esc(x.a) + "</p>") + "</li>";
+      '<section class="s-sec" id="s-t-qa"><div class="s-sec-h"><h2>문의 <b>' + qa.length + '</b></h2><a class="btn line-l s-wr" href="#/match?to=' + m.id + '">채팅으로 문의하기</a></div><ul class="s-qa">' + qa.map(function (x) {
+        return '<li><p class="s-qa-q"><span>질문</span>' + esc(x.q) + '</p><p class="s-qa-m">' + esc(x.who) + " · " + day(x.at) + " · 답변 완료</p>" + (x.secret ? '<p class="s-qa-a s-qa-s">비밀 답변입니다. 질문한 회원과 담당 매니저만 볼 수 있습니다.</p>' : '<p class="s-qa-a"><span>답변 · ' + esc(x.by) + "</span>" + esc(x.a) + "</p>") + "</li>";
       }).join("") + "</ul></section>" +
       '<section class="s-sec" id="s-t-ret"><h2>교환·반품 안내</h2><table class="s-tbl"><tr><th>신청 기간</th><td>받은 날부터 7일 안에 담당 매니저에게 알려 주세요.</td></tr><tr><th>비용</th><td>제품 하자나 다른 규격이 온 경우는 판매 업체가, 단순 변심은 구매자가 왕복 운송비를 냅니다.</td></tr><tr><th>교환·반품이 어려운 경우</th><td>절단·가공한 자재, 주문 제작 품목, 개봉해 사용한 자재, 현장 보관 중 젖거나 손상된 자재</td></tr><tr><th>문의</th><td>담당 매니저 · 대표번호 1588-9863</td></tr></table></section>' +
-      '<div class="s-buy"><button type="button" class="btn line-l" data-act="s-add-it">견적 목록에 담기</button><button type="button" class="btn" data-act="s-buy">바로 견적서 받기</button></div></div>';
-    var qi = document.getElementById("s-qty");
+      '<div class="s-buy"><a class="btn" href="#/match?to=' + m.id + '">채팅으로 견적 상담</a><button type="button" class="btn line-l" data-act="s-add-it">목록에 담기</button></div></div>';
+    var qi = document.getElementById("s-qty"), ss = document.getElementById("s-sdsel");
+    ss.addEventListener("change", function () { A.keep("mall-sido", ss.value); document.getElementById("s-shipv").innerHTML = shipLine(m, sdNow(), "s-ship s-ship-it"); });
     qi.addEventListener("change", function () { cur.qty = fixQty(m, qi.value); qi.value = cur.qty; amt(); });
     var nav = document.getElementById("s-tabs");
     BG.spy(nav, function () { var h = document.getElementById("hd"); return (h ? h.offsetHeight : 64) + nav.offsetHeight; });
@@ -342,22 +451,25 @@
     var m = x.m;
     return '<article class="s-row"><a class="s-row-im" href="#/item/' + m.id + '"><img src="' + photo(m.ph) + '" alt="' + esc(m.name) + '"></a><div class="s-row-i"><h3><a href="#/item/' + m.id + '">' + esc(m.name) + "</a></h3>" +
       (m.specs.length > 1 ? '<label class="selbox s-row-sp"><select data-s-spec="' + x.i + '" aria-label="' + esc(m.name) + ' 규격">' + m.specs.map(function (s) { return "<option" + (s === x.spec ? " selected" : "") + ">" + esc(s) + "</option>"; }).join("") + "</select>" + I.down + "</label>" : '<p class="s-row-s">' + esc(x.spec) + "</p>") +
-      '<p class="s-row-u">' + (S.member ? "회원가 " : "") + won(x.unit) + "원 / " + esc(m.unit) + " · 최소 " + esc(m.moq) + "</p></div>" +
+      '<p class="s-row-u">' + (S.member ? "회원가 " : "") + won(x.unit) + "원 / " + esc(m.unit) + " · 최소 " + esc(m.moq) + "</p>" + shipLine(m, sdNow(), "s-ship s-ship-row") + "</div>" +
       '<div class="s-row-q"><div class="qty"><button type="button" data-act="s-cq" data-i="' + x.i + '" data-d="-1" aria-label="수량 줄이기">' + I.minus + '</button><input data-s-qty="' + x.i + '" inputmode="numeric" value="' + x.qty + '" aria-label="' + esc(m.name) + ' 수량"><button type="button" data-act="s-cq" data-i="' + x.i + '" data-d="1" aria-label="수량 늘리기">' + I.plus + '</button></div><span>' + esc(m.unit) + "</span></div>" +
       '<p class="s-row-p">' + won(x.amt) + '원</p><button type="button" class="s-row-x" data-act="s-cdel" data-i="' + x.i + '" aria-label="' + esc(m.name) + ' 빼기">빼기</button></article>';
   }
   function sumBox() {
     var t = S.cartTotals();
     return '<aside class="s-sumb"><h2>견적 합계</h2><dl><div><dt>품목</dt><dd>' + t.count + "개</dd></div><div><dt>정가 합계</dt><dd>" + won(t.list) + "원</dd></div>" + (S.member ? "<div><dt>회원가 합계</dt><dd>" + won(t.pay) + "원</dd></div>" : "") + '<div class="t"><dt>견적 금액</dt><dd>' + won(t.pay) + "원</dd></div></dl>" +
-      (S.member ? "" : '<p class="s-sumb-n"><a href="#/join">회원가입</a>하면 회원가로 다시 계산됩니다.</p>') + '<a class="btn s-wide" href="#/sign">계약서 쓰고 견적서 받기</a><p class="s-sumb-n">대금은 견적 확정 뒤 판매 업체와 협의합니다. 이 사이트에서는 결제하지 않습니다.</p></aside>';
+      (S.member ? "" : '<p class="s-sumb-n"><a href="#/join">회원가입</a>하면 회원가로 다시 계산됩니다.</p>') + '<a class="btn s-wide" href="#/sign">계약서 쓰고 견적서 받기</a><a class="btn line-l s-wide s-sumb-chat" href="#/match?mcat=all">' + SI.chat + '<span>채팅으로 견적 상담</span></a><p class="s-sumb-n">대금은 견적 확정 뒤 담당 매니저가 안내합니다. 이 사이트에서는 결제하지 않습니다.</p></aside>';
   }
   function cart() {
     seedCart();
     var rows = cartRows();
+    var sd = sdNow();
     app.innerHTML = '<div class="s-pg s-cartp">' + head("자재 견적 목록", "담은 자재를 입점 업체별로 모았습니다. 계약서에 서명하면 견적서가 나옵니다.", [["자재몰", "#/mall"], ["자재 견적 목록"]]) +
-      (rows.length ? '<div class="s-cart"><div class="s-cl">' + bySeller(rows).map(function (g) {
+      (rows.length ? '<div class="s-cart"><div class="s-cl"><div class="s-csd"><p><b>배송 지역</b><span>' + esc(sd ? sd + " 현장 기준으로 품목별 출고일을 안내합니다" : "전국 기준 출고일입니다. 지역을 고르시면 맞춰 안내합니다") + '</span></p><span class="selbox s-sdsel"><select id="s-csd" aria-label="배송 지역 고르기">' + sdOpts(sd) + "</select>" + I.down + "</span></div>" + bySeller(rows).map(function (g) {
         return '<section class="s-grp"><header class="s-grp-h"><p class="s-grp-n"><span>판매</span>' + (g.c ? '<a href="#/company/' + g.c.id + '">' + esc(g.c.name) + "</a>" : "도아") + '</p><p class="s-grp-m">' + esc(vendMeta(g.c)) + " · " + esc(okLine(g.c)) + "</p></header>" + g.rows.map(cartRow).join("") + "</section>";
       }).join("") + "</div>" + sumBox() + "</div>" : '<div class="s-empty"><p>담은 자재가 없습니다.</p><a class="btn" href="#/mall">자재몰로 가기</a></div>') + "</div>";
+    var cs = document.getElementById("s-csd");
+    if (cs) cs.addEventListener("change", function () { A.keep("mall-sido", cs.value); redrawCart(); });
   }
   function redrawCart() { var y = window.scrollY; cart(); window.scrollTo(0, y); changed(); }
   function setSpec(i, spec) {
@@ -434,7 +546,7 @@
       "<li><b>제2조 (납품 조건)</b> 납품 장소는 구매자가 정한 현장이며, 납기는 품목별 출고 기준(당일 출고·2일·3일·주문 제작 7일)에 따릅니다. 하차는 1층 하차를 기준으로 하고 층 올림은 따로 정합니다.</li>" +
       "<li><b>제3조 (대금)</b> 대금은 견적 확정 뒤 공급자와 구매자가 협의하여 정합니다. 이 계약서 서명으로 결제가 일어나지 않습니다.</li>" +
       "<li><b>제4조 (검수와 교환)</b> 구매자는 받은 날부터 7일 안에 수량과 상태를 확인하고, 하자가 있으면 공급자가 교환합니다. 절단·가공한 자재와 주문 제작 품목은 교환하지 않습니다.</li>" +
-      "<li><b>제5조 (중개)</b> 도아는 거래를 중개하며, 담당 매니저가 견적 확정과 납품 일정 조율을 돕습니다.</li></ol>" +
+      "<li><b>제5조 (중개)</b> 도아는 거래를 중개하며, 담당 매니저가 견적 확정과 납품 일정 조율을 맡습니다. 공급자와 구매자의 연락은 담당 매니저를 거칩니다.</li></ol>" +
       '<div class="s-pi"><b>개인정보 수집·이용 동의</b><p>수집 항목 회사명, 서명자 이름, 휴대폰 번호 · 이용 목적 견적서 발급과 납품 연락 · 보유 기간 거래가 끝난 뒤 5년</p></div>' +
       '<div class="s-doc-sg"><p>구매자 <b id="s-doc-who">' + esc(u.name || "") + '</b> (서명)</p><span class="s-doc-im"><img id="s-doc-sig" alt="구매자 서명" hidden></span></div></article>' +
       '<form class="s-sform" id="s-sform" novalidate><h2>서명</h2>' +
@@ -485,16 +597,39 @@
       docItems(qd.items, foot) +
       '<div class="s-qfoot"><p class="s-qmsg">담당 매니저가 확인 후 연락드립니다.</p><div class="s-qsig"><p>구매자 서명<span>' + esc(qd.signer) + " · " + day(qd.at) + '</span></p><span class="s-doc-im"><img src="' + esc(qd.sig || "") + '" alt="구매자 서명"></span></div></div></article>' +
       '<aside class="s-done-a"><button type="button" class="btn s-wide" data-act="s-dl">견적서 내려받기</button><a class="btn line-l s-wide" href="#/quote">견적서 받기 화면으로</a><a class="btn line-l s-wide" href="#/mall">자재 더 보기</a>' +
-      '<ol class="s-flow"><li><b>담당 매니저 확인</b><span>견적서와 서명한 계약서를 확인합니다.</span></li><li><b>공급자와 견적 확정</b><span>재고와 출고일을 입점 업체와 맞춥니다.</span></li><li><b>대금 협의 · 납품 일정</b><span>확정된 견적으로 대금과 납품일을 정합니다.</span></li></ol></aside></div></div>';
+      '<ol class="s-flow"><li><b>담당 매니저 확인</b><span>견적서와 서명한 계약서를 확인합니다.</span></li><li><b>매니저가 공급사와 견적 확정</b><span>담당 매니저가 재고와 출고일을 공급사와 맞춥니다.</span></li><li><b>대금 · 납품 일정 안내</b><span>확정된 견적으로 대금과 납품일을 매니저가 안내합니다.</span></li></ol></aside></div></div>';
   }
 
   function reqName(x) {
-    var c = CO[x.to], e = EX[x.to];
-    if (c) return { n: c.name, s: A.typeName(c.type) + " · " + c.region + " " + c.city, href: "#/company/" + c.id, k: "업체 상담" };
-    if (e) return { n: e.name + " " + e.title, s: e.region + " · 경력 " + e.years + "년", href: "#/expert/" + e.id, k: "전문가 상담" };
-    if (x.to === "pm") return { n: "PM 상담", s: "도아 PM 담당", href: "#/pm", k: "PM 상담" };
-    if (x.to === "finance") return { n: "금융 상담", s: "도아 금융 담당", href: "#/finance", k: "금융 상담" };
-    return { n: String(x.title || x.to || "상담 요청"), s: x.label || "", href: "#/quote", k: x.kind === "expert" ? "전문가 상담" : "업체 상담" };
+    var c = CO[x.to], e = EX[x.to], m = MT[x.to];
+    var k = c || x.kind === "company" || x.kind === "cat" ? "업체 상담" : e || x.kind === "expert" || x.kind === "work" ? "전문가 상담" : m || x.kind === "material" || x.kind === "mcat" ? "자재 견적 상담" : x.to === "pm" || x.kind === "pm" ? "PM 상담" : x.to === "finance" || x.kind === "finance" ? "금융 상담" : "상담";
+    var n = x.title || (c ? c.name + " 상담" : e ? e.name + " " + e.title + " 상담" : m ? m.name + " 견적 상담" : k);
+    var sub = x.label || (c ? A.typeName(c.type) + " · " + sdOf(c) + " " + c.city : e ? e.region + " · 경력 " + e.years + "년" : m ? "자재몰 · " + (MC[m.cat] ? MC[m.cat].name : "") : "");
+    return { n: n, s: sub, k: k };
+  }
+  function recCard(x, c) {
+    var picked = msgsOf(x).some(function (g) { return g.from === "me" && g.pick === c.id; });
+    var lic = (c.licenses || []).join(" · ");
+    return '<li class="s-rc"><p class="s-rc-k">' + esc((CATN[c.cat] || CATN[catsOf(c)[0]] || "업체") + " · " + A.typeName(c.type)) + '</p><h4><a href="#/company/' + c.id + '">' + esc(c.name) + "</a></h4>" +
+      '<dl class="s-rc-f"><div><dt>지역</dt><dd>' + esc(sdOf(c) + " " + c.city) + "</dd></div><div><dt>설립</dt><dd>" + esc(c.since + "년") + "</dd></div><div><dt>실적</dt><dd>" + esc(won(c.count) + "건") + "</dd></div>" + (lic ? "<div><dt>면허</dt><dd>" + esc(lic) + "</dd></div>" : "") + "</dl>" +
+      '<p class="s-rc-ok">' + SI.check + "<span>도아 확인 · " + esc((c.checks || []).map(function (k) { return { "면허": "면허", "사업자": "사업자등록", "보험": "보험 가입" }[k] || k; }).join(" · ")) + "</span></p>" +
+      (picked ? '<p class="s-rc-done">' + SI.check + "<span>진행 요청을 보냈습니다</span></p>" : '<button type="button" class="btn s-rc-go" data-act="s-pick" data-rq="' + esc(x.id) + '" data-c="' + c.id + '">이 업체로 진행 요청</button>') + "</li>";
+  }
+  function rqItem(x, full) {
+    var nm = reqName(x), st = stOf(x), ms = msgsOf(x), last = null, step = STEP[st];
+    for (var i = ms.length - 1; i >= 0; i--) if (ms[i] && ms[i].from === "mgr") { last = ms[i]; break; }
+    var recs = (Array.isArray(x.recommend) ? x.recommend : []).map(function (id) { return CO[id]; }).filter(Boolean);
+    var href = "#/match?rq=" + encodeURIComponent(x.id);
+    var h = '<li class="s-rq s-rqst-' + st + '"><div class="s-rq-top"><p class="s-rq-k">' + esc(nm.k) + (x.at ? " · " + day(x.at) : "") + '</p><p class="s-st s-st-' + st + '">' + esc(ST[st]) + "</p></div>" +
+      '<h3><a href="' + href + '">' + esc(nm.n) + "</a></h3>" + (nm.s ? '<p class="s-rq-s">' + esc(nm.s) + "</p>" : "") +
+      '<ol class="s-stp" aria-label="진행 단계">' + ["매니저 확인", "채팅·전화 상담", "업체 추천", "진행"].map(function (t, k) { return '<li class="' + (k < step ? "ok" : k === step ? "on" : "") + '"' + (k === step ? ' aria-current="step"' : "") + "><span>" + t + "</span></li>"; }).join("") + "</ol>";
+    if (full) h += answers(x.answers, x.rows);
+    if (st === "call" && x.call && x.call.at) h += '<p class="s-rq-call">' + SI.phone + "<span><b>" + esc(wk(x.call.at)) + "</b> 남기신 번호로 담당 매니저가 전화드립니다</span></p>";
+    if (st === "new") h += '<p class="s-rq-wait">담당 매니저가 남기신 내용을 확인하고 있습니다. 채팅이나 전화로 곧 연락드립니다.</p>';
+    if (last) h += '<div class="s-mmsg"><p class="s-mmsg-k">' + esc(x.mgr || "도아 담당 매니저") + (last.at ? " · " + esc(md(last.at) + " " + hm(last.at)) : "") + "</p><p>" + esc(last.t || "") + "</p></div>";
+    if (recs.length && full) h += '<div class="s-recb"><p class="s-recb-h"><b>매니저가 추천한 업체 ' + recs.length + '곳</b><span>업체에 전하는 말과 일정 조율은 담당 매니저가 대신 합니다</span></p><ul class="s-rcs">' + recs.map(function (c) { return recCard(x, c); }).join("") + "</ul></div>";
+    h += '<div class="s-rq-a"><a class="btn line-l" href="' + href + '">' + SI.chat + "<span>대화 보기</span></a>" + (recs.length && !full ? '<a class="s-more" href="#/quote">추천 업체 ' + recs.length + "곳 보기 " + I.arrow + "</a>" : "") + "</div></li>";
+    return h;
   }
   function answers(a, rows) {
     if (Array.isArray(rows) && rows.length) return '<dl class="s-ans">' + rows.filter(function (x) { return x && x[1]; }).slice(0, 4).map(function (x) { return "<div><dt>" + esc(x[0]) + "</dt><dd>" + esc(x[1]) + "</dd></div>"; }).join("") + "</dl>";
@@ -510,38 +645,37 @@
     if (r.query.to && A.views.match) { location.replace("#/match?to=" + encodeURIComponent(r.query.to)); return; }
     seedCart();
     var rows = cartRows(), rq = reqsShown(), qs = quotesShown(), t = S.cartTotals(), emptyAll = !rows.length && !rq.length && !qs.length;
-    var html = '<div class="s-pg s-hub">' + head("견적서 받기", emptyAll ? "업체 찾기·전문가 찾기·자재몰을 한곳에서 받습니다. 먼저 찾으실 것을 골라 주세요." : "업체·전문가 상담 요청과 자재 견적을 한곳에서 확인합니다. 담당 매니저가 확인한 뒤 연락드립니다.", [["견적서 받기"]]);
+    var cta = '<div class="s-head-a"><a class="btn s-cta" href="#/match">' + SI.chat + '<span>채팅으로 새 상담 시작</span></a><a class="s-call" href="tel:1588-9863">' + SI.phone + "<span>전화 상담 1588-9863</span></a></div>";
+    var html = '<div class="s-pg s-hub">' + head("견적서 받기", emptyAll ? "업체 찾기·전문가 찾기·자재몰 상담을 한곳에서 받습니다. 먼저 찾으실 것을 골라 주세요." : "상담 요청과 자재 견적을 한곳에서 확인합니다. 업체 연결은 도아 담당 매니저가 가운데에서 맡습니다.", [["견적서 받기"]], cta);
     if (emptyAll) {
-      html += doorsHtml(true) + '<p class="s-hub-n">고르신 업체·전문가에 상담을 요청하거나 자재를 담으면 이 화면에 모입니다. 담당 매니저가 확인한 뒤 연락드립니다.</p>';
+      html += doorsHtml(true) + '<p class="s-hub-n">분야를 골라 상담을 시작하거나 자재를 담으면 이 화면에 모입니다. 담당 매니저가 확인한 뒤 연락드립니다.</p>';
     } else {
-      html += '<dl class="s-hub-sum"><div><dt>자재 견적 목록</dt><dd>' + rows.length + '품목</dd></div><div><dt>상담 요청</dt><dd>' + rq.length + "건</dd></div><div><dt>받은 견적서</dt><dd>" + qs.length + "건</dd></div></dl>";
+      html += '<dl class="s-hub-sum"><div><dt>상담 요청</dt><dd>' + rq.length + '건</dd></div><div><dt>자재 견적 목록</dt><dd>' + rows.length + "품목</dd></div><div><dt>받은 견적서</dt><dd>" + qs.length + "건</dd></div></dl>";
+      html += '<section class="s-hs" id="s-rqsec"><div class="s-hs-h"><h2>내 상담 요청</h2><p class="s-hs-n">고객님과 업체 사이는 도아 담당 매니저가 이어 드립니다</p></div>' + (rq.length ? '<ul class="s-rqs">' + rq.map(function (x) { return rqItem(x, true); }).join("") + "</ul>" : '<p class="s-hs-e">아직 보낸 상담 요청이 없습니다. <a href="#/match">채팅 상담</a>을 시작하면 여기에 모입니다.</p>') + "</section>";
       html += '<section class="s-hs"><div class="s-hs-h"><h2>자재 견적 목록</h2>' + (rows.length ? '<a class="s-more" href="#/cart">목록 고치기 ' + I.arrow + "</a>" : "") + "</div>" +
-        (rows.length ? '<ul class="s-mini">' + rows.map(function (x) { return '<li><img src="' + photo(x.m.ph) + '" alt=""><p><b>' + esc(x.m.name) + "</b><span>" + esc((CO[x.m.seller] ? CO[x.m.seller].name + " · " : "") + x.spec + " · " + won(x.qty) + x.m.unit) + "</span></p><strong>" + won(x.amt) + "원</strong></li>"; }).join("") + '</ul><div class="s-hs-f"><p>견적 금액 <b>' + won(t.pay) + '원</b></p><a class="btn" href="#/sign">계약서 쓰고 견적서 받기</a></div>' : '<p class="s-hs-e">담은 자재가 없습니다. <a href="#/mall">자재몰</a>에서 담으면 여기에 모입니다.</p>') + "</section>";
-      html += '<section class="s-hs"><div class="s-hs-h"><h2>업체·전문가 상담 요청</h2></div>' + (rq.length ? '<ul class="s-rqs">' + rq.map(function (x) {
-        var nm = reqName(x);
-        return '<li class="s-rq"><div class="s-rq-i"><p class="s-rq-k">' + esc(nm.k) + (x.at ? " · " + day(x.at) : "") + '</p><h3><a href="' + nm.href + '">' + esc(nm.n) + "</a></h3>" + (nm.s ? '<p class="s-rq-s">' + esc(nm.s) + "</p>" : "") + answers(x.answers, x.rows) + '</div><p class="s-rq-st">' + esc(x.st || "매니저 확인 중") + '</p></li>';
-      }).join("") + "</ul>" : '<p class="s-hs-e">아직 보낸 상담 요청이 없습니다. <a href="#/companies">업체 찾기</a>나 <a href="#/experts">전문가 찾기</a>에서 요청하면 여기에 모입니다.</p>') + "</section>";
+        (rows.length ? '<ul class="s-mini">' + rows.map(function (x) { return '<li><img src="' + photo(x.m.ph) + '" alt=""><p><b>' + esc(x.m.name) + "</b><span>" + esc((CO[x.m.seller] ? CO[x.m.seller].name + " · " : "") + x.spec + " · " + won(x.qty) + x.m.unit) + "</span>" + shipLine(x.m, sdNow(), "s-ship s-ship-mini", "span") + "</p><strong>" + won(x.amt) + "원</strong></li>"; }).join("") + '</ul><div class="s-hs-f"><p>견적 금액 <b>' + won(t.pay) + '원</b></p><a class="btn" href="#/sign">계약서 쓰고 견적서 받기</a></div>' : '<p class="s-hs-e">담은 자재가 없습니다. <a href="#/mall">자재몰</a>에서 담으면 여기에 모입니다.</p>') + "</section>";
       if (qs.length) html += '<section class="s-hs"><div class="s-hs-h"><h2>받은 견적서</h2></div><ul class="s-qs">' + qs.map(function (x) { return '<li><a href="#/quote/done?no=' + encodeURIComponent(x.no) + '"><b>' + esc(x.no) + "</b><span>" + day(x.at) + " · " + esc(x.items[0] ? x.items[0].name : "") + (x.items.length > 1 ? " 외 " + (x.items.length - 1) + "품목" : "") + "</span><strong>" + won(x.pay) + "원</strong>" + I.arrow + "</a></li>"; }).join("") + "</ul></section>";
-      html += '<section class="s-hs"><div class="s-hs-h"><h2>더 담으러 가기</h2></div>' + doorsHtml(false) + "</section>";
+      html += '<section class="s-hs"><div class="s-hs-h"><h2>새 상담 시작하기</h2></div>' + doorsHtml(false) + "</section>";
     }
     app.innerHTML = html + "</div>";
   }
+  function redraw() { var y = window.scrollY, r = BG.parseHash(); if (A.views[r.name]) A.views[r.name](r); window.scrollTo(0, y); changed(); }
 
   var J = null;
   function join(r) {
     var k = r.query.kind === "biz" || r.query.kind === "person" ? r.query.kind : "";
-    J = { step: k ? 2 : 1, kind: k, f: {}, p: [], ref: "" };
+    J = { step: k ? 2 : 1, kind: k, f: {}, p: [], ref: "", refOk: false };
     drawJoin(false);
   }
   function fv(n) { return esc(J.f[n] || ""); }
   function joinBody() {
     if (J.step === 1) {
-      return '<div class="s-kinds"><button type="button" class="s-kind" data-act="s-kind" data-k="biz"><span class="s-kind-im"><img src="' + photo("hero_rise") + '" alt=""></span><span class="s-kind-b"><b>업체 입점 (사업자)</b><span>시행·시공·자재·설계·PM·금융 업체로 입점해 상담과 견적 요청을 받습니다.</span><em>사업자등록번호로 가입 ' + I.arrow + "</em></span></button>" +
-        '<button type="button" class="s-kind" data-act="s-kind" data-k="person"><span class="s-kind-im"><img src="' + photo("site_aerial") + '" alt=""></span><span class="s-kind-b"><b>일반회원 (개인)</b><span>토지·기술·자본을 가지고 계신 분, 자재를 사려는 분이 가입합니다.</span><em>휴대폰 번호로 가입 ' + I.arrow + "</em></span></button></div>";
+      return '<div class="s-kinds"><button type="button" class="s-kind" data-act="s-kind" data-k="biz"><span class="s-kind-im"><img src="' + photo("hero_rise") + '" alt=""></span><span class="s-kind-b"><b>업체 입점 (사업자)</b><span>시행·시공·자재·설계·PM·금융 업체로 입점하면 담당 매니저가 맞는 상담과 견적 요청을 전해 드립니다.</span><em>사업자등록번호로 가입 ' + I.arrow + "</em></span></button>" +
+        '<button type="button" class="s-kind" data-act="s-kind" data-k="person"><span class="s-kind-im"><img src="' + photo("site_aerial") + '" alt=""></span><span class="s-kind-b"><b>일반회원 (개인)</b><span>토지·기술·자본을 가지고 계신 분, 자재를 사려는 분이 가입합니다.</span><em>휴대폰 번호로 가입 ' + I.arrow + "</em></span></button></div>" + refAsk(true);
     }
     if (J.step === 2) {
       var biz = J.kind === "biz";
-      return '<form class="s-jf" id="s-jf" novalidate><p class="s-jk">' + (biz ? "업체 입점 (사업자)" : "일반회원 (개인)") + ' <button type="button" class="s-link" data-act="s-jprev">회원 종류 바꾸기</button></p><div class="s-jg">' +
+      return '<form class="s-jf" id="s-jf" novalidate><p class="s-jk">' + (biz ? "업체 입점 (사업자)" : "일반회원 (개인)") + ' <button type="button" class="s-link" data-act="s-jprev">회원 종류 바꾸기</button></p>' + refBox(biz) + '<div class="s-jg">' +
         (biz ? '<label class="s-fl"><span>회사명</span><input class="inp" name="company" value="' + fv("company") + '" autocomplete="organization"></label><label class="s-fl"><span>사업자등록번호</span><input class="inp" name="bizNo" value="' + fv("bizNo") + '" inputmode="numeric" placeholder="000-00-00000"></label><label class="s-fl"><span>담당자 이름</span><input class="inp" name="name" value="' + fv("name") + '" autocomplete="name"></label>' : '<label class="s-fl"><span>이름</span><input class="inp" name="name" value="' + fv("name") + '" autocomplete="name"></label>') +
         '<label class="s-fl"><span>휴대폰</span><input class="inp" name="phone" value="' + fv("phone") + '" inputmode="tel" autocomplete="tel" placeholder="010-0000-0000"></label>' +
         '<label class="s-fl"><span>아이디</span><input class="inp" name="id" value="' + fv("id") + '" autocomplete="username" placeholder="영문·숫자 4자 이상"></label><label class="s-fl"><span>비밀번호</span><input class="inp" type="password" name="pw" autocomplete="new-password" placeholder="8자 이상"></label></div>' +
@@ -549,9 +683,30 @@
         '<p class="s-err" id="s-jerr" role="alert"></p><div class="s-jact"><button type="button" class="btn line-l" data-act="s-jprev">이전</button><button type="submit" class="btn">다음</button></div></form>';
     }
     return '<form class="s-jf" id="s-jf" novalidate><fieldset class="s-fs"><legend>가입 목적 <em>여러 개 고를 수 있습니다</em></legend><div class="s-pur">' + PURPOSES.map(function (x) { return '<label class="s-cb s-pur-i"><input type="checkbox" name="pur" value="' + x[0] + '"' + (J.p.indexOf(x[0]) >= 0 ? " checked" : "") + '><span class="s-box" aria-hidden="true">' + SI.check + "</span><span>" + x[1] + "</span></label>"; }).join("") + "</div></fieldset>" +
-      '<label class="s-fl s-ref"><span>추천인 아이디 <em>선택</em></span><input class="inp" name="ref" value="' + esc(J.ref) + '" placeholder="추천해 준 회원의 아이디"></label><p class="s-refn">가입하면 추천인에게 포인트가 적립됩니다. 포인트는 가입 추천 적립과 관리자 지급으로만 쌓입니다.</p>' +
+      '<p class="s-refd">' + SI.check + "<span>추천인 <b>" + esc(mask(J.ref)) + "</b>님 확인 완료 · 가입하면 추천인에게 포인트가 적립됩니다</span></p>" +
       '<label class="s-cb"><input type="checkbox" name="agree"><span class="s-box" aria-hidden="true">' + SI.check + "</span><span>[필수] 이용약관과 개인정보 수집·이용에 동의합니다</span></label>" +
       '<p class="s-err" id="s-jerr" role="alert"></p><div class="s-jact"><button type="button" class="btn line-l" data-act="s-jprev">이전</button><button type="submit" class="btn">가입하기</button></div></form>';
+  }
+  function mask(v) { v = String(v || ""); return v.slice(0, 2) + "***"; }
+  function refAsk(top) {
+    return '<div class="s-refask' + (top ? " s-refask-top" : "") + '"><p class="s-refask-t"><b>' + (top ? "회원가입에는 추천인 아이디가 꼭 필요합니다" : "추천인 아이디가 없으신가요?") + "</b><span>" + (top ? "추천인 아이디가 없으시면 " : "") + "문의게시판에 ‘추천인 아이디 요청’을 남겨 주시면 검토 후 알려 드립니다.</span></p>" +
+      '<a class="btn s-refask-b" href="#/qna/write?cat=' + encodeURIComponent("회원") + "&title=" + encodeURIComponent("추천인 아이디 요청") + '">문의게시판에 추천인 아이디 요청하기 ' + I.arrow + "</a></div>";
+  }
+  function refBox(biz) {
+    var v = J.ref, ok = J.refOk && v.length >= 4;
+    return '<div class="s-refw"><label class="s-fl s-ref" for="s-refi"><span>추천인 아이디 <em class="s-req">필수</em></span></label><div class="s-refrow"><input class="inp" id="s-refi" name="ref" value="' + esc(v) + '" autocomplete="off" placeholder="추천해 준 회원의 아이디" aria-describedby="s-refm"><button type="button" class="btn s-refchk" data-act="s-refchk">확인</button></div>' +
+      '<p class="s-refm' + (ok ? " ok" : J.refMsg ? " no" : "") + '" id="s-refm" role="status">' + (ok ? SI.check + "<span>확인됐습니다 — " + esc(mask(v)) + "님</span>" : esc(J.refMsg || "가입하면 추천인에게 포인트가 적립됩니다. 포인트는 가입 추천 적립과 관리자 지급으로만 쌓입니다.")) + "</p>" +
+      refAsk(false) + "</div>";
+  }
+  function refCheck(f) {
+    var v = (f && f.ref ? f.ref.value : J.ref).trim();
+    J.ref = v;
+    if (!v) { J.refOk = false; J.refMsg = "추천인 아이디를 넣어 주세요"; }
+    else if (v.length < 4) { J.refOk = false; J.refMsg = "찾을 수 없는 아이디입니다. 다시 확인해 주세요"; }
+    else { J.refOk = true; J.refMsg = ""; }
+    var m = document.getElementById("s-refm");
+    if (m) { m.className = "s-refm " + (J.refOk ? "ok" : "no"); m.innerHTML = J.refOk ? SI.check + "<span>확인됐습니다 — " + esc(mask(v)) + "님</span>" : esc(J.refMsg); }
+    return J.refOk;
   }
   function drawJoin(anim) {
     var had = user();
@@ -559,8 +714,9 @@
       '<div class="s-join"><ol class="s-steps">' + ["회원 종류", "정보 입력", "가입 목적"].map(function (t, i) { var n = i + 1; return '<li class="' + (J.step === n ? "on" : J.step > n ? "ok" : "") + '"' + (J.step === n ? ' aria-current="step"' : "") + "><span>" + t + "</span></li>"; }).join("") + "</ol>" +
       (had && J.step === 1 ? '<p class="s-had">이미 가입한 정보가 있습니다. 다시 가입하면 새 정보로 바뀝니다. <a href="#/my">내 정보 보기</a></p>' : "") +
       '<div class="s-jb" id="s-jb">' + joinBody() + "</div></div></div>";
-    var f = document.getElementById("s-jf");
+    var f = document.getElementById("s-jf"), ri = document.getElementById("s-refi");
     if (f) f.addEventListener("submit", function (ev) { ev.preventDefault(); J.step === 2 ? step2(f) : step3(f); });
+    if (ri) ri.addEventListener("input", function () { J.ref = ri.value.trim(); J.refOk = false; J.refMsg = ""; var m = document.getElementById("s-refm"); if (m) { m.className = "s-refm"; m.textContent = "아이디를 넣고 ‘확인’을 눌러 주세요"; } });
     if (anim) {
       var top = document.querySelector(".s-steps"), hd = document.getElementById("hd");
       if (top && top.getBoundingClientRect().top < 0) window.scrollTo(0, top.getBoundingClientRect().top + window.scrollY - (hd ? hd.offsetHeight : 64) - 20);
@@ -571,6 +727,7 @@
     var biz = J.kind === "biz", miss = [], first = null;
     function need(ok, n, el) { if (!ok) { miss.push(n); if (!first) first = el; } }
     ["company", "bizNo", "name", "phone", "id"].forEach(function (n) { if (f[n]) J.f[n] = f[n].value.trim(); });
+    if (!refCheck(f)) { document.getElementById("s-jerr").textContent = J.refMsg; f.ref.focus(); f.ref.scrollIntoView({ block: "center", behavior: BG.reduced() ? "auto" : "smooth" }); return; }
     var fd = f.querySelector('input[name="field"]:checked'); J.f.field = fd ? fd.value : "";
     if (biz) { need(J.f.company, "회사명", f.company); need(J.f.bizNo.replace(/\D/g, "").length === 10, "사업자등록번호 10자리", f.bizNo); need(J.f.name, "담당자 이름", f.name); }
     else need(J.f.name, "이름", f.name);
@@ -583,7 +740,6 @@
   }
   function step3(f) {
     J.p = [].map.call(f.querySelectorAll('input[name="pur"]:checked'), function (x) { return x.value; });
-    J.ref = f.ref.value.trim();
     var miss = [];
     if (!J.p.length) miss.push("가입 목적 1개 이상");
     if (!f.agree.checked) miss.push("약관 동의");
@@ -616,7 +772,7 @@
   function login(r) {
     app.innerHTML = '<div class="s-pg s-loginp">' + head("로그인", "가입한 아이디로 로그인하면 회원가와 내 견적·상담 요청을 볼 수 있습니다.", [["로그인"]]) +
       '<form class="s-login" id="s-lf" novalidate><label class="s-fl"><span>아이디</span><input class="inp" name="id" autocomplete="username"></label><label class="s-fl"><span>비밀번호</span><input class="inp" type="password" name="pw" autocomplete="current-password"></label>' +
-      '<p class="s-err" id="s-lerr" role="alert"></p><button type="submit" class="btn s-wide" data-act="s-login">로그인</button><div class="s-lj"><p>아직 회원이 아니신가요?</p><div><a class="btn line-l" href="#/join?kind=biz">업체 입점 (사업자)</a><a class="btn line-l" href="#/join?kind=person">일반회원 (개인)</a></div></div></form></div>';
+      '<p class="s-err" id="s-lerr" role="alert"></p><button type="submit" class="btn s-wide" data-act="s-login">로그인</button><div class="s-lj"><p>아직 회원이 아니신가요? 가입에는 추천인 아이디가 필요합니다.</p><div><a class="btn line-l" href="#/join?kind=biz">업체 입점 (사업자)</a><a class="btn line-l" href="#/join?kind=person">일반회원 (개인)</a></div></div></form></div>';
     document.getElementById("s-lf").addEventListener("submit", function (ev) { ev.preventDefault(); doLogin(r); });
   }
   function doLogin(r) {
@@ -643,7 +799,7 @@
       '<p class="s-pt-n">포인트는 가입 추천 적립과 관리자 지급으로만 쌓입니다. 내 아이디 <b>' + esc(u.id || "") + "</b>를 추천인으로 적고 가입한 회원이 생기면 적립됩니다.</p>" +
       '<table class="s-tbl s-ptt"><thead><tr><th>일자</th><th>내용</th><th>구분</th><th class="n">포인트</th></tr></thead><tbody>' + (pts.length ? pts.slice().sort(function (a, b) { return new Date(b.at) - new Date(a.at); }).map(function (x) { return "<tr><td>" + day(x.at) + "</td><td>" + esc(x.t || "") + "</td><td>" + esc(x.kind === "admin" || /관리자/.test(x.t || "") ? "관리자 지급" : "추천 가입 적립") + '</td><td class="n">' + (x.amt > 0 ? "+" : "") + won(x.amt || 0) + "</td></tr>"; }).join("") : '<tr><td colspan="4" class="s-none">아직 쌓인 포인트가 없습니다.</td></tr>') + "</tbody></table></section>" +
       '<section class="s-hs"><div class="s-hs-h"><h2>내 견적서</h2><a class="s-more" href="#/quote">견적서 받기 ' + I.arrow + "</a></div>" + (qs.length ? '<ul class="s-qs">' + qs.map(function (x) { return '<li><a href="#/quote/done?no=' + encodeURIComponent(x.no) + '"><b>' + esc(x.no) + "</b><span>" + day(x.at) + " · " + esc(x.items[0] ? x.items[0].name : "") + (x.items.length > 1 ? " 외 " + (x.items.length - 1) + "품목" : "") + "</span><strong>" + won(x.pay) + "원</strong>" + I.arrow + "</a></li>"; }).join("") + "</ul>" : '<p class="s-hs-e">아직 받은 견적서가 없습니다.</p>') + "</section>" +
-      '<section class="s-hs"><div class="s-hs-h"><h2>상담 요청</h2></div>' + (rq.length ? '<ul class="s-rqs">' + rq.map(function (x) { var nm = reqName(x); return '<li class="s-rq"><div class="s-rq-i"><p class="s-rq-k">' + esc(nm.k) + (x.at ? " · " + day(x.at) : "") + '</p><h3><a href="' + nm.href + '">' + esc(nm.n) + '</a></h3></div><p class="s-rq-st">' + esc(x.st || "매니저 확인 중") + '</p></li>'; }).join("") + "</ul>" : '<p class="s-hs-e">아직 보낸 상담 요청이 없습니다.</p>') + "</section>" +
+      '<section class="s-hs"><div class="s-hs-h"><h2>상담 요청</h2><a class="s-more" href="#/quote">견적서 받기에서 자세히 ' + I.arrow + "</a></div>" + (rq.length ? '<ul class="s-rqs s-rqs-c">' + rq.map(function (x) { return rqItem(x, false); }).join("") + "</ul>" : '<p class="s-hs-e">아직 보낸 상담 요청이 없습니다.</p>') + "</section>" +
       '<div class="s-btns"><button type="button" class="btn line-l" data-act="s-logout">로그아웃</button></div></div></div>';
   }
 
@@ -690,6 +846,7 @@
       addCur();
       var a = document.getElementById("s-added"); if (a) { a.hidden = false; if (!BG.reduced() && a.animate) a.animate([{ opacity: 0, transform: "translateY(6px)" }, { opacity: 1, transform: "none" }], { duration: 320 }); }
       [].forEach.call(document.querySelectorAll('[data-act="s-add-it"]'), function (x) { x.textContent = "한 번 더 담기"; });
+      BG.toast("견적 목록에 담았습니다");
     },
     "s-buy": function () { addCur(); location.hash = "#/sign"; },
     "s-rv-open": function () { openReview(); },
@@ -716,10 +873,20 @@
     "s-clear": function () { if (PAD) PAD.clear(); },
     "s-dl": function () { A.notice && A.notice("견적서 내려받기"); },
     "s-kind": function (b) { J.kind = b.dataset.k; J.step = 2; drawJoin(true); },
+    "s-refchk": function () { var f = document.getElementById("s-jf"); refCheck(f); var e = document.getElementById("s-jerr"); if (e) e.textContent = ""; },
+    "s-sido": function (b) { A.keep("mall-sido", b.dataset.v || ""); if (MALL && MALL.r && BG.parseHash().name === "mall") { var y = window.scrollY; mall(BG.parseHash()); window.scrollTo(0, y); document.body.classList.toggle("s-barred", S.cart.length > 0); var on = document.querySelector('.s-sd.on'); if (on && on.scrollIntoView && on.parentNode.scrollWidth > on.parentNode.clientWidth) on.parentNode.scrollLeft = on.offsetLeft - on.parentNode.clientWidth / 2 + on.offsetWidth / 2; } },
+    "s-pick": function (b) {
+      var list = reqs(), x = list.filter(function (r) { return r.id === b.dataset.rq; })[0], c = CO[b.dataset.c]; if (!x || !c) return;
+      x.messages = msgsOf(x).slice();
+      x.messages.push({ from: "me", t: "추천해 주신 업체 중 " + c.name + ro(c.name) + " 진행하고 싶습니다. 다음 절차를 안내해 주세요.", at: new Date().toISOString(), pick: c.id });
+      A.keep("requests", list);
+      redraw();
+      BG.toast("진행 요청을 보냈습니다. 담당 매니저가 업체에 전하고 연락드립니다.");
+    },
     "s-jprev": function () {
       var f = document.getElementById("s-jf");
-      if (J.step === 3 && f) { J.p = [].map.call(f.querySelectorAll('input[name="pur"]:checked'), function (x) { return x.value; }); J.ref = f.ref.value.trim(); }
-      if (J.step === 2 && f) ["company", "bizNo", "name", "phone", "id"].forEach(function (n) { if (f[n]) J.f[n] = f[n].value.trim(); });
+      if (J.step === 3 && f) J.p = [].map.call(f.querySelectorAll('input[name="pur"]:checked'), function (x) { return x.value; });
+      if (J.step === 2 && f) { ["company", "bizNo", "name", "phone", "id"].forEach(function (n) { if (f[n]) J.f[n] = f[n].value.trim(); }); if (f.ref) J.ref = f.ref.value.trim(); }
       J.step = Math.max(1, J.step - 1); drawJoin(true);
     },
     "s-login": function (b, ev) { ev.preventDefault(); doLogin(BG.parseHash()); },

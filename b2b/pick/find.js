@@ -89,6 +89,22 @@
   }
 
   var CUR = null, rgOpen = false, keepY = null, chat = null;
+  var WI = {
+    design: svg('<rect x="4" y="4" width="16" height="16" rx="1"/><path d="M4 9h16M9 9v11M12.5 13h4.5M12.5 16.5h4.5"/>'),
+    civil: svg('<path d="M3 19.5h18M4.5 19.5l4.5-8.5 3.2 4.3 3.3-6.8 4 11"/>'),
+    rc: svg('<rect x="4" y="5" width="16" height="14" rx="1"/><path d="M4 10h16M4 14.5h16M9 5v14M15 5v14"/>'),
+    steel: svg('<path d="M6 5h12M6 19h12M12 5v14M8.5 5v1.8M15.5 5v1.8M8.5 19v-1.8M15.5 19v-1.8"/>'),
+    water: svg('<path d="M12 3.5c3.5 4.5 6 7.6 6 10.5a6 6 0 0 1-12 0c0-2.9 2.5-6 6-10.5z"/>'),
+    window: svg('<rect x="5" y="3.5" width="14" height="17" rx="1"/><path d="M12 3.5v17M5 12h14"/>'),
+    mech: svg('<circle cx="12" cy="12" r="3.2"/><path d="M12 3.5v3M12 17.5v3M3.5 12h3M17.5 12h3M6 6l2.1 2.1M15.9 15.9 18 18M6 18l2.1-2.1M15.9 8.1 18 6"/>'),
+    elec: svg('<path d="M13 3 6 13.5h5L10 21l8-11h-5z"/>'),
+    interior: svg('<path d="M5.5 12V9.5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2V12"/><path d="M3.5 12.5h17V17h-17zM6 17v2.5M18 17v2.5"/>'),
+    stone: svg('<path d="M3.5 6h17v12h-17zM3.5 10h17M3.5 14h17M9 6v4M15 10v4M9 14v4"/>'),
+    land: svg('<path d="M12 21v-6"/><path d="M12 3.5c3.6 0 6 2.8 6 6 0 3-2.7 5.5-6 5.5s-6-2.5-6-5.5c0-3.2 2.4-6 6-6z"/>')
+  };
+  var STN = { "new": "매니저 확인 중", talk: "채팅 상담 중", call: "전화 상담 예정", rec: "업체 추천 완료", done: "진행 완료" };
+  var FLOW = [["매니저 확인", "보내 주신 내용을 매니저가 먼저 읽습니다"], ["채팅·전화 상담", "채팅으로 충분하면 채팅으로, 필요하면 전화로"], ["업체 추천", "상담 내용에 맞는 곳을 골라 추천합니다"], ["진행", "업체와의 일은 매니저가 가운데서 조율합니다"]];
+  var MGR = "도아 담당 매니저";
 
   function words(s) { return String(s || "").trim().split(/\s+/).filter(Boolean); }
   function hit(hay, kw) { var ws = words(kw); return ws.every(function (w) { return hay.indexOf(w) >= 0; }); }
@@ -118,7 +134,7 @@
   function mtFind(q) { return ranked(D.materials.slice(), q, mtHay).sort(byRel); }
   function exSort(list) { return list.sort(function (a, b) { return byRel(a, b) || b.years - a.years; }); }
   function coSort(list, s) {
-    return list.sort(function (a, b) { return byRel(a, b) || (s === "count" ? b.count - a.count : s === "since" ? a.since - b.since : (b.checks.length - a.checks.length) || (b.count - a.count)); });
+    return list.sort(function (a, b) { return byRel(a, b) || (s === "count" ? b.count - a.count : s === "since" ? a.since - b.since : s === "cap" ? capOf(b) - capOf(a) : (b.checks.length - a.checks.length) || (b.count - a.count)); });
   }
   function tally(cos, exs) {
     var t = {};
@@ -126,6 +142,18 @@
     cos.forEach(function (c) { if (t[c.sido]) t[c.sido].co++; });
     exs.forEach(function (x) { if (t[x.sido]) t[x.sido].ex++; });
     return t;
+  }
+  function hsh(s) { var h = 7; s = String(s); for (var i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) % 9973; return h; }
+  function capOf(c) {
+    if (c.cap) return c.cap;
+    var y = Math.max(1, 2026 - c.since), b = { gc: 30, sc: 10, de: 4, su: 15, dv: 30 }[c.type] || 10;
+    var k = { gc: 3, sc: 1.5, de: 1, su: 1.6, dv: 4 }[c.type] || 1.5;
+    c.cap = b + Math.round(y * k) + Math.min(40, Math.round(c.count / (c.type === "su" ? 60 : 8))) + hsh(c.id) % 7;
+    return c.cap;
+  }
+  function capText(c) {
+    var v = capOf(c), e = Math.floor(v / 10), r = v % 10;
+    return (e ? e + "억" : "") + (r ? (e ? " " : "") + r + "천만" : "") + " 원";
   }
   function month(d) { return d.slice(0, 7); }
   function licName(c) { return c.cat === "dev" ? "부동산개발업 등록" : c.type === "de" ? "건축사사무소 등록" : "건설업 면허"; }
@@ -147,22 +175,23 @@
   }
   function exOkLine(x) { return '<p class="f-ok">' + FI.shield + "<span>" + esc(exOk(x).join(" · ")) + " 확인 <em>· " + month(x.at) + " 도아 확인</em></span></p>"; }
   function kindLine(c) { return CAT[c.cat].name + " · " + A.typeName(c.type); }
-  function phs(list, alt) {
-    return list.slice(0, 3).map(function (p, i) { return '<span class="f-p' + (i + 1) + '"><img loading="lazy" src="' + photo(p.ph) + '" alt="' + esc(p.t || alt) + '"></span>'; }).join("");
+  function okBadge(title) { return '<span class="f-okb" title="' + esc(title) + '">' + FI.shield + "서류 확인</span>"; }
+  function cell(k, v, cls) { return "<div" + (cls ? ' class="' + cls + '"' : "") + "><dt>" + k + "</dt><dd>" + v + "</dd></div>"; }
+  function coFacts(c) {
+    return '<dl class="f-dl">' + cell("지역", esc(c.sido + " " + c.city)) + cell("설립", c.since + "년") + cell(c.cat === "mat" ? "납품" : "실적", won(c.count) + "건") + cell("자본금", capText(c)) + cell(c.cat === "mat" ? "등록" : "자격", esc(c.licenses.join(", ")), "w") + "</dl>";
+  }
+  function exFacts(x) {
+    return '<dl class="f-dl">' + cell("지역", esc(x.sido)) + cell("경력", x.years + "년") + cell("자격", esc(x.title), "w") + cell("소속", esc(x.affil)) + cell("대표 실적", x.projects.length + "건") + "</dl>";
   }
   function coRow(c) {
-    return '<article class="f-row"><div class="f-phw"><a class="f-ph" href="#/company/' + c.id + '" aria-label="' + esc(c.name) + ' 대표 실적 사진">' + phs(c.projects) + '</a><p class="f-cap">대표 실적 · ' + esc(c.projects[0].t) + " · " + c.projects[0].y + "</p></div>" +
-      '<div class="f-in"><p class="f-kind">' + esc(kindLine(c)) + '</p><h3><a href="#/company/' + c.id + '">' + esc(c.name) + "</a></h3><p class=\"f-intro\">" + esc(c.intro) + "</p>" +
-      '<dl class="f-dl"><div><dt>지역</dt><dd>' + esc(c.sido + " " + c.city) + "</dd></div><div><dt>설립</dt><dd>" + c.since + "년</dd></div><div><dt>" + (c.cat === "mat" ? "납품" : "실적") + "</dt><dd>" + won(c.count) + "건</dd></div><div><dt>" + (c.cat === "dev" ? "사업" : c.cat === "mat" ? "품목" : "주요 공종") + "</dt><dd>" + esc(A.workNames(c.works).join(" · ")) + "</dd></div></dl>" +
-      (c.lh ? '<p class="f-lh">' + esc(c.lh) + "</p>" : "") + okLine(c) + "</div>" +
-      '<div class="f-act"><a class="f-btn" href="#/match?to=' + c.id + '">' + FI.chat + "<span>채팅으로 상담 신청</span></a><a class=\"f-btn line\" href=\"#/company/" + c.id + '">상세 보기</a></div></article>';
+    return '<article class="f-row"><a class="f-ph" href="#/company/' + c.id + '" aria-label="' + esc(c.name) + ' 상세"><img loading="lazy" src="' + photo(c.projects[0].ph) + '" alt=""></a>' +
+      '<div class="f-in"><h3><a href="#/company/' + c.id + '">' + esc(c.name) + '</a><span class="f-tag">' + esc(kindLine(c)) + "</span>" + okBadge(okList(c).join(" · ") + " 확인") + '</h3><p class="f-intro">' + esc(c.intro) + "</p>" + coFacts(c) + "</div>" +
+      '<div class="f-act"><a class="f-btn" href="#/match?to=' + c.id + '">' + FI.chat + '<span>상담 신청</span></a><a class="f-btn line" href="#/company/' + c.id + '">상세</a></div></article>';
   }
   function exRow(x) {
-    var ps = x.projects.map(function (t, k) { return { t: t, ph: x.phs[k] }; });
-    return '<article class="f-row ex"><div class="f-phw"><a class="f-ph" href="#/expert/' + x.id + '" aria-label="' + esc(x.name) + ' 대표 실적 사진">' + phs(ps) + '</a><p class="f-cap">대표 실적 · ' + esc(x.projects[0]) + "</p></div>" +
-      '<div class="f-in"><p class="f-kind">전문가 · ' + esc(A.workNames(x.works).join(" · ")) + '</p><h3><a href="#/expert/' + x.id + '">' + esc(x.name) + "</a> <small>" + esc(x.title) + "</small></h3><p class=\"f-intro\">" + esc(x.intro) + "</p>" +
-      '<dl class="f-dl"><div><dt>지역</dt><dd>' + esc(x.sido) + "</dd></div><div><dt>경력</dt><dd>" + x.years + "년</dd></div><div><dt>소속</dt><dd>" + esc(x.affil) + "</dd></div><div><dt>대표 실적</dt><dd>" + esc(x.projects[0]) + " 외 " + (x.projects.length - 1) + "건</dd></div></dl>" + exOkLine(x) + "</div>" +
-      '<div class="f-act"><a class="f-btn" href="#/match?to=' + x.id + '">' + FI.chat + "<span>채팅으로 상담 신청</span></a><a class=\"f-btn line\" href=\"#/expert/" + x.id + '">상세 보기</a></div></article>';
+    return '<article class="f-row ex"><a class="f-ph" href="#/expert/' + x.id + '" aria-label="' + esc(x.name) + ' 상세"><img loading="lazy" src="' + photo(x.phs[0]) + '" alt=""></a>' +
+      '<div class="f-in"><h3><a href="#/expert/' + x.id + '">' + esc(x.name) + '</a><span class="f-tag">' + esc(A.workNames(x.works).join(" · ")) + "</span>" + okBadge(exOk(x).join(" · ") + " 확인") + '</h3><p class="f-intro">' + esc(x.intro) + "</p>" + exFacts(x) + "</div>" +
+      '<div class="f-act"><a class="f-btn" href="#/match?to=' + x.id + '">' + FI.chat + '<span>상담 신청</span></a><a class="f-btn line" href="#/expert/' + x.id + '">상세</a></div></article>';
   }
   function mtCard(m) {
     var co = BG.CO[m.seller];
@@ -174,28 +203,29 @@
     if (!M) return '<p class="f-map-w">지도를 불러오고 있습니다.</p>';
     var mx = 1;
     SIDO.forEach(function (n) { mx = Math.max(mx, t[n].co + t[n].ex); });
-    var ps = M.p.map(function (p) {
+    var ord = M.p.filter(function (p) { return SKEY[p.id] !== cur; }).concat(M.p.filter(function (p) { return SKEY[p.id] === cur; }));
+    var ps = ord.map(function (p) {
       var n = SKEY[p.id], c = t[n].co + t[n].ex, lv = c ? Math.max(1, Math.ceil(c / mx * 4)) : 0;
-      return '<path d="' + p.d + '" class="lv' + lv + (cur === n ? " on" : "") + '" data-sd="' + n + '"/>';
+      return '<path d="' + p.d + '" class="lv' + lv + (cur === n ? " on" : "") + '" data-sd="' + n + '"><title>' + n + "</title></path>";
     }).join("");
     var lb = M.p.map(function (p) { var n = SKEY[p.id]; return '<text x="' + p.x + '" y="' + p.y + '" class="' + (SMALL[p.id] ? "s" : "") + (cur === n ? " on" : "") + '">' + n + "</text>"; }).join("");
     return '<svg class="f-svg" viewBox="0 0 ' + M.w + " " + M.h + '" role="img" aria-label="대한민국 시·도 지도">' + ps + '<g class="f-lb" aria-hidden="true">' + lb + "</g></svg>";
   }
-  function rgPanel(t, cur) {
+  function rgPanel(t, cur, unit) {
     var all = 0;
     SIDO.forEach(function (n) { all += t[n].co + t[n].ex; });
-    var items = '<button type="button" class="f-sd' + (cur ? "" : " on") + '" data-act="f-sd" data-v=""><span>전국</span><b>' + all + "</b></button>" + SIDO.map(function (n) {
-      var c = t[n].co + t[n].ex;
-      return '<button type="button" class="f-sd' + (cur === n ? " on" : "") + (c ? "" : " zero") + '" data-act="f-sd" data-v="' + n + '"><span>' + n + "</span><b>" + c + "</b></button>";
-    }).join("");
-    return '<div class="f-rg' + (rgOpen && wide() ? " open" : "") + '" id="fRg"><div class="f-rg-bg" data-act="f-rg-x"></div><div class="f-rg-in" role="dialog" aria-labelledby="fRgT">' +
-      '<div class="f-rg-h"><div><h2 id="fRgT">지역 설정</h2><p>현장이 있는 시·도를 지도에서 누르세요. 숫자는 그 지역 업체와 전문가 수입니다.</p></div><button type="button" class="f-rg-x" data-act="f-rg-x" aria-label="지역 설정 닫기">' + I.close + "</button></div>" +
-      '<div class="f-rg-b"><div class="f-map" id="fMap">' + mapSvg(t, cur) + '<div class="f-tip" id="fTip" hidden></div></div><div class="f-sdl">' + items + "</div></div>" +
-      '<p class="f-src">지도 경계: 통계청(southkorea-maps)</p></div></div>';
-  }
-  function rgBtn(cur) {
-    return '<button type="button" class="f-rgb" data-act="f-rg" aria-expanded="' + (rgOpen && wide() ? "true" : "false") + '" aria-controls="fRg">' + I.pin + "<span>지역</span><b>" + (cur || "전국") + "</b>" + I.down + "</button>" +
-      (cur ? '<button type="button" class="f-chip" data-act="f-sd" data-v="" aria-label="' + cur + ' 지역 선택 풀기"><span>' + cur + "</span>" + I.close + "</button>" : "");
+    var btn = function (cls) {
+      return '<button type="button" class="' + cls + (cur ? "" : " on") + '" data-act="f-sd" data-v=""' + (cur ? "" : ' aria-pressed="true"') + "><span>전국</span><b>" + all + "</b></button>" + SIDO.map(function (n) {
+        var c = t[n].co + t[n].ex;
+        return '<button type="button" class="' + cls + (cur === n ? " on" : "") + (c ? "" : " zero") + '" data-act="f-sd" data-v="' + n + '"' + (cur === n ? ' aria-pressed="true"' : "") + "><span>" + n + "</span><b>" + c + "</b></button>";
+      }).join("");
+    };
+    return '<aside class="f-rg' + (rgOpen ? " open" : "") + '" id="fRg" aria-label="지역 설정">' +
+      '<div class="f-rg-bar"><p class="f-rg-l">' + I.pin + "<b>" + (cur || "전국") + '</b></p><div class="f-rg-chips" id="fRgc">' + btn("f-rc") + '</div><button type="button" class="f-rg-mb" data-act="f-rg" aria-controls="fRgIn">지도에서 고르기</button></div>' +
+      '<div class="f-rg-bg" data-act="f-rg-x"></div><div class="f-rg-in" id="fRgIn">' +
+      '<div class="f-rg-h"><div><h2 id="fRgT">' + I.pin + "지역 설정 <b>" + (cur || "전국") + "</b></h2><p>시·도를 누르면 그 지역 " + unit + '만 보입니다. 숫자는 등록된 수입니다.</p></div><button type="button" class="f-rg-x" data-act="f-rg-x" aria-label="지역 설정 닫기">' + I.close + "</button></div>" +
+      '<div class="f-map" id="fMap">' + mapSvg(t, cur) + '<div class="f-tip" id="fTip" hidden></div></div><div class="f-sdl">' + btn("f-sd") + "</div>" +
+      '<p class="f-src">지도 경계: 통계청(southkorea-maps)</p></div></aside>';
   }
   function sbar(kind, q, ph, hidden) {
     var hs = "";
@@ -203,11 +233,17 @@
     return '<form class="f-sbar" data-f="' + kind + '" role="search"><label><span class="f-sr">검색어</span><input name="q" type="search" value="' + esc(q || "") + '" placeholder="' + esc(ph) + '" autocomplete="off"></label>' + hs + '<button type="submit" aria-label="찾기">' + I.search + "</button></form>";
   }
   function link(name, q) { return "#/" + name + BG.qs(q); }
-  function pick(o, keys) { var r = {}; keys.forEach(function (k) { if (o[k]) r[k] = o[k]; }); return r; }
+  function bigs(label, head, sub, items) {
+    return '<nav class="f-bigs" aria-label="' + label + '"><div class="f-bigs-in"><p class="f-bigs-h"><b>' + head + "</b><span>" + sub + "</span></p><div class=\"f-bigs-row\">" +
+      items.map(function (x) { return '<a class="f-big" href="' + x.href + '">' + x.ic + '<span class="f-big-t"><b>' + esc(x.t) + "</b><em>" + x.n + '</em></span><span class="f-big-d">' + esc(x.d) + '</span><span class="f-big-go">바로 상담</span></a>'; }).join("") + "</div></div></nav>";
+  }
+  function fchips(items, cur) {
+    return '<p class="f-fil" aria-label="목록 거르기">' + items.map(function (x) { return '<a class="f-fc' + (cur === x[0] ? " on" : "") + '" href="' + x[2] + '"' + (cur === x[0] ? ' aria-current="true"' : "") + "><span>" + esc(x[1]) + "</span>" + (x[3] != null ? "<b>" + x[3] + "</b>" : "") + "</a>"; }).join("") + "</p>";
+  }
 
   var PG = {};
   function paged(k, items, fn, unit, cls) {
-    var n = cls ? (wide() ? 8 : 6) : (wide() ? 8 : 5);
+    var n = cls ? (wide() ? 8 : 6) : (wide() ? 10 : 8);
     PG[k] = { items: items, fn: fn, shown: Math.min(n, items.length), n: n, unit: unit };
     return '<div class="' + (cls || "f-pgl") + '" id="fPg-' + k + '">' + items.slice(0, n).map(fn).join("") + "</div>" + pgBtn(k);
   }
@@ -255,7 +291,7 @@
     if (tab === "all") {
       body += grp("업체", cos.length, "곳", cos.length ? cos.slice(0, 3).map(coRow).join("") : none, more(cos.length, "업체 " + cos.length + "곳 모두 보기", link("companies", { q: kw, sido: sd })));
       body += grp("전문가", exs.length, "명", exs.length ? exs.slice(0, 3).map(exRow).join("") : none, more(exs.length, "전문가 " + exs.length + "명 모두 보기", link("experts", { q: kw, sido: sd })));
-      body += grp("자재", mts.length, "종", mts.length ? '<div class="f-mts">' + mts.slice(0, 4).map(mtCard).join("") + "</div>" : none, more(mts.length, "자재 " + mts.length + "종 모두 보기", link("search", { q: kw, tab: "mall" })));
+      body += grp("자재", mts.length, "종", mts.length ? '<div class="f-mts">' + mts.slice(0, 3).map(mtCard).join("") + "</div>" : none, more(mts.length, "자재 " + mts.length + "종 모두 보기", link("search", { q: kw, tab: "mall" })));
       body += svcBand();
     } else if (tab === "expert") {
       body += grp("전문가", exs.length, "명", exs.length ? paged("sx", exs, exRow, "명") : none, "");
@@ -267,10 +303,13 @@
       body += grp("업체 · " + CAT[tab].name, cos.length, "곳", cos.length ? paged("sc", cos, coRow, "곳") : none, more(cos.length, "업체 찾기에서 정렬해 보기", link("companies", { cat: tab, q: kw, sido: sd })));
     }
     var noRegion = tab === "mall" || tab === "finance";
+    var band = '<section class="f-band"><div class="f-band-t">' + FI.chat + "<div><b>" + (kw ? "‘" + esc(kw) + "’ " : "") + "직접 고르지 않으셔도 됩니다</b><p>채팅으로 몇 가지만 답하시면 매니저가 맞는 업체·전문가·자재를 추천해 드립니다.</p></div></div>" +
+      '<a class="f-btn xl or" href="' + link("match", { q: kw }) + '">' + FI.chat + "<span>채팅으로 상담 시작</span></a></section>";
     A.app.innerHTML = '<div class="f-pg"><section class="f-hd"><p class="crumb"><a href="#/">홈</a><span>›</span>검색</p><h1 class="f-h1">' + head + "</h1>" + sbar("search", kw, "업체, 공종, 자격, 자재 이름으로 찾기", { tab: tab === "all" ? "" : tab, sido: sd }) + "</section>" +
+      '<div class="f-wrap">' + band + "</div>" +
       '<nav class="f-cats" aria-label="분류"><div class="f-cats-in">' + tabs + "</div></nav>" +
-      '<div class="f-wrap"><div class="f-tool"><p class="f-sum">' + (kw ? "업체 <b>" + coAll.length + "</b> · 전문가 <b>" + exAll.length + "</b> · 자재 <b>" + mts.length + "</b>" : "찾을 말을 넣거나 분류를 고르세요") + "</p>" + (noRegion ? '<p class="f-nor">' + (tab === "mall" ? "자재는 전국으로 배송해 지역 구분이 없습니다." : "금융 상담은 지역과 관계없이 도아가 직접 받습니다.") + "</p>" : '<div class="f-rgw">' + rgBtn(sd) + "</div>") + "</div>" +
-      (noRegion ? "" : rgPanel(t, sd)) + body + "</div></div>";
+      '<div class="f-wrap"><div class="f-lay' + (noRegion ? " solo" : "") + '">' + (noRegion ? "" : rgPanel(t, sd, tab === "expert" || tab === "pm" ? "전문가" : "업체·전문가")) + '<div class="f-main"><div class="f-tool"><p class="f-sum">' + (kw ? "업체 <b>" + coAll.length + "</b> · 전문가 <b>" + exAll.length + "</b> · 자재 <b>" + mts.length + "</b>" : "찾을 말을 넣거나 분류를 고르세요") + "</p>" + (noRegion ? '<p class="f-nor">' + (tab === "mall" ? "자재는 전국으로 배송해 지역 구분이 없습니다." : "금융 상담은 지역과 관계없이 도아가 직접 받습니다.") + "</p>" : "") + "</div>" +
+      body + "</div></div></div></div>";
     afterRender();
   }
   function svcBand() {
@@ -289,20 +328,22 @@
   function companies(r) {
     fresh("companies");
     var q = r.query, kw = (q.q || "").trim(), cat = CAT[q.cat] ? q.cat : "", sd = SIDO.indexOf(q.sido) >= 0 ? q.sido : "", sort = q.sort || "trust";
-    var base = { q: kw, type: q.type, work: q.work, region: q.region };
-    var all = coFind(base), t = tally(coFind({ q: kw, cat: cat, type: q.type, work: q.work }), []);
+    var t = tally(coFind({ q: kw, cat: cat, type: q.type, work: q.work }), []);
     var res = coSort(coFind({ q: kw, cat: cat, type: q.type, work: q.work, region: q.region, sido: sd }), sort);
     CUR = { name: "companies", query: q, t: t };
-    var n = { "": all.length, dev: 0, build: 0, mat: 0 };
-    ["dev", "build", "mat"].forEach(function (k) { n[k] = coFind({ q: kw, cat: k, type: q.type, work: q.work, region: q.region }).length; });
-    var big = [["", "전체", "확인한 업체 모두"], ["dev", "시행", CAT.dev.d], ["build", "시공", CAT.build.d], ["mat", "자재", CAT.mat.d]].map(function (x) {
-      return '<a class="f-big' + (cat === x[0] ? " on" : "") + '" href="' + link("companies", { cat: x[0], q: kw, sido: sd }) + '"' + (cat === x[0] ? ' aria-current="page"' : "") + ">" + FI[x[0] || "all"] + '<span class="f-big-t"><b>' + x[1] + "</b><em>" + n[x[0]] + '</em></span><span class="f-big-d">' + x[2] + "</span></a>";
-    }).join("");
-    var sorts = [["trust", "확인 많은 순"], ["count", "실적 많은 순"], ["since", "업력 순"]].map(function (o) { return '<a href="' + link("companies", { cat: cat, q: kw, sido: sd, sort: o[0] === "trust" ? "" : o[0] }) + '" class="' + (sort === o[0] ? "on" : "") + '">' + o[1] + "</a>"; }).join("");
-    A.app.innerHTML = '<div class="f-pg"><section class="f-hd"><p class="crumb"><a href="#/">홈</a><span>›</span>업체 찾기</p><h1 class="f-h1">업체 찾기</h1><p class="f-sub">사업자등록 · 면허 · 보험을 도아 담당 매니저가 서류로 확인한 업체만 올립니다.</p>' + sbar("companies", kw, "업체명, 공종, 면허로 찾기", { cat: cat, sido: sd }) + "</section>" +
-      '<nav class="f-bigs" aria-label="업체 분류"><div class="f-bigs-in">' + big + "</div></nav>" +
-      '<div class="f-wrap"><div class="f-tool"><p class="f-sum">' + (cat ? CAT[cat].name + " " : "") + "업체 <b>" + res.length + '</b>곳</p><div class="f-rgw">' + rgBtn(sd) + '</div><p class="f-sort" aria-label="정렬">' + sorts + "</p></div>" + rgPanel(t, sd) +
-      '<section class="f-list">' + (res.length ? paged("co", res, coRow, "곳") : '<p class="f-none">조건에 맞는 업체가 없습니다. 지역을 ‘전국’으로 넓혀 보세요.</p>') + "</section>" + helpBand("업체") + "</div></div>";
+    var n = { "": 0, dev: 0, build: 0, mat: 0 }, fn = { "": 0, dev: 0, build: 0, mat: 0 };
+    ["dev", "build", "mat"].forEach(function (k) { n[k] = coFind({ cat: k }).length; n[""] += n[k]; fn[k] = coFind({ q: kw, cat: k, type: q.type, work: q.work, region: q.region, sido: sd }).length; fn[""] += fn[k]; });
+    var big = bigs("업체 분류 · 바로 상담", "분야를 누르면 바로 채팅 상담이 시작됩니다", "업체는 도아 담당 매니저가 골라 추천해 드립니다", [
+      { href: "#/match?cat=all", ic: FI.all, t: "전체", n: n[""], d: "어떤 업체가 필요한지 함께 정합니다" },
+      { href: "#/match?cat=dev", ic: FI.dev, t: "시행", n: n.dev, d: CAT.dev.d },
+      { href: "#/match?cat=build", ic: FI.build, t: "시공", n: n.build, d: CAT.build.d },
+      { href: "#/match?cat=mat", ic: FI.mat, t: "자재", n: n.mat, d: CAT.mat.d }
+    ]);
+    var fil = fchips([["", "전체", link("companies", { q: kw, sido: sd, sort: q.sort }), fn[""]], ["dev", "시행", link("companies", { cat: "dev", q: kw, sido: sd, sort: q.sort }), fn.dev], ["build", "시공", link("companies", { cat: "build", q: kw, sido: sd, sort: q.sort }), fn.build], ["mat", "자재", link("companies", { cat: "mat", q: kw, sido: sd, sort: q.sort }), fn.mat]], cat);
+    var sorts = [["trust", "확인 많은 순"], ["count", "실적 많은 순"], ["since", "업력 순"], ["cap", "자본금 순"]].map(function (o) { return '<a href="' + link("companies", { cat: cat, q: kw, sido: sd, sort: o[0] === "trust" ? "" : o[0] }) + '" class="' + (sort === o[0] ? "on" : "") + '">' + o[1] + "</a>"; }).join("");
+    A.app.innerHTML = '<div class="f-pg"><section class="f-hd"><p class="crumb"><a href="#/">홈</a><span>›</span>업체 찾기</p><h1 class="f-h1">업체 찾기</h1><p class="f-sub">사업자등록 · 면허 · 보험을 도아 담당 매니저가 서류로 확인한 업체만 올립니다.</p>' + sbar("companies", kw, "업체명, 공종, 면허로 찾기", { cat: cat, sido: sd }) + "</section>" + big +
+      '<div class="f-wrap"><div class="f-lay">' + rgPanel(t, sd, "업체") + '<div class="f-main"><div class="f-tool"><h2 class="f-lt">업체 직접 둘러보기</h2><p class="f-sum">' + (sd ? esc(sd) + " " : "") + (cat ? CAT[cat].name + " " : "") + "업체 <b>" + res.length + '</b>곳</p><p class="f-sort" aria-label="정렬">' + sorts + "</p></div>" + fil +
+      '<section class="f-list">' + (res.length ? paged("co", res, coRow, "곳") : '<p class="f-none">조건에 맞는 업체가 없습니다. 지역을 ‘전국’으로 넓혀 보세요.</p>') + "</section></div></div>" + helpBand("업체", "#/match?cat=all") + "</div></div>";
     afterRender();
   }
   function experts(r) {
@@ -311,21 +352,24 @@
     var t = tally([], exFind({ q: kw, work: work }));
     var res = exSort(exFind({ q: kw, work: work, region: q.region, sido: sd }));
     CUR = { name: "experts", query: q, t: t };
-    var ws = [{ id: "", name: "전체" }].concat(D.works).map(function (w) { var c = exFind({ q: kw, work: w.id, sido: sd }).length; return '<a class="f-wk' + (work === w.id ? " on" : "") + '" href="' + link("experts", { work: w.id, q: kw, sido: sd }) + '"' + (work === w.id ? ' aria-current="page"' : "") + "><span>" + esc(w.name) + "</span><b>" + c + "</b></a>"; }).join("");
-    A.app.innerHTML = '<div class="f-pg"><section class="f-hd"><p class="crumb"><a href="#/">홈</a><span>›</span>전문가 찾기</p><h1 class="f-h1">전문가 찾기</h1><p class="f-sub">건축사 · 기술사 · 현장소장급 기술자의 자격증과 경력증명서를 확인했습니다.</p>' + sbar("experts", kw, "이름, 자격, 분야로 찾기", { work: work, sido: sd }) + "</section>" +
-      '<nav class="f-wks" aria-label="전문 분야"><div class="f-wks-in">' + ws + "</div></nav>" +
-      '<div class="f-wrap"><div class="f-tool"><p class="f-sum">' + (work ? esc(BG.WORK[work].name) + " " : "") + "전문가 <b>" + res.length + '</b>명</p><div class="f-rgw">' + rgBtn(sd) + '</div><p class="f-sort"><a class="on">경력 많은 순</a></p></div>' + rgPanel(t, sd) +
-      '<section class="f-list">' + (res.length ? paged("ex", res, exRow, "명") : '<p class="f-none">조건에 맞는 전문가가 없습니다. 지역을 ‘전국’으로 넓혀 보세요.</p>') + "</section>" + helpBand("전문가") + "</div></div>";
+    var big = bigs("전문 분야 · 바로 상담", "분야를 누르면 바로 채팅 상담이 시작됩니다", "전문가는 도아 담당 매니저가 골라 추천해 드립니다", [{ href: "#/match?work=all", ic: FI.expert, t: "전체", n: D.experts.length, d: "필요한 분야를 함께 정합니다" }].concat(D.works.map(function (w) {
+      return { href: "#/match?work=" + w.id, ic: WI[w.id] || FI.expert, t: w.name, n: exFind({ work: w.id }).length, d: "" };
+    })));
+    var all = exFind({ q: kw, sido: sd }).length;
+    var fil = fchips([["", "전체", link("experts", { q: kw, sido: sd }), all]].concat(D.works.map(function (w) { return [w.id, w.name, link("experts", { work: w.id, q: kw, sido: sd }), exFind({ q: kw, work: w.id, sido: sd }).length]; })), work);
+    A.app.innerHTML = '<div class="f-pg"><section class="f-hd"><p class="crumb"><a href="#/">홈</a><span>›</span>전문가 찾기</p><h1 class="f-h1">전문가 찾기</h1><p class="f-sub">건축사 · 기술사 · 현장소장급 기술자의 자격증과 경력증명서를 확인했습니다.</p>' + sbar("experts", kw, "이름, 자격, 분야로 찾기", { work: work, sido: sd }) + "</section>" + big +
+      '<div class="f-wrap"><div class="f-lay">' + rgPanel(t, sd, "전문가") + '<div class="f-main"><div class="f-tool"><h2 class="f-lt">전문가 직접 둘러보기</h2><p class="f-sum">' + (sd ? esc(sd) + " " : "") + (work ? esc(BG.WORK[work].name) + " " : "") + "전문가 <b>" + res.length + '</b>명</p><p class="f-sort"><a class="on">경력 많은 순</a></p></div>' + fil +
+      '<section class="f-list">' + (res.length ? paged("ex", res, exRow, "명") : '<p class="f-none">조건에 맞는 전문가가 없습니다. 지역을 ‘전국’으로 넓혀 보세요.</p>') + "</section></div></div>" + helpBand("전문가", "#/match?work=all") + "</div></div>";
     afterRender();
   }
-  function helpBand(k) {
-    return '<section class="f-help"><div><h2>찾는 ' + k + "가 없으신가요?</h2><p>현장 조건만 남기시면 담당 매니저가 맞는 " + k + "를 직접 골라 연결합니다.</p></div><div class=\"f-sv-a\"><a class=\"f-btn xl\" href=\"#/quote\">견적서 받기</a><a class=\"f-btn line xl\" href=\"#/match?to=pm\">도아에 직접 상담</a></div></section>";
+  function helpBand(k, href) {
+    return '<section class="f-help"><div><h2>' + k + "를 직접 고르기 어려우신가요?</h2><p>채팅으로 몇 가지만 답하시면 도아 담당 매니저가 맞는 " + k + "를 골라 추천해 드립니다.</p></div><div class=\"f-sv-a\"><a class=\"f-btn xl or\" href=\"" + href + '">' + FI.chat + '<span>채팅으로 상담 시작</span></a><a class="f-btn line xl" href="#/quote">견적서 받기</a></div></section>';
   }
   function mgrBox(name) {
-    return '<div class="f-mgr"><p class="f-kind">담당 매니저 연결</p><div class="f-mgr-t">' + FI.person + "<div><b>도아 파트너 연결팀</b><span>상담 신청서를 사람이 직접 읽고 연결합니다</span></div></div><ul>" +
-      "<li>" + FI.check + "<span>보내 주신 내용을 담당 매니저가 먼저 확인하고, 빠진 것이 있으면 전화로 여쭙니다.</span></li>" +
-      "<li>" + FI.check + "<span>" + esc(name) + "에 현장 정보를 전달하고 상담 일정을 잡아 드립니다.</span></li>" +
-      "<li>" + FI.check + "<span>견적을 받으면 같은 기준으로 정리해 견적서 받기에 올려 드립니다.</span></li></ul>" +
+    return '<div class="f-mgr"><p class="f-kind">도아 담당 매니저가 가운데서 진행</p><div class="f-mgr-t">' + FI.person + "<div><b>도아 파트너 연결팀</b><span>상담 신청서를 사람이 직접 읽고 진행합니다</span></div></div><ul>" +
+      "<li>" + FI.check + "<span>보내 주신 내용을 담당 매니저가 먼저 확인하고, 채팅으로 충분하면 채팅으로, 필요하면 전화로 상담합니다.</span></li>" +
+      "<li>" + FI.check + "<span>" + esc(name) + "에는 매니저가 필요한 내용만 전하고 답을 받아 옵니다. 업체와 직접 연락하실 필요가 없습니다.</span></li>" +
+      "<li>" + FI.check + "<span>상담을 마치면 맞는 업체를 골라 대화창에서 추천해 드립니다.</span></li></ul>" +
       '<button type="button" class="f-tel" data-act="f-tel">' + FI.phone + "<span>대표번호 <b>1588-9863</b></span></button></div>";
   }
   function company(r) {
@@ -334,70 +378,155 @@
     var ck = [["사업자등록", "사업자등록증 · 휴업·폐업 여부", c.checks.indexOf("사업자") >= 0]];
     if (c.cat !== "mat") ck.push([licName(c), c.cat === "dev" ? "부동산개발업 등록증" : c.type === "de" ? "건축사사무소 개설 신고 확인증" : "건설업 등록증 · 등록수첩", c.checks.indexOf("면허") >= 0]);
     if (c.cat !== "mat") ck.push(["보험", "공제조합 보증서 · 배상책임 보험증권", c.checks.indexOf("보험") >= 0]);
-    var rows = [["업체명", esc(c.name)], ["분류", esc(kindLine(c)) + (c.tags.length ? " · " + esc(c.tags.join(" ")) : "")], [c.cat === "dev" ? "사업 분야" : c.cat === "mat" ? "공급 품목" : "주요 공종", esc(A.workNames(c.works).join(", "))], ["면허·등록", esc(c.licenses.join(", "))], ["소재지", esc(c.sido + " " + c.city)], ["설립", c.since + "년 (업력 " + (2026 - c.since) + "년)"], [c.cat === "mat" ? "납품 실적" : "실적", won(c.count) + "건"]];
+    var rows = [["업체명", esc(c.name)], ["분류", esc(kindLine(c)) + (c.tags.length ? " · " + esc(c.tags.join(" ")) : "")], [c.cat === "dev" ? "사업 분야" : c.cat === "mat" ? "공급 품목" : "주요 공종", esc(A.workNames(c.works).join(", "))], ["면허·등록", esc(c.licenses.join(", "))], ["소재지", esc(c.sido + " " + c.city)], ["설립", c.since + "년 (업력 " + (2026 - c.since) + "년)"], ["자본금", capText(c)], [c.cat === "mat" ? "납품 실적" : "실적", won(c.count) + "건"]];
     if (c.lh) rows.push(["LH 매입약정", esc(c.lh)]);
     A.app.innerHTML = '<div class="f-pg f-dt"><section class="f-dh"><p class="crumb"><a href="#/companies">업체 찾기</a><span>›</span><a href="#/companies?cat=' + c.cat + '">' + CAT[c.cat].name + "</a></p>" +
       '<div class="f-dh-in"><div class="f-dh-t"><p class="f-kind">' + esc(kindLine(c) + " · " + c.sido + " " + c.city) + '</p><h1 class="f-h1">' + esc(c.name) + '</h1><p class="f-lead">' + esc(c.intro) + "</p>" + okLine(c) + "</div>" +
-      '<div class="f-dh-a"><a class="f-btn xl" href="#/match?to=' + c.id + '">' + FI.chat + "<span>채팅으로 상담 신청</span></a>" + A.saveBtn(c.id) + '<a class="f-tl" href="#/quote?to=' + c.id + '">견적서 받기로 요청하기</a></div></div></section>' +
+      '<div class="f-dh-a"><a class="f-btn xl" href="#/match?to=' + c.id + '">' + FI.chat + "<span>채팅으로 상담 신청</span></a>" + A.saveBtn(c.id) + '<p class="f-mid">업체와 직접 연락하지 않으셔도 됩니다. 도아 담당 매니저가 가운데서 확인합니다.</p></div></div></section>' +
       '<section class="f-gal"><figure class="f-g1"><div class="f-gi"><img src="' + photo(pj[0].ph) + '" alt="' + esc(pj[0].t) + '"></div><figcaption><b>' + esc(pj[0].t) + "</b><span>" + pj[0].y + "</span></figcaption></figure>" +
       pj.slice(1, 3).map(function (p) { return '<figure class="f-g2"><div class="f-gi"><img loading="lazy" src="' + photo(p.ph) + '" alt="' + esc(p.t) + '"></div><figcaption><b>' + esc(p.t) + "</b><span>" + p.y + "</span></figcaption></figure>"; }).join("") + "</section>" +
       '<section class="f-sec"><h2>업체 정보</h2><table class="f-tb">' + rows.map(function (x) { return "<tr><th>" + x[0] + "</th><td>" + x[1] + "</td></tr>"; }).join("") + "</table></section>" +
       '<section class="f-sec"><h2>대표 실적</h2><div class="f-pj">' + pj.map(function (p) { return '<figure><div class="f-gi"><img loading="lazy" src="' + photo(p.ph) + '" alt="' + esc(p.t) + '"></div><figcaption><span class="f-y">' + p.y + (c.cat === "mat" ? "" : "년") + "</span><b>" + esc(p.t) + "</b><span>" + esc(p.d) + "</span></figcaption></figure>"; }).join("") + "</div></section>" +
       '<section class="f-sec f-two"><div><h2>확인 내역</h2><table class="f-tb f-ck"><tr><th scope="col">항목</th><th scope="col">받은 서류</th><th scope="col">확인</th></tr>' + ck.map(function (x) { return "<tr><td><b>" + x[0] + "</b></td><td>" + x[1] + "</td><td>" + (x[2] ? '<span class="f-yes">' + FI.check + c.at + "</span>" : '<span class="f-wait">서류 받는 중</span>') + "</td></tr>"; }).join("") + '</table><p class="f-note">도아 담당 매니저가 서류를 받아 직접 확인한 날짜입니다.</p></div>' + mgrBox(c.name) + "</section>" +
-      askBand(c.name + "에", "#/match?to=" + c.id, "#/quote?to=" + c.id) + "</div>";
+      askBand(c.name, "#/match?to=" + c.id, "#/quote?to=" + c.id) + "</div>";
     afterRender();
   }
   function expert(r) {
     var x = BG.EX[r.id] || D.experts[0];
     CUR = { name: "expert", query: r.query };
     var ok = exOk(x), docs = { "건축사 자격": "건축사 자격증 · 등록증", "기술사 자격": "기술사 자격증", "기능장 자격": "기능장 자격증", "국가기술자격": "국가기술자격증", "경력증명서": "건설기술인 경력증명서", "재직": "재직증명서 (" + x.affil + ")" };
-    var rows = [["이름", esc(x.name)], ["자격", esc(x.title)], ["분야", esc(A.workNames(x.works).join(", "))], ["경력", x.years + "년"], ["활동 지역", esc(x.sido)], ["소속", esc(x.affil)]];
+    var rows = [["이름", esc(x.name)], ["자격", esc(x.title)], ["분야", esc(A.workNames(x.works).join(", "))], ["경력", x.years + "년"], ["활동 지역", esc(x.sido)], ["소속", esc(x.affil)], ["대표 실적", x.projects.length + "건"]];
     A.app.innerHTML = '<div class="f-pg f-dt"><section class="f-dh"><p class="crumb"><a href="#/experts">전문가 찾기</a><span>›</span><a href="#/experts?work=' + x.works[0] + '">' + esc(BG.WORK[x.works[0]].name) + "</a></p>" +
       '<div class="f-dh-in"><div class="f-dh-t"><p class="f-kind">' + esc("전문가 · " + x.title + " · 경력 " + x.years + "년 · " + x.sido) + '</p><h1 class="f-h1">' + esc(x.name) + " <small>" + esc(x.title) + '</small></h1><p class="f-lead">' + esc(x.intro) + "</p>" + exOkLine(x) + "</div>" +
-      '<div class="f-dh-a"><a class="f-btn xl" href="#/match?to=' + x.id + '">' + FI.chat + "<span>채팅으로 상담 신청</span></a>" + A.saveBtn(x.id) + '<a class="f-tl" href="#/quote?to=' + x.id + '">견적서 받기로 요청하기</a></div></div></section>' +
+      '<div class="f-dh-a"><a class="f-btn xl" href="#/match?to=' + x.id + '">' + FI.chat + "<span>채팅으로 상담 신청</span></a>" + A.saveBtn(x.id) + '<p class="f-mid">전문가와 직접 연락하지 않으셔도 됩니다. 도아 담당 매니저가 가운데서 확인합니다.</p></div></div></section>' +
       '<section class="f-gal">' + x.projects.slice(0, 3).map(function (p, k) { return '<figure class="' + (k ? "f-g2" : "f-g1") + '"><div class="f-gi"><img ' + (k ? 'loading="lazy" ' : "") + 'src="' + photo(x.phs[k]) + '" alt="' + esc(p) + '"></div><figcaption><b>' + esc(p) + "</b><span>" + (2025 - k) + "</span></figcaption></figure>"; }).join("") + "</section>" +
       '<section class="f-sec"><h2>전문가 정보</h2><table class="f-tb">' + rows.map(function (y) { return "<tr><th>" + y[0] + "</th><td>" + y[1] + "</td></tr>"; }).join("") + "</table></section>" +
       '<section class="f-sec"><h2>대표 실적</h2><table class="f-tb f-pl"><tr><th scope="col">연도</th><th scope="col">내용</th><th scope="col">역할</th></tr>' + x.projects.map(function (p, k) { return "<tr><td>" + (2025 - k) + "</td><td><b>" + esc(p) + "</b></td><td>" + esc(x.title.split(" · ")[0]) + "</td></tr>"; }).join("") + "</table></section>" +
       '<section class="f-sec f-two"><div><h2>확인 내역</h2><table class="f-tb f-ck"><tr><th scope="col">항목</th><th scope="col">받은 서류</th><th scope="col">확인</th></tr>' + ok.map(function (k) { return "<tr><td><b>" + k + "</b></td><td>" + esc(docs[k]) + '</td><td><span class="f-yes">' + FI.check + x.at + "</span></td></tr>"; }).join("") + '</table><p class="f-note">도아 담당 매니저가 서류를 받아 직접 확인한 날짜입니다.</p></div>' + mgrBox(x.name + " " + x.title.split(" · ")[0]) + "</section>" +
-      askBand(x.name + " " + x.title.split(" · ")[0] + "에게", "#/match?to=" + x.id, "#/quote?to=" + x.id) + "</div>";
+      askBand(x.name + " " + x.title.split(" · ")[0], "#/match?to=" + x.id, "#/quote?to=" + x.id) + "</div>";
     afterRender();
   }
   function askBand(who, chatHref, quoteHref) {
-    return '<section class="f-ask"><div><h2>' + esc(who) + "<br>상담을 신청하세요.</h2><p>채팅으로 몇 가지만 고르시면, 담당 매니저가 내용을 확인한 뒤 연결해 드립니다.</p></div>" +
+    return '<section class="f-ask"><div><h2>' + esc(who) + " 건,<br>채팅으로 상담하세요.</h2><p>몇 가지만 답하시면 도아 담당 매니저가 대신 확인하고 결과를 알려 드립니다. 업체와 직접 연락하실 필요가 없습니다.</p></div>" +
       '<div class="f-sv-a"><a class="f-btn xl" href="' + chatHref + '">' + FI.chat + '<span>채팅으로 상담 신청</span></a><a class="f-btn line xl" href="' + quoteHref + '">견적서 받기</a></div></section>';
   }
 
-  function target(to) {
-    var c = BG.CO[to], x = BG.EX[to];
-    if (c) return { kind: "company", id: c.id, name: c.name, label: kindLine(c), nav: "companies", back: "#/company/" + c.id, ph: c.projects[0].ph, sub: c.sido + " " + c.city, ok: okList(c).join(" · ") + " 확인", c: c };
-    if (x) return { kind: "expert", id: x.id, name: x.name + " " + x.title.split(" · ")[0], label: "전문가 · " + x.title, nav: "experts", back: "#/expert/" + x.id, ph: x.phs[0], sub: x.sido + " · 경력 " + x.years + "년", ok: exOk(x).join(" · ") + " 확인", x: x };
-    if (to === "finance") return { kind: "finance", id: "finance", name: "도아 금융 상담", label: "도아 직접 상담 · 금융", nav: "finance", back: "#/finance", ph: "w_women", sub: "(주)더원파트너스", ok: "LH 민간신축매입약정사업 전문기업" };
-    return { kind: "pm", id: "pm", name: "도아 PM 상담", label: "도아 직접 상담 · PM", nav: "pm", back: "#/pm", ph: "w_measure", sub: "(주)더원파트너스", ok: "LH 민간신축매입약정사업 전문기업" };
+  var SZ = ["330㎡ 미만 (100평 미만)", "330~990㎡ (100~300평)", "990~3,300㎡ (300~1,000평)", "3,300㎡ 이상 (1,000평 이상)", "아직 모르겠어요"];
+  var LHS = ["검토 중", "공모 준비", "조건부 통과", "약정 체결", "착공", "해당 없음"];
+  var NEED = [["dev", "시행 업체"], ["build", "시공 업체"], ["mat", "자재"], ["expert", "전문가 (설계·기술)"], ["pm", "PM (사업 관리)"], ["finance", "금융 (사업 자금)"]];
+  function stp(id, type, label, q, opts, x) { var o = { id: id, type: type, label: label, q: q, opts: opts }; for (var k in x) o[k] = x[k]; return o; }
+  function idBy(list, name) { for (var i = 0; i < list.length; i++) if (list[i].name === name || list[i][1] === name) return list[i].id || list[i][0]; return ""; }
+  function base(q) {
+    var b = { q: (q.q || "").trim(), kind: "general", to: "", cat: "", work: "", mcat: "" }, to = q.to;
+    if (to) {
+      b.to = to;
+      if (BG.CO[to]) { b.kind = "company"; b.cat = BG.CO[to].cat; }
+      else if (BG.EX[to]) { b.kind = "expert"; b.work = BG.EX[to].works[0]; }
+      else if (BG.MT[to]) { b.kind = "material"; b.mcat = BG.MT[to].cat; }
+      else if (to === "finance") b.kind = "finance";
+      else { b.kind = "pm"; b.to = "pm"; }
+    } else if (q.cat) { b.kind = "cat"; b.cat = CAT[q.cat] ? q.cat : "all"; }
+    else if (q.work) { b.kind = "work"; b.work = BG.WORK[q.work] && q.work !== "devp" && q.work !== "lh" ? q.work : "all"; }
+    else if (q.mcat) { b.kind = "mcat"; b.mcat = BG.MC[q.mcat] ? q.mcat : "all"; }
+    return b;
   }
-  function workOpts(T) {
-    if (T.kind === "pm") return ["토지 검토", "사업성 분석", "설계·인허가 관리", "시공 관리", "준공·매입 대응"];
-    if (T.kind === "finance") return ["토지 매입 자금", "PF 대출", "공사비", "중도금·잔금", "아직 모르겠어요"];
-    var c = T.c, x = T.x, ws = (c || x).works;
-    if (c && c.cat === "dev") return ["사업성 검토", "부지 매입 검토", "LH 매입약정 신청", "시행 위탁", "토지주 공동 사업"];
-    if (c && c.cat === "mat") return ["자재 납품", "단가 견적", "정기 납품", "현장 직송"];
+  function eff(b, ans) {
+    var e = { kind: b.kind, to: b.to, cat: b.cat, work: b.work, mcat: b.mcat };
+    if (e.kind === "general" && ans.need) {
+      var n = idBy(NEED, ans.need);
+      if (n === "dev" || n === "build") { e.kind = "cat"; e.cat = n; }
+      else if (n === "mat") { e.kind = "mcat"; e.mcat = "all"; }
+      else if (n === "expert") { e.kind = "work"; e.work = "all"; }
+      else if (n) { e.kind = n; e.to = n; }
+    }
+    if (e.kind === "cat" && e.cat === "all" && ans.catp) e.cat = idBy([{ id: "dev", name: "시행 업체" }, { id: "build", name: "시공 업체" }, { id: "mat", name: "자재 공급 업체" }], ans.catp);
+    if (e.kind === "cat" && e.cat === "mat") { e.kind = "mcat"; e.mcat = "all"; e.viaCat = true; }
+    if (e.kind === "work" && e.work === "all" && ans.workp) e.work = idBy(D.works, ans.workp) || "all";
+    if (e.kind === "mcat" && e.mcat === "all" && ans.mcatp && ans.mcatp.length) e.mcats = ans.mcatp.map(function (n) { return idBy(D.matCats, n); }).filter(Boolean);
+    return e;
+  }
+  function plan(b, ans) {
+    var e = eff(b, ans), st = [];
+    if (b.kind === "general") st.push(stp("need", "one", "필요한 것", "무엇이 필요하세요?", NEED.map(function (x) { return x[1]; })));
+    if (b.kind === "cat" && b.cat === "all") st.push(stp("catp", "one", "업체 분류", "어떤 업체가 필요하세요?", ["시행 업체", "시공 업체", "자재 공급 업체"]));
+    if (e.kind === "general" || (e.kind === "cat" && e.cat === "all")) return { e: e, st: st };
+    if (e.kind === "work" && (b.kind === "general" || b.work === "all")) {
+      st.push(stp("workp", "one", "전문 분야", "어느 분야 전문가가 필요하세요?", D.works.map(function (w) { return w.name; })));
+      if (e.work === "all") return { e: e, st: st };
+    }
+    if (e.kind === "mcat" && (b.kind === "general" || b.mcat === "all" || e.viaCat)) {
+      st.push(stp("mcatp", "multi", "자재 분류", "어떤 자재가 필요하세요? 여러 개 고르셔도 됩니다.", D.matCats.map(function (m) { return m.name; })));
+      if (!e.mcats) return { e: e, st: st };
+    }
+    return { e: e, st: st.concat(detail(e)) };
+  }
+  function tail(id, label, q, opts, chk) {
+    return [
+      stp("when", "one", label, q, opts),
+      stp("check", "multi", "꼭 확인할 것", "꼭 확인하고 싶은 것을 모두 골라 주세요.", chk),
+      stp("contact", "contact", "연락처", "마지막이에요. 매니저가 연락드릴 이름과 휴대폰 번호를 남겨 주세요. 번호는 업체에 알리지 않습니다.")
+    ];
+  }
+  function siteSteps(budget) {
+    return [
+      stp("sido", "sido", "현장 지역", "현장은 어느 지역인가요? 지도나 아래 칸에서 시·도를 고르고, 시·군·구도 알려 주세요."),
+      stp("size", "one", "규모", "규모는 어느 정도인가요? 연면적으로 골라 주세요.", SZ),
+      stp("lh", "one", "LH 매입약정 단계", "LH 매입약정은 어디까지 진행되셨나요?", LHS),
+      stp("budget", "one", "예산 범위", "예산 범위를 알려 주시면 맞는 곳을 고르기 쉬워요.", budget, { skip: "선택 안 함" })
+    ];
+  }
+  function detail(e) {
+    var c = BG.CO[e.to], x = BG.EX[e.to], m = BG.MT[e.to], WHEN = ["3개월 안", "6개월 안", "1년 안", "아직 정하지 않았어요"];
+    if (e.kind === "mcat" || e.kind === "material" || (c && c.cat === "mat")) {
+      var cats = e.mcats || (e.mcat && e.mcat !== "all" ? [e.mcat] : []), items;
+      if (m) items = null;
+      else if (c) items = D.materials.filter(function (y) { return y.seller === c.id; }).map(function (y) { return y.name; });
+      else items = D.materials.filter(function (y) { return !cats.length || cats.indexOf(y.cat) >= 0; }).map(function (y) { return y.name; });
+      if (items && !items.length) items = D.matCats.map(function (y) { return y.name; });
+      var s = [];
+      if (items) s.push(stp("items", "multi", "품목", "어떤 품목이 필요하세요? 여러 개 고르셔도 됩니다.", items.slice(0, 9).concat(["그 밖의 품목"])));
+      s.push(stp("spec", "text", "규격·수량", (m ? m.name + "의 " : "") + "규격과 수량을 알고 계시면 적어 주세요. 모르시면 매니저가 통화로 여쭙겠습니다.", null, { ph: m ? "예: " + m.spec + " · 수량" : "예: D13 철근 30톤, 합판 12T 200장", skip: "통화로 정할게요" }));
+      s.push(stp("sido", "sido", "납품 지역", "자재를 받으실 현장은 어느 지역인가요? 지도나 아래 칸에서 고르세요."));
+      return s.concat(tail("when", "납품 희망 시기", "자재는 언제 받으셔야 하나요?", ["1주 안", "2주 안", "1개월 안", "3개월 안", "아직 정하지 않았어요"], ["단가 비교", "납품 일정", "규격·시험성적서", "현장 하차 가능 여부", "세금계산서 발행"]));
+    }
+    if (e.kind === "pm") return [stp("work", "one", "사업 단계", "사업이 지금 어느 단계인가요?", ["토지 검토", "사업성 분석", "설계·인허가 관리", "시공 관리", "준공·매입 대응"])].concat(siteSteps(["10억 원 미만", "10억~50억 원", "50억~100억 원", "100억 원 이상"])).concat(tail("when", "PM 시작 시기", "PM은 언제부터 필요하세요?", WHEN, ["사업성 검토 보고서", "공정 관리", "비용 관리", "LH 협의 지원", "금융 연계"]));
+    if (e.kind === "finance") return [stp("work", "multi", "필요한 자금", "필요한 자금은 어떤 종류인가요? 여러 개 고르셔도 됩니다.", ["토지 매입 자금", "PF 대출", "공사비", "중도금·잔금", "아직 모르겠어요"])].concat(siteSteps(["10억 원 미만", "10억~50억 원", "50억~100억 원", "100억 원 이상"])).concat(tail("when", "자금 필요 시기", "자금은 언제 필요하세요?", ["1개월 안", "3개월 안", "6개월 안", "아직 정하지 않았어요"], ["금리 조건", "대출 한도", "실행까지 걸리는 기간", "보증 조건", "자기자본 비율"]));
+    if ((e.kind === "cat" && e.cat === "dev") || (c && c.cat === "dev")) return [stp("work", "multi", "맡기실 일", "어떤 일을 맡기실 건가요? 여러 개 고르셔도 됩니다.", ["사업성 검토", "부지 매입 검토", "LH 매입약정 신청", "시행 위탁", "토지주 공동 사업"])].concat(siteSteps(["10억 원 미만", "10억~50억 원", "50억~100억 원", "100억 원 이상"])).concat(tail("when", "착공 희망 시기", "착공은 언제쯤 생각하세요?", WHEN, ["부동산개발업 등록", "매입약정 실적", "토지 계약 조건", "사업비 조달 계획", "준공 후 매입 일정"]));
+    var wk = e.work && e.work !== "all" ? e.work : "", opts;
+    if (x) opts = workOpts(x.works, true);
+    else if (c) opts = workOpts(c.works, false);
+    else if (wk) opts = wk === "design" ? ["설계", "인허가", "구조 검토", "공사 감리", "사업성 검토"] : [BG.WORK[wk].name + " 시공 관리", "설계 검토", "기술 자문·현장 점검", "공사 감리", "하자 진단"];
+    else opts = ["신축 공사 전체", "골조 (철근콘크리트)", "철골 공사", "설비·전기 공사", "창호·방수·마감", "리모델링", "하자 보수"];
+    var chk = e.kind === "work" || x ? ["자격증 확인", "비슷한 실적", "경력 연수", "현장 방문 가능 여부", "일정 맞추기"] : ["건설업 면허", "비슷한 실적", "보증·보험 가입", "하자보수 이행", "직접 시공 여부", "현장 방문 상담"];
+    return [stp("work", "multi", "맡기실 일", "어떤 일을 맡기실 건가요? 여러 개 고르셔도 됩니다.", opts)].concat(siteSteps(["5억 원 미만", "5억~20억 원", "20억~50억 원", "50억 원 이상"])).concat(tail("when", "착공 희망 시기", "착공은 언제쯤 생각하세요?", WHEN, chk));
+  }
+  function workOpts(ws, isEx) {
     if (ws.indexOf("design") >= 0) return ["설계", "인허가", "구조 검토", "공사 감리", "사업성 검토"];
     var a = ["신축 시공", "리모델링"];
     ws.forEach(function (w) { var n = BG.WORK[w].name + " 공사"; if (a.indexOf(n) < 0) a.push(n); });
-    a.push(x ? "기술 자문·현장 점검" : "하자 보수");
+    a.push(isEx ? "기술 자문·현장 점검" : "하자 보수");
     return a.slice(0, 6);
   }
-  function steps(T) {
-    var fin = T.kind === "finance", pm = T.kind === "pm", mat = T.c && T.c.cat === "mat";
-    return [
-      { id: "work", type: fin ? "multi" : pm ? "one" : "multi", label: fin ? "필요한 자금" : pm ? "사업 단계" : "맡기실 일", q: fin ? "필요한 자금은 어떤 종류인가요? 여러 개 고르셔도 됩니다." : pm ? "사업이 지금 어느 단계인가요?" : "어떤 일을 맡기실 건가요? 여러 개 고르셔도 됩니다.", opts: workOpts(T) },
-      { id: "sido", type: "sido", label: "현장 지역", q: "현장은 어느 지역인가요? 시·도를 고르고, 시·군·구도 알려 주세요." },
-      { id: "size", type: "one", label: "규모", q: "규모는 어느 정도인가요? 연면적으로 골라 주세요.", opts: ["330㎡ 미만 (100평 미만)", "330~990㎡ (100~300평)", "990~3,300㎡ (300~1,000평)", "3,300㎡ 이상 (1,000평 이상)", "아직 모르겠어요"] },
-      { id: "lh", type: "one", label: "LH 매입약정 단계", q: "LH 매입약정은 어디까지 진행되셨나요?", opts: ["검토 중", "공모 준비", "조건부 통과", "약정 체결", "착공", "해당 없음"] },
-      { id: "when", type: "one", label: fin ? "자금 필요 시기" : pm ? "PM 시작 시기" : mat ? "납품 희망 시기" : "착공 희망 시기", q: fin ? "자금은 언제 필요하세요?" : pm ? "PM은 언제부터 필요하세요?" : mat ? "자재는 언제 받으셔야 하나요?" : "착공은 언제쯤 생각하세요?", opts: fin ? ["1개월 안", "3개월 안", "6개월 안", "아직 정하지 않았어요"] : ["3개월 안", "6개월 안", "1년 안", "아직 정하지 않았어요"] },
-      { id: "budget", type: "one", label: fin ? "필요 금액" : pm ? "총사업비" : "예산 범위", q: fin ? "필요한 금액은 어느 정도인가요?" : pm ? "총사업비는 어느 정도인가요?" : "예산 범위를 알려 주시면 맞는 곳을 고르기 쉬워요.", opts: fin || pm ? ["10억 원 미만", "10억~50억 원", "50억~100억 원", "100억 원 이상"] : mat ? ["1천만 원 미만", "1천만~5천만 원", "5천만~2억 원", "2억 원 이상"] : ["5억 원 미만", "5억~20억 원", "20억~50억 원", "50억 원 이상"], skip: "선택 안 함" },
-      { id: "check", type: "multi", label: "꼭 확인할 것", q: "꼭 확인하고 싶은 것을 모두 골라 주세요.", opts: fin ? ["금리 조건", "대출 한도", "실행까지 걸리는 기간", "보증 조건", "자기자본 비율"] : pm ? ["사업성 검토 보고서", "공정 관리", "비용 관리", "LH 협의 지원", "금융 연계"] : mat ? ["단가 비교", "납품 일정", "규격·시험성적서", "현장 하차 가능 여부", "세금계산서 발행"] : T.c && T.c.cat === "dev" ? ["부동산개발업 등록", "매입약정 실적", "토지 계약 조건", "사업비 조달 계획", "준공 후 매입 일정"] : ["건설업 면허", "비슷한 실적", "보증·보험 가입", "하자보수 이행", "직접 시공 여부", "현장 방문 상담"] },
-      { id: "contact", type: "contact", label: "연락처", q: "마지막이에요. 연락받으실 이름과 휴대폰 번호를 남겨 주세요." }
-    ];
+  function head(b, e) {
+    var c = BG.CO[e.to], x = BG.EX[e.to], m = BG.MT[e.to];
+    if (c) return { title: c.name + " 상담", label: "업체 · " + kindLine(c), name: c.name, ph: c.projects[0].ph, sub: c.sido + " " + c.city + " · 설립 " + c.since + "년 · 자본금 " + capText(c), back: "#/company/" + c.id, nav: "companies", unit: "업체" };
+    if (x) return { title: x.name + " " + x.title.split(" · ")[0] + " 상담", label: "전문가 · " + x.title, name: x.name + " " + x.title.split(" · ")[0], ph: x.phs[0], sub: x.sido + " · 경력 " + x.years + "년", back: "#/expert/" + x.id, nav: "experts", unit: "전문가" };
+    if (m) return { title: m.name + " 자재 상담", label: "자재몰 · " + (BG.MC[m.cat] ? BG.MC[m.cat].name : "자재"), name: m.name, ph: m.ph, sub: m.spec, back: "#/item/" + m.id, nav: "mall", unit: "공급처" };
+    if (e.kind === "pm") return { title: "PM 상담", label: "도아 직접 상담 · PM", back: "#/pm", nav: "pm", unit: "업체" };
+    if (e.kind === "finance") return { title: "금융 상담", label: "도아 직접 상담 · 금융", back: "#/finance", nav: "finance", unit: "업체" };
+    if (e.kind === "cat" && CAT[e.cat]) return { title: CAT[e.cat].name + " 업체 상담", label: "업체 찾기 · " + CAT[e.cat].name, back: "#/companies", nav: "companies", unit: "업체" };
+    if (e.kind === "cat") return { title: "업체 상담", label: "업체 찾기 · 전체", back: "#/companies", nav: "companies", unit: "업체" };
+    if (e.kind === "work") return { title: (BG.WORK[e.work] ? BG.WORK[e.work].name + " " : "") + "전문가 상담", label: "전문가 찾기 · " + (BG.WORK[e.work] ? BG.WORK[e.work].name : "전체"), back: "#/experts", nav: "experts", unit: "전문가" };
+    if (e.kind === "mcat") { var mc = e.mcats && e.mcats.length ? e.mcats : e.mcat && e.mcat !== "all" ? [e.mcat] : []; return { title: (mc.length ? mc.map(function (k) { return BG.MC[k].name; }).join(" · ") + " " : "") + "자재 상담", label: e.viaCat ? "업체 찾기 · 자재" : "자재몰 · " + (mc.length ? BG.MC[mc[0]].name : "전체"), back: e.viaCat ? "#/companies" : "#/mall", nav: e.viaCat ? "companies" : "mall", unit: "공급처" }; }
+    return { title: "통합 상담", label: "도아 BUILDGO 상담", back: "#/", nav: "", unit: "업체" };
+  }
+  function intro(b) {
+    var h = head(b, eff(b, {})), s = "안녕하세요, " + MGR + "입니다. ";
+    if (b.kind === "company" || b.kind === "expert") s += h.name + " 건으로 상담을 도와드릴게요. " + (b.kind === "expert" ? "전문가" : "업체") + "에는 제가 대신 확인합니다. ";
+    else if (b.kind === "material") s += h.name + " 자재 상담을 도와드릴게요. 단가·재고·납품 일정은 제가 공급처에 대신 확인합니다. ";
+    else if (b.kind === "pm" || b.kind === "finance") s += (b.kind === "pm" ? "PM" : "금융") + " 상담을 도와드릴게요. 몇 가지만 답해 주시면 담당이 검토한 뒤 연락드립니다. ";
+    else s += "몇 가지만 답해 주시면 제가 내용을 확인하고 맞는 " + h.unit + "를 골라 추천해 드립니다. ";
+    return s + "업체와 직접 연락하실 필요가 없습니다.";
   }
   function ansText(st, v) {
     if (v == null) return "";
@@ -408,32 +537,55 @@
   }
   function mBub(html, who) { return '<div class="f-m l">' + (who ? '<p class="f-who">' + who + "</p>" : "") + '<div class="f-bub">' + html + "</div></div>"; }
   function myBub(st, k, v) { return '<div class="f-m r"><button type="button" class="f-bub" data-act="f-redo" data-k="' + k + '" title="누르면 이 질문부터 다시 고를 수 있어요"><span>' + esc(ansText(st, v)) + '</span><i>다시 고르기</i></button></div>'; }
-  function intro(T) {
-    if (T.kind === "pm") return "안녕하세요, 도아 PM 상담입니다. 사업 단계와 규모를 알려 주시면 PM 담당이 확인한 뒤 연락드립니다.";
-    if (T.kind === "finance") return "안녕하세요, 도아 금융 상담입니다. 필요한 자금과 일정을 알려 주시면 금융 담당이 검토한 뒤 연락드립니다.";
-    return "안녕하세요, 도아 담당 매니저입니다. " + T.name + (T.kind === "expert" ? "에게" : "에") + " 상담을 연결해 드릴게요. 몇 가지만 고르시면 미리 내용을 전하고 연락드립니다.";
+  function qBub(st) {
+    var h = esc(st.q) + (st.type === "multi" ? '<span class="f-hint">여러 개 고를 수 있어요</span>' : "");
+    if (st.type === "sido") h += '<div class="f-cmap" id="fMapC">' + mapSvg(tally(D.companies, D.experts), chat.prev.sido ? chat.prev.sido.sido : "") + "</div>";
+    return mBub(h);
   }
+  function flowSide(stage, h) {
+    var card = h && h.name ? '<div class="f-side-c"><div class="f-side-p"><img src="' + photo(h.ph) + '" alt=""></div><p class="f-kind">' + esc(h.label) + "</p><b>" + esc(h.name) + "</b><p>" + esc(h.sub || "") + "</p></div>" : "";
+    return '<aside class="f-side">' + card + flowBox(stage) + '<button type="button" class="f-tel" data-act="f-tel">' + FI.phone + "<span>대표번호 <b>1588-9863</b></span></button></aside>";
+  }
+  function flowBox(stage) {
+    return '<div class="f-flow"><p class="f-kind">상담 진행 순서</p><ol>' + FLOW.map(function (f, i) { return '<li class="' + (i < stage ? "ok" : i === stage ? "on" : "") + '"><i>' + (i < stage ? FI.check : i + 1) + "</i><div><b>" + f[0] + "</b><span>" + f[1] + "</span></div></li>"; }).join("") + '</ol><p class="f-flow-n">' + FI.shield + "<span>고객님과 업체는 직접 연락하지 않습니다. 도아가 가운데서 양쪽 이야기를 듣고 진행합니다.</span></p></div>";
+  }
+  function flowBar(stage) {
+    return '<div class="f-flowbar"><ol>' + FLOW.map(function (f, i) { return '<li class="' + (i < stage ? "ok" : i === stage ? "on" : "") + '"><i>' + (i + 1) + "</i>" + f[0] + "</li>"; }).join("") + "</ol><p>업체와 직접 연락하지 않습니다 — 도아 매니저가 가운데서 진행합니다</p></div>";
+  }
+  function stageOf(s) { return { "new": 0, talk: 1, call: 1, rec: 2, done: 3 }[s] || 0; }
+
   function match(r) {
-    var to = r.query.to || "pm", T = target(to), ST = steps(T);
-    CUR = { name: "match", query: r.query };
-    chat = { to: to, T: T, ST: ST, k: 0, ans: {}, prev: {}, tok: {}, done: false, sent: false };
+    var q = r.query;
+    if (q.rq) {
+      var rq = findReq(q.rq);
+      if (rq) { thread(rq, false); return; }
+    }
+    var b = base(q), e = eff(b, {}), h = head(b, e);
+    CUR = { name: "match", query: q };
+    chat = { b: b, k: 0, ans: {}, prev: {}, tok: {}, done: false, sent: false, nav: h.nav };
+    chat.ST = plan(b, chat.ans).st;
     var u = A.keep("user");
     if (u && u.name) chat.prev.contact = { name: u.name, phone: "" };
-    A.app.innerHTML = '<div class="f-cw"><div class="f-chat"><header class="f-ch-h"><a class="f-back" href="' + T.back + '" aria-label="이전 화면으로">' + FI.back + '</a><div class="f-ch-t"><p class="f-kind">' + esc(T.label) + "</p><h1>" + esc(T.name) + '</h1><p class="f-ch-s">담당 매니저가 확인 후 연락드려요</p></div><p class="f-prog" id="fProg"></p><i class="f-bar"><b id="fBar"></b></i></header>' +
-      '<div class="f-log" id="fLog" aria-live="polite"></div><div class="f-ans" id="fAns"></div></div>' +
-      '<aside class="f-side"><div class="f-side-p"><img src="' + photo(T.ph) + '" alt=""></div><p class="f-kind">' + esc(T.label) + "</p><b>" + esc(T.name) + "</b><p>" + esc(T.sub) + '</p><p class="f-ok">' + FI.shield + "<span>" + esc(T.ok) + "</span></p>" +
-      '<div class="f-side-m">' + FI.person + "<p>상담 신청서는 도아 담당 매니저가 먼저 읽고, 확인이 끝나면 남기신 번호로 연락드립니다.</p></div></aside></div>";
+    A.app.innerHTML = '<div class="f-cw"><div class="f-chat"><header class="f-ch-h"><a class="f-back" href="' + h.back + '" aria-label="이전 화면으로">' + FI.back + '</a><div class="f-ch-t"><p class="f-kind" id="fKind">' + esc(h.label) + '</p><h1 id="fTitle">' + esc(h.title) + '</h1><p class="f-ch-s">' + MGR + '가 가운데서 상담합니다</p></div><p class="f-prog" id="fProg"></p><i class="f-bar"><b id="fBar"></b></i></header>' + flowBar(-1) +
+      '<div class="f-log" id="fLog" aria-live="polite"></div><div class="f-ans" id="fAns"></div></div>' + flowSide(-1, h) + "</div>";
     var log = document.getElementById("fLog");
-    log.innerHTML = mBub(esc(intro(T)), "도아 매니저");
+    log.innerHTML = (b.q ? '<p class="f-qnote">찾으신 말: <b>‘' + esc(b.q) + "’</b></p>" : "") + mBub(esc(intro(b)), MGR);
     ask(true);
+  }
+  function replan() {
+    chat.ST = plan(chat.b, chat.ans).st;
+    var h = head(chat.b, eff(chat.b, chat.ans)), k = document.getElementById("fKind"), t = document.getElementById("fTitle");
+    if (k) k.textContent = h.label;
+    if (t) t.textContent = h.title;
+    chat.nav = h.nav;
   }
   function prog() {
     var n = chat.ST.length, k = Math.min(chat.k + 1, n), p = document.getElementById("fProg"), b = document.getElementById("fBar");
     if (!p) return;
-    p.innerHTML = chat.sent ? "요청 완료" : "<b>" + k + "</b>/" + n;
-    b.style.width = (chat.sent ? 100 : chat.done ? 100 : Math.round(chat.k / n * 100)) + "%";
+    p.innerHTML = chat.sent ? "신청 완료" : "<b>" + k + "</b>/" + n;
+    b.style.width = (chat.sent || chat.done ? 100 : Math.round(chat.k / n * 100)) + "%";
   }
-  function typing(cb) {
+  function typing(cb, ms) {
     var log = document.getElementById("fLog"), tok = chat.tok = {};
     log.insertAdjacentHTML("beforeend", '<div class="f-m l f-typing" aria-label="입력 중"><div class="f-bub"><i></i><i></i><i></i></div></div>');
     scrollEnd();
@@ -442,9 +594,9 @@
       var t = log.querySelector(".f-typing");
       if (t) t.remove();
       cb();
-    }, 600);
+    }, ms || 600);
   }
-  function ask(first) {
+  function ask() {
     var ans = document.getElementById("fAns");
     ans.innerHTML = "";
     prog();
@@ -452,9 +604,10 @@
     var st = chat.ST[chat.k];
     typing(function () {
       var log = document.getElementById("fLog");
-      log.insertAdjacentHTML("beforeend", mBub(esc(st.q) + (st.type === "multi" ? '<span class="f-hint">여러 개 고를 수 있어요</span>' : "")));
+      log.insertAdjacentHTML("beforeend", qBub(st));
       pop(log.lastElementChild);
       ansUi(st);
+      bindCmap();
       scrollEnd();
     });
   }
@@ -462,31 +615,51 @@
     return '<div class="f-chips' + (st.opts.length > 5 ? " c3" : "") + '">' + st.opts.map(function (o) {
       var on = multi ? (cur || []).indexOf(o) >= 0 : cur === o;
       return '<button type="button" class="f-cp' + (on ? " on" : "") + '" data-act="' + (multi ? "f-tg" : "f-one") + '" data-v="' + esc(o) + '" aria-pressed="' + on + '">' + (multi ? '<i aria-hidden="true">' + FI.check + "</i>" : "") + "<span>" + esc(o) + "</span></button>";
-    }).join("") + (st.skip ? '<button type="button" class="f-cp skip" data-act="f-one" data-v="' + st.skip + '"><span>' + st.skip + "</span></button>" : "") + "</div>";
+    }).join("") + (st.skip && st.type !== "text" ? '<button type="button" class="f-cp skip" data-act="f-one" data-v="' + st.skip + '"><span>' + st.skip + "</span></button>" : "") + "</div>";
   }
   function ansUi(st) {
     var ans = document.getElementById("fAns"), pv = chat.prev[st.id], h = "";
     if (st.type === "one") h = chips(st, pv, false);
     if (st.type === "multi") h = chips(st, pv, true) + '<button type="button" class="f-btn f-next" data-act="f-multi"' + (pv && pv.length ? "" : " disabled") + ">다음" + (pv && pv.length ? " (" + pv.length + "개)" : "") + "</button>";
     if (st.type === "sido") h = '<div class="f-chips c4 sd">' + SIDO.map(function (n) { return '<button type="button" class="f-cp' + (pv && pv.sido === n ? " on" : "") + '" data-act="f-sdo" data-v="' + n + '" aria-pressed="' + !!(pv && pv.sido === n) + '"><span>' + n + "</span></button>"; }).join("") + "</div>" +
-      '<div class="f-in2"><label><span>시·군·구 (선택)</span><input id="fGu" class="f-inp" placeholder="예: 용인시 처인구" value="' + esc(pv ? pv.gu : "") + '" autocomplete="off"></label><button type="button" class="f-btn" data-act="f-sdgo"' + (pv && pv.sido ? "" : " disabled") + ">다음</button></div>";
-    if (st.type === "contact") h = '<form class="f-in2 f-ct" id="fCt" novalidate><label><span>이름</span><input name="nm" class="f-inp" autocomplete="name" value="' + esc(pv ? pv.name : "") + '"></label><label><span>휴대폰</span><input name="ph" class="f-inp" inputmode="tel" autocomplete="tel" placeholder="010-0000-0000" value="' + esc(pv ? pv.phone : "") + '"></label><button type="submit" class="f-btn">보내기</button><p class="f-err" id="fErr" role="alert"></p></form>';
+      '<div class="f-in2 f-gu"><label><span>시·군·구 (선택)</span><input id="fGu" class="f-inp" placeholder="시·군·구 (선택) 예: 용인시 처인구" value="' + esc(pv ? pv.gu : "") + '" autocomplete="off"></label><button type="button" class="f-btn" data-act="f-sdgo"' + (pv && pv.sido ? "" : " disabled") + ">다음</button></div>";
+    if (st.type === "text") h = '<div class="f-in2 f-tx"><label><span>' + esc(st.label) + '</span><input id="fTx" class="f-inp" placeholder="' + esc(st.ph || "") + '" value="' + esc(pv && pv !== st.skip ? pv : "") + '" autocomplete="off"></label><button type="button" class="f-btn" data-act="f-txgo">다음</button><button type="button" class="f-btn line" data-act="f-one" data-v="' + esc(st.skip) + '">' + esc(st.skip) + "</button></div>";
+    if (st.type === "contact") h = '<form class="f-in2 f-ct" id="fCt" novalidate><label><span>이름</span><input name="nm" class="f-inp" autocomplete="name" value="' + esc(pv ? pv.name : "") + '"></label><label><span>휴대폰</span><input name="ph" class="f-inp" inputmode="tel" autocomplete="tel" placeholder="010-0000-0000" value="' + esc(pv ? pv.phone : "") + '"></label><button type="submit" class="f-btn">다음</button><p class="f-err" id="fErr" role="alert"></p></form>';
     ans.innerHTML = '<div class="f-ans-in">' + h + "</div>";
     pop(ans.firstElementChild, true);
     if (st.type === "sido" && pv && pv.sido) chat.sel = pv.sido; else chat.sel = null;
     if (st.type === "multi") chat.multi = (pv || []).slice();
   }
+  function bindCmap() {
+    var m = document.getElementById("fMapC");
+    if (!m) return;
+    m.onclick = function (ev) {
+      var p = ev.target.closest ? ev.target.closest("path[data-sd]") : null;
+      if (!p || !chat || chat.sent) return;
+      pickSido(p.getAttribute("data-sd"));
+    };
+  }
+  function pickSido(v) {
+    chat.sel = v;
+    document.querySelectorAll('[data-act="f-sdo"]').forEach(function (b) { var on = b.dataset.v === v; b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); });
+    var go = document.querySelector('[data-act="f-sdgo"]');
+    if (go) go.disabled = false;
+    var m = document.getElementById("fMapC");
+    if (m) m.innerHTML = mapSvg(tally(D.companies, D.experts), v);
+  }
   function answer(v) {
-    var st = chat.ST[chat.k], log = document.getElementById("fLog");
+    var st = chat.ST[chat.k], log = document.getElementById("fLog"), mc = document.getElementById("fMapC");
+    if (mc) { mc.removeAttribute("id"); mc.onclick = null; mc.classList.add("off"); }
     chat.ans[st.id] = v;
     chat.prev[st.id] = v;
     log.insertAdjacentHTML("beforeend", myBub(st, chat.k, v));
     pop(log.lastElementChild);
     chat.k++;
-    ask(false);
+    replan();
+    ask();
   }
   function rebuild() {
-    var log = document.getElementById("fLog"), h = mBub(esc(intro(chat.T)), "도아 매니저");
+    var log = document.getElementById("fLog"), h = (chat.b.q ? '<p class="f-qnote">찾으신 말: <b>‘' + esc(chat.b.q) + "’</b></p>" : "") + mBub(esc(intro(chat.b)), MGR);
     for (var k = 0; k < chat.k; k++) { var st = chat.ST[k]; h += mBub(esc(st.q)) + myBub(st, k, chat.ans[st.id]); }
     log.innerHTML = h;
   }
@@ -494,36 +667,112 @@
     chat.done = true;
     prog();
     typing(function () {
-      var log = document.getElementById("fLog");
+      var log = document.getElementById("fLog"), h = head(chat.b, eff(chat.b, chat.ans));
       var rows = chat.ST.map(function (st) { return "<tr><th>" + esc(st.label) + "</th><td>" + esc(ansText(st, chat.ans[st.id])) + "</td></tr>"; }).join("");
-      log.insertAdjacentHTML("beforeend", mBub("고르신 내용을 정리했어요. 맞으면 연결 요청을 보내 주세요. 고칠 것은 위의 내 답을 누르면 다시 고를 수 있습니다."));
-      log.insertAdjacentHTML("beforeend", '<div class="f-sumc"><p class="f-kind">상담 신청 내용</p><b>' + esc(chat.T.name) + '</b><table class="f-tb">' + rows + "</table></div>");
+      log.insertAdjacentHTML("beforeend", mBub("고르신 내용을 정리했어요. 맞으면 <b>이대로 상담 신청</b>을 눌러 주세요. 고칠 것은 위의 내 답을 누르면 다시 고를 수 있습니다."));
+      log.insertAdjacentHTML("beforeend", '<div class="f-sumc"><p class="f-kind">상담 신청 내용</p><b>' + esc(h.title) + '</b><table class="f-tb">' + rows + "</table></div>");
       pop(log.children[log.children.length - 2]);
       pop(log.lastElementChild);
-      document.getElementById("fAns").innerHTML = '<div class="f-ans-in f-fin"><button type="button" class="f-btn xl" data-act="f-send">이대로 연결 요청</button><button type="button" class="f-btn line xl" data-act="f-reset">처음부터 다시</button></div>';
+      document.getElementById("fAns").innerHTML = '<div class="f-ans-in f-fin"><button type="button" class="f-btn xl or" data-act="f-send">' + FI.chat + '<span>이대로 상담 신청</span></button><button type="button" class="f-btn line xl" data-act="f-reset">처음부터 다시</button></div>';
       scrollEnd();
     });
   }
+  function reqs() { var l = A.keep("requests"); return Array.isArray(l) ? l : []; }
+  function norm(q) {
+    if (!q.status || !STN[q.status]) q.status = "new";
+    if (!Array.isArray(q.messages)) q.messages = [];
+    if (!Array.isArray(q.recommend)) q.recommend = [];
+    if (!Array.isArray(q.rows)) q.rows = [];
+    q.mgr = q.mgr || MGR;
+    return q;
+  }
+  function findReq(id) { var l = reqs(); for (var i = 0; i < l.length; i++) if (l[i] && l[i].id === id) return norm(l[i]); return null; }
+  function saveReq(q) {
+    var l = reqs(), done = false;
+    for (var i = 0; i < l.length; i++) if (l[i] && l[i].id === q.id) { l[i] = q; done = true; }
+    if (!done) l.unshift(q);
+    A.keep("requests", l);
+  }
   function send() {
+    var e = eff(chat.b, chat.ans), h = head(chat.b, e), a = {};
     var rows = chat.ST.map(function (st) { return [st.label, ansText(st, chat.ans[st.id])]; });
-    var a = {};
     chat.ST.forEach(function (st) { a[st.id] = chat.ans[st.id]; });
-    var list = A.keep("requests") || [];
-    var req = { id: "rq" + Date.now(), to: chat.to, kind: chat.T.kind, title: chat.T.name, label: chat.T.label, answers: a, rows: rows, at: new Date().toISOString() };
-    list.unshift(req);
-    A.keep("requests", list);
+    var kind = { cat: "cat", work: "work", mcat: "mcat" }[e.kind] || e.kind;
+    var now = new Date().toISOString(), sd = a.sido ? ansText({ type: "sido" }, a.sido) : "";
+    var req = { id: "rq" + Date.now(), to: e.to || "", cat: e.kind === "cat" ? e.cat : e.viaCat ? "mat" : BG.CO[e.to] ? BG.CO[e.to].cat : "", work: e.kind === "work" ? e.work : BG.EX[e.to] ? BG.EX[e.to].works[0] : "", mcat: e.mcats ? e.mcats[0] : e.mcat && e.mcat !== "all" ? e.mcat : BG.MT[e.to] ? BG.MT[e.to].cat : "",
+      kind: kind, title: h.title, label: h.label, answers: a, rows: rows, at: now, status: "new", mgr: MGR,
+      messages: [{ from: "me", t: "상담 신청서를 보냈습니다. " + [h.title, sd].filter(Boolean).join(" · "), at: now }], recommend: [], call: null };
+    saveReq(req);
     chat.sent = true;
-    prog();
-    document.getElementById("fAns").innerHTML = "";
-    typing(function () {
-      var log = document.getElementById("fLog");
-      log.insertAdjacentHTML("beforeend", mBub("<b>연결 요청을 보냈어요.</b> 담당 매니저가 확인 후 남기신 번호로 연락드립니다."));
-      pop(log.lastElementChild);
-      log.querySelectorAll('[data-act="f-redo"]').forEach(function (b) { b.disabled = true; });
-      document.getElementById("fAns").innerHTML = '<div class="f-ans-in f-fin"><a class="f-btn xl" href="#/quote">견적서 받기에서 보기</a><a class="f-btn line xl" href="' + (chat.T.kind === "expert" ? "#/experts" : "#/companies") + '">다른 ' + (chat.T.kind === "expert" ? "전문가" : "업체") + " 더 보기</a></div>";
-      pop(document.getElementById("fAns").firstElementChild, true);
+    try { history.replaceState(null, "", location.pathname + location.search + "#/match?rq=" + req.id); } catch (er) {}
+    thread(req, true);
+  }
+  function hm(iso) { var d = new Date(iso); if (isNaN(d)) return ""; var p = function (n) { return (n < 10 ? "0" : "") + n; }; return p(d.getMonth() + 1) + "." + p(d.getDate()) + " " + p(d.getHours()) + ":" + p(d.getMinutes()); }
+  function ro(name) { var c = name.charCodeAt(name.length - 1) - 0xac00; if (c < 0 || c > 11171) return "(으)로"; var j = c % 28; return j && j !== 8 ? "으로" : "로"; }
+  function recCard(id) {
+    var c = BG.CO[id], x = BG.EX[id], m = BG.MT[id];
+    if (c) return '<div class="f-rec"><div class="f-rec-h"><p class="f-kind">' + esc(kindLine(c)) + "</p><b>" + esc(c.name) + "</b>" + okBadge(okList(c).join(" · ") + " 확인") + "</div>" + coFacts(c) + '<div class="f-rec-a"><button type="button" class="f-btn" data-act="f-pick" data-id="' + c.id + '">이 업체로 진행 요청</button><a class="f-btn line" href="#/company/' + c.id + '">업체 정보 보기</a></div></div>';
+    if (x) return '<div class="f-rec"><div class="f-rec-h"><p class="f-kind">전문가 · ' + esc(A.workNames(x.works).join(" · ")) + "</p><b>" + esc(x.name) + " <small>" + esc(x.title) + "</small></b>" + okBadge(exOk(x).join(" · ") + " 확인") + "</div>" + exFacts(x) + '<div class="f-rec-a"><button type="button" class="f-btn" data-act="f-pick" data-id="' + x.id + '">이 전문가로 진행 요청</button><a class="f-btn line" href="#/expert/' + x.id + '">전문가 정보 보기</a></div></div>';
+    if (m) { var s = BG.CO[m.seller]; return '<div class="f-rec"><div class="f-rec-h"><p class="f-kind">자재 · ' + esc(BG.MC[m.cat] ? BG.MC[m.cat].name : "") + "</p><b>" + esc(m.name) + "</b></div>" + '<dl class="f-dl">' + cell("규격", esc(m.spec), "w") + cell("단가", won(S.priceOf(m)) + "원 / " + esc(m.unit)) + cell("출고", esc(m.ship)) + (s ? cell("공급처 자본금", capText(s)) : "") + '</dl><div class="f-rec-a"><button type="button" class="f-btn" data-act="f-pick" data-id="' + m.id + '">이 자재로 진행 요청</button><a class="f-btn line" href="#/item/' + m.id + '">자재 정보 보기</a></div></div>'; }
+    return "";
+  }
+  function recName(id) { var c = BG.CO[id], x = BG.EX[id], m = BG.MT[id]; return c ? c.name : x ? x.name + " " + x.title.split(" · ")[0] : m ? m.name : id; }
+  function msgHtml(m) {
+    if (m.from === "me") return '<div class="f-m r"><div class="f-bub"><span>' + esc(m.t) + '</span></div><p class="f-at">' + hm(m.at) + "</p></div>";
+    var rec = Array.isArray(m.rec) && m.rec.length ? '<div class="f-recs">' + m.rec.map(recCard).join("") + "</div>" : "";
+    return '<div class="f-m l' + (rec ? " f-wide" : "") + '"><p class="f-who">' + MGR + '</p><div class="f-bub">' + esc(m.t).replace(/\n/g, "<br>") + "</div>" + rec + '<p class="f-at">' + hm(m.at) + "</p></div>";
+  }
+  function sumCard(q) {
+    return '<div class="f-sumc"><p class="f-kind">보내신 상담 신청 · ' + hm(q.at) + "</p><b>" + esc(q.title || "상담") + '</b><table class="f-tb">' + q.rows.map(function (x) { return "<tr><th>" + esc(x[0]) + "</th><td>" + esc(x[1]) + "</td></tr>"; }).join("") + "</table></div>";
+  }
+  function logHtml(q) {
+    var inMsg = q.messages.some(function (m) { return Array.isArray(m.rec) && m.rec.length; });
+    var h = sumCard(q) + q.messages.map(msgHtml).join("");
+    if (!inMsg && q.recommend.length) h += msgHtml({ from: "mgr", t: "상담 내용을 바탕으로 추천드리는 곳입니다.", at: q.at, rec: q.recommend });
+    return h;
+  }
+  function thread(q, fresh) {
+    norm(q);
+    var h = { title: q.title || "상담", label: q.label || "상담", nav: "" }, st = stageOf(q.status);
+    CUR = { name: "match", query: { rq: q.id } };
+    chat = { rq: q.id, thread: true, tok: {}, nav: q.cat === "mat" || q.kind === "mcat" || q.kind === "material" ? "mall" : q.work || q.kind === "expert" ? "experts" : q.kind === "pm" ? "pm" : q.kind === "finance" ? "finance" : "companies" };
+    A.app.innerHTML = '<div class="f-cw"><div class="f-chat"><header class="f-ch-h"><a class="f-back" href="#/quote" aria-label="견적서 받기로">' + FI.back + '</a><div class="f-ch-t"><p class="f-kind">' + esc(h.label) + "</p><h1>" + esc(h.title) + '</h1><p class="f-ch-s">담당 · ' + esc(q.mgr) + '</p></div><p class="f-st st-' + q.status + '">' + STN[q.status] + "</p></header>" + flowBar(st) +
+      '<div class="f-log" id="fLog" aria-live="polite">' + logHtml(q) + '</div><div class="f-ans" id="fAns"><div class="f-ans-in"><form class="f-say" id="fSay"><label class="f-sr" for="fSayI">매니저에게 보낼 말</label><input id="fSayI" name="t" class="f-inp" placeholder="매니저에게 보낼 말을 적어 주세요" autocomplete="off"><button type="submit" class="f-btn">보내기</button></form><p class="f-say-n">' + FI.shield + "업체에는 매니저가 필요한 내용만 전합니다. 연락처는 알리지 않습니다.</p></div></div></div>" + flowSide(st, null) + "</div>";
+    if (fresh) {
       scrollEnd();
-    });
+      typing(function () {
+        var cur = findReq(q.id) || q;
+        cur.messages.push({ from: "mgr", t: "접수했습니다. 채팅으로 충분한 내용은 여기서 여쭙고, 전화가 필요한 내용은 남기신 번호로 연락드리겠습니다. 상담을 마치면 맞는 업체를 골라 이 대화창에서 추천해 드립니다.", at: new Date().toISOString() });
+        saveReq(cur);
+        var log = document.getElementById("fLog");
+        log.insertAdjacentHTML("beforeend", msgHtml(cur.messages[cur.messages.length - 1]));
+        pop(log.lastElementChild);
+        scrollEnd();
+      }, 1400);
+    } else setTimeout(scrollEnd, 60);
+  }
+  function say(t) {
+    var q = findReq(chat.rq);
+    if (!q || !t) return;
+    var first = !q.messages.some(function (m) { return m.from === "me" && m.say; });
+    q.messages.push({ from: "me", t: t, at: new Date().toISOString(), say: 1 });
+    saveReq(q);
+    var log = document.getElementById("fLog");
+    log.insertAdjacentHTML("beforeend", msgHtml(q.messages[q.messages.length - 1]));
+    pop(log.lastElementChild);
+    scrollEnd();
+    if (first && !q.ack) {
+      typing(function () {
+        var cur = findReq(q.id);
+        if (!cur) return;
+        cur.ack = 1;
+        cur.messages.push({ from: "mgr", t: "확인했습니다. 담당 매니저가 곧 답을 드리겠습니다.", at: new Date().toISOString() });
+        saveReq(cur);
+        log.insertAdjacentHTML("beforeend", msgHtml(cur.messages[cur.messages.length - 1]));
+        pop(log.lastElementChild);
+        scrollEnd();
+      }, 1100);
+    }
   }
   function pop(el, up) {
     if (!el || !BG.mo.able()) return;
@@ -541,6 +790,8 @@
   function afterRender() {
     var map = document.getElementById("fMap");
     if (map) bindMap(map);
+    var rc = document.getElementById("fRgc"), on = rc && rc.querySelector(".on");
+    if (on && on.offsetLeft > rc.clientWidth - 60) rc.scrollLeft = on.offsetLeft - 16;
   }
   function bindMap(map) {
     var tip = document.getElementById("fTip");
@@ -550,7 +801,7 @@
       var n = p.getAttribute("data-sd"), c = CUR.t[n], b = map.getBoundingClientRect();
       tip.innerHTML = "<b>" + n + "</b>" + (CUR.name === "companies" ? "업체 " + c.co + "곳" : CUR.name === "experts" ? "전문가 " + c.ex + "명" : "업체 " + c.co + " · 전문가 " + c.ex);
       tip.hidden = false;
-      tip.style.left = Math.min(ev.clientX - b.left + 14, b.width - tip.offsetWidth) + "px";
+      tip.style.left = Math.max(0, Math.min(ev.clientX - b.left + 14, b.width - tip.offsetWidth)) + "px";
       tip.style.top = Math.max(0, ev.clientY - b.top - 44) + "px";
     };
     map.onmouseleave = function () { tip.hidden = true; };
@@ -559,36 +810,26 @@
       if (p) setSido(p.getAttribute("data-sd"));
     };
   }
-  function wide() { return window.matchMedia("(min-width: 861px)").matches; }
+  function wide() { return window.matchMedia("(min-width: 1100px)").matches; }
   function fresh(name) { if (!CUR || CUR.name !== name) rgOpen = false; }
   function setSido(v) {
     if (!CUR) return;
     var q = {};
     for (var k in CUR.query) q[k] = CUR.query[k];
     q.sido = CUR.query.sido === v && v ? "" : v;
-    rgOpen = wide();
+    rgOpen = false;
     keepY = window.scrollY;
     document.body.classList.remove("lock", "f-sheet");
     location.hash = link(CUR.name, q);
   }
   function openRg(on) {
-    var p = document.getElementById("fRg"), b = document.querySelector('[data-act="f-rg"]');
+    var p = document.getElementById("fRg");
     if (!p) return;
-    rgOpen = on;
-    p.classList.toggle("open", on);
-    if (b) b.setAttribute("aria-expanded", on ? "true" : "false");
-    var sheet = on && !wide();
-    document.body.classList.toggle("lock", sheet);
-    document.body.classList.toggle("f-sheet", sheet);
-    if (on && BG.mo.able()) {
-      var inn = p.querySelector(".f-rg-in");
-      if (sheet) inn.animate([{ transform: "translateY(100%)" }, { transform: "none" }], { duration: 420, easing: "cubic-bezier(.2,.7,.1,1)" });
-      else inn.animate([{ clipPath: "inset(0 0 100% 0)" }, { clipPath: "inset(0 0 0 0)" }], { duration: 520, easing: "cubic-bezier(.2,.7,.1,1)" });
-    }
-    if (on && !sheet) {
-      var rb = p.getBoundingClientRect().bottom;
-      if (rb > window.innerHeight) window.scrollTo({ top: window.scrollY + Math.min(rb - window.innerHeight + 24, p.getBoundingClientRect().top - 200), behavior: BG.reduced() ? "auto" : "smooth" });
-    }
+    rgOpen = on && !wide();
+    p.classList.toggle("open", rgOpen);
+    document.body.classList.toggle("lock", rgOpen);
+    document.body.classList.toggle("f-sheet", rgOpen);
+    if (rgOpen && BG.mo.able()) p.querySelector(".f-rg-in").animate([{ transform: "translateY(100%)" }, { transform: "none" }], { duration: 420, easing: "cubic-bezier(.2,.7,.1,1)" });
   }
   function notice(name) {
     if (A.notice) A.notice(name); else BG.toast("대표번호 1588-9863");
@@ -605,6 +846,19 @@
     if (act === "f-tel") notice("전화 걸기");
     if (act === "f-page") pageMore(a.dataset.k);
     if (!chat) return;
+    if (act === "f-pick" && chat.thread) {
+      var q = findReq(chat.rq), nm = recName(a.dataset.id);
+      if (!q) return;
+      q.messages.push({ from: "me", t: nm + ro(nm) + " 진행을 원합니다.", at: new Date().toISOString(), pick: a.dataset.id });
+      saveReq(q);
+      var lg = document.getElementById("fLog");
+      lg.insertAdjacentHTML("beforeend", msgHtml(q.messages[q.messages.length - 1]));
+      pop(lg.lastElementChild);
+      scrollEnd();
+      BG.toast("매니저에게 전했습니다");
+      return;
+    }
+    if (chat.thread) return;
     if (act === "f-one") answer(a.dataset.v);
     if (act === "f-tg") {
       var v = a.dataset.v, i = chat.multi.indexOf(v);
@@ -616,29 +870,36 @@
       nb.textContent = "다음" + (chat.multi.length ? " (" + chat.multi.length + "개)" : "");
     }
     if (act === "f-multi" && chat.multi.length) answer(chat.ST[chat.k].opts.filter(function (o) { return chat.multi.indexOf(o) >= 0; }));
-    if (act === "f-sdo") {
-      chat.sel = a.dataset.v;
-      document.querySelectorAll('[data-act="f-sdo"]').forEach(function (b) { var on = b === a; b.classList.toggle("on", on); b.setAttribute("aria-pressed", on); });
-      document.querySelector('[data-act="f-sdgo"]').disabled = false;
-    }
+    if (act === "f-sdo") pickSido(a.dataset.v);
     if (act === "f-sdgo" && chat.sel) answer({ sido: chat.sel, gu: (document.getElementById("fGu").value || "").trim() });
+    if (act === "f-txgo") { var tv = (document.getElementById("fTx").value || "").trim(); answer(tv || chat.ST[chat.k].skip); }
     if (act === "f-redo" && !chat.sent) {
       chat.tok = {};
       chat.k = +a.dataset.k;
       chat.done = false;
       chat.ST.slice(chat.k).forEach(function (st) { delete chat.ans[st.id]; });
+      replan();
       rebuild();
       prog();
       var st = chat.ST[chat.k], log = document.getElementById("fLog");
-      log.insertAdjacentHTML("beforeend", mBub(esc(st.q) + (st.type === "multi" ? '<span class="f-hint">여러 개 고를 수 있어요</span>' : "")));
+      log.insertAdjacentHTML("beforeend", qBub(st));
       ansUi(st);
+      bindCmap();
       scrollEnd();
     }
     if (act === "f-send" && !chat.sent) send();
-    if (act === "f-reset") { chat.k = 0; chat.ans = {}; chat.done = false; chat.tok = {}; rebuild(); ask(false); }
+    if (act === "f-reset") { chat.k = 0; chat.ans = {}; chat.done = false; chat.tok = {}; replan(); rebuild(); ask(); }
   });
   document.addEventListener("submit", function (ev) {
     var f = ev.target;
+    if (f.id === "fSay") {
+      ev.preventDefault();
+      var inp = document.getElementById("fSayI"), t = (inp.value || "").trim();
+      if (!t) { inp.focus(); return; }
+      inp.value = "";
+      say(t);
+      return;
+    }
     if (f.id === "fCt") {
       ev.preventDefault();
       var nm = f.nm.value.trim(), ph = f.ph.value.replace(/\D/g, ""), miss = [];
@@ -662,6 +923,12 @@
   document.addEventListener("keydown", function (ev) {
     if (ev.key === "Escape" && rgOpen) openRg(false);
     if (ev.key === "Enter" && ev.target.id === "fGu" && chat && chat.sel) { ev.preventDefault(); answer({ sido: chat.sel, gu: ev.target.value.trim() }); }
+    if (ev.key === "Enter" && ev.target.id === "fTx" && chat && !chat.thread) { ev.preventDefault(); answer(ev.target.value.trim() || chat.ST[chat.k].skip); }
+  });
+  window.addEventListener("storage", function (ev) {
+    if (ev.key !== "b2bpick-requests" || !chat || !chat.thread) return;
+    var q = findReq(chat.rq);
+    if (q) thread(q, false);
   });
 
   if (!window.FMAP) {
@@ -680,11 +947,11 @@
   A.views.experts = experts;
   A.views.expert = expert;
   A.views.match = match;
-  A.findData = { sido: SIDO, cat: CAT, coFind: coFind, exFind: exFind };
+  A.findData = { sido: SIDO, cat: CAT, coFind: coFind, exFind: exFind, capText: capText, coFacts: coFacts, exFacts: exFacts, kindLine: kindLine, okList: okList, exOk: exOk, okBadge: okBadge, mapSvg: mapSvg, tally: tally, status: STN, norm: norm, reqs: reqs, findReq: findReq, saveReq: saveReq, hm: hm, recName: recName };
 
   A.motion.push(
     [".f-hd .f-h1", "up", { y: 16, dur: 700 }],
-    [".f-row", "up", { y: 18, stagger: 60, max: 6 }],
+    [".f-row", "up", { y: 18, stagger: 50, max: 6 }],
     [".f-mt", "up", { y: 14, stagger: 50, max: 8 }],
     [".f-gal figure", "wipe", { stagger: 110, dur: 1100 }],
     [".f-pj figure", "wipe", { stagger: 110 }],
@@ -696,7 +963,7 @@
     if (document.body.classList.contains("f-sheet")) document.body.classList.remove("f-sheet", "lock");
     if (["search", "companies", "experts"].indexOf(r.name) < 0) rgOpen = false;
     if (r.name !== "match") chat = null;
-    if (r.name === "match" && chat) document.querySelectorAll("[data-nav]").forEach(function (n) { n.classList.toggle("on", n.dataset.nav === chat.T.nav); });
+    if (r.name === "match" && chat) document.querySelectorAll("[data-nav]").forEach(function (n) { n.classList.toggle("on", n.dataset.nav === chat.nav); });
     if (r.name === "search") document.querySelectorAll("[data-nav]").forEach(function (n) { n.classList.remove("on"); });
     if (keepY != null) { var y = keepY; keepY = null; setTimeout(function () { window.scrollTo(0, y); }, 0); }
   });
