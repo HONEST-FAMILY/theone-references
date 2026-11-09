@@ -136,6 +136,13 @@
 .f-dl div { flex: 0 1 auto; min-width: 0; padding: 4px 12px 5px; }
 .f-dl div + div { border-left: 1px solid var(--line); }
 .f-dl div.w { flex: 1 1 auto; }
+@media (min-width: 641px) {
+  .f-row .f-dl { flex-wrap: wrap; }
+  .f-row .f-dl div { flex: 0 0 auto; }
+  .f-row .f-dl div.w { flex: 1 1 150px; }
+  .f-row .f-dl dd { overflow: visible; text-overflow: clip; }
+  .f-row .f-dl div.w dd { white-space: normal; }
+}
 .f-dl dt { font-size: 13px; line-height: 1.4; color: var(--mute); white-space: nowrap; }
 .f-dl dd { margin: 0; overflow: hidden; font-size: 16px; font-weight: 700; line-height: 1.4; color: var(--ink); white-space: nowrap; text-overflow: ellipsis; }
 .f-lh { margin: 10px 0 0; font-size: 16px; font-weight: 600; color: var(--ink); }
