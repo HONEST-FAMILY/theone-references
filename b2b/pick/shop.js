@@ -540,7 +540,7 @@
     var foot = "<tfoot>" + (S.member ? '<tr><th colspan="4">정가 합계</th><td class="n">' + won(t.list) + "</td></tr>" : "") + '<tr class="t"><th colspan="4">견적 금액 (원)</th><td class="n">' + won(t.pay) + "</td></tr></tfoot>";
     app.innerHTML = '<div class="s-pg s-signp">' + head("계약서 쓰고 견적서 받기", "계약서 내용을 확인하고 서명하면 견적서가 바로 나옵니다. 대금은 견적 확정 뒤 협의하며, 이 화면에서는 결제가 일어나지 않습니다.", [["견적서 받기", "#/quote"], ["자재 견적 목록", "#/cart"], ["계약서 서명"]]) +
       '<div class="s-sign"><article class="s-doc" aria-label="자재 공급 계약서 미리보기"><header class="s-doc-h"><p>계약서 미리보기</p><h2>자재 공급 계약서</h2><p>작성일 ' + day(Date.now()) + "</p></header>" +
-      '<dl class="s-doc-pt"><div><dt>공급자</dt><dd><ul class="s-pts">' + partyRows(items) + '</ul></dd></div><div><dt>구매자</dt><dd id="s-doc-buyer">' + esc(u.company || u.name || "구매자 회사명을 적어 주세요") + "</dd></div><div><dt>중개</dt><dd>도아 · (주)더원파트너스 (대표 권병철 · 대표번호 1588-9863)</dd></div></dl>" +
+      '<dl class="s-doc-pt"><div><dt>공급자</dt><dd><ul class="s-pts">' + partyRows(items) + '</ul></dd></div><div><dt>구매자</dt><dd id="s-doc-buyer">' + esc(u.company || u.name || "구매자 회사명을 적어 주세요") + "</dd></div><div><dt>중개</dt><dd>도아 · (주)더원파트너스 (대표 김철하 · 대표번호 1588-9863)</dd></div></dl>" +
       '<p class="s-doc-p">공급자와 구매자는 아래 자재의 공급에 관하여 다음과 같이 계약합니다.</p>' + docItems(items, foot) +
       '<ol class="s-arts"><li><b>제1조 (목적)</b> 이 계약은 공급자가 위 표의 자재를 구매자가 정한 현장에 납품하고, 구매자가 이를 인수하는 데 필요한 사항을 정합니다.</li>' +
       "<li><b>제2조 (납품 조건)</b> 납품 장소는 구매자가 정한 현장이며, 납기는 품목별 출고 기준(당일 출고·2일·3일·주문 제작 7일)에 따릅니다. 하차는 1층 하차를 기준으로 하고 층 올림은 따로 정합니다.</li>" +
@@ -593,7 +593,7 @@
     app.innerHTML = '<div class="s-pg s-donep">' + head("견적서 받기 완료", "서명한 계약서로 견적서가 나왔습니다. 담당 매니저가 확인 후 연락드립니다.", [["견적서 받기", "#/quote"], ["견적서"]]) +
       '<div class="s-done"><article class="s-doc s-qdoc"><header class="s-doc-h"><p>도아 BUILDGO 자재 견적</p><h2>견적서</h2></header>' +
       '<dl class="s-qmeta"><div><dt>견적번호</dt><dd>' + esc(qd.no) + "</dd></div><div><dt>견적일</dt><dd>" + day(qd.at) + "</dd></div><div><dt>수신</dt><dd>" + esc(qd.buyer) + " 귀하</dd></div><div><dt>유효 기간</dt><dd>견적일부터 14일</dd></div>" + (qd.site ? "<div><dt>납품 현장</dt><dd>" + esc(qd.site) + "</dd></div>" : "") + "</dl>" +
-      '<dl class="s-doc-pt"><div><dt>공급자</dt><dd><ul class="s-pts">' + partyRows(qd.items) + "</ul></dd></div><div><dt>중개</dt><dd>도아 · (주)더원파트너스 · 대표 권병철 · 사업자 399-86-03838 · 서울 영등포구 국회대로 800 317호 · 1588-9863</dd></div></dl>" +
+      '<dl class="s-doc-pt"><div><dt>공급자</dt><dd><ul class="s-pts">' + partyRows(qd.items) + "</ul></dd></div><div><dt>중개</dt><dd>도아 · (주)더원파트너스 · 대표 김철하 · 사업자 399-86-03838 · 경상북도 포항시 북구 삼호로 156-14(항구동) · 1588-9863</dd></div></dl>" +
       docItems(qd.items, foot) +
       '<div class="s-qfoot"><p class="s-qmsg">담당 매니저가 확인 후 연락드립니다.</p><div class="s-qsig"><p>구매자 서명<span>' + esc(qd.signer) + " · " + day(qd.at) + '</span></p><span class="s-doc-im"><img src="' + esc(qd.sig || "") + '" alt="구매자 서명"></span></div></div></article>' +
       '<aside class="s-done-a"><button type="button" class="btn s-wide" data-act="s-dl">견적서 내려받기</button><a class="btn line-l s-wide" href="#/quote">견적서 받기 화면으로</a><a class="btn line-l s-wide" href="#/mall">자재 더 보기</a>' +
@@ -670,12 +670,12 @@
   function fv(n) { return esc(J.f[n] || ""); }
   function joinBody() {
     if (J.step === 1) {
-      return '<div class="s-kinds"><button type="button" class="s-kind" data-act="s-kind" data-k="biz"><span class="s-kind-im"><img src="' + photo("hero_rise") + '" alt=""></span><span class="s-kind-b"><b>업체 입점 (사업자)</b><span>시행·시공·자재·설계·PM·금융 업체로 입점하면 담당 매니저가 맞는 상담과 견적 요청을 전해 드립니다.</span><em>사업자등록번호로 가입 ' + I.arrow + "</em></span></button>" +
-        '<button type="button" class="s-kind" data-act="s-kind" data-k="person"><span class="s-kind-im"><img src="' + photo("site_aerial") + '" alt=""></span><span class="s-kind-b"><b>일반회원 (개인)</b><span>토지·기술·자본을 가지고 계신 분, 자재를 사려는 분이 가입합니다.</span><em>휴대폰 번호로 가입 ' + I.arrow + "</em></span></button></div>" + refAsk(true);
+      return '<div class="s-kinds"><button type="button" class="s-kind" data-act="s-kind" data-k="biz"><span class="s-kind-im"><img src="' + photo("hero_rise") + '" alt=""></span><span class="s-kind-b"><b>사업자회원</b><span>시행·시공·자재·설계·PM·금융 사업자가 가입합니다. 아직 BUILDGO와 함께 일하지 않아도 가입할 수 있습니다.</span><em>사업자등록번호로 가입 ' + I.arrow + "</em></span></button>" +
+        '<button type="button" class="s-kind" data-act="s-kind" data-k="person"><span class="s-kind-im"><img src="' + photo("site_aerial") + '" alt=""></span><span class="s-kind-b"><b>일반회원</b><span>토지·기술·자본을 가지고 계신 분, 자재를 사려는 분이 가입합니다.</span><em>휴대폰 번호로 가입 ' + I.arrow + "</em></span></button></div>" + '<p class="s-pin"><span><b>업체로 입점해 함께 일하실 사업자이신가요?</b> 입점은 회원가입과 따로 받습니다.</span><a href="#/partner">입점 문의하기 ' + I.arrow + "</a></p>" + refAsk(true);
     }
     if (J.step === 2) {
       var biz = J.kind === "biz";
-      return '<form class="s-jf" id="s-jf" novalidate><p class="s-jk">' + (biz ? "업체 입점 (사업자)" : "일반회원 (개인)") + ' <button type="button" class="s-link" data-act="s-jprev">회원 종류 바꾸기</button></p>' + refBox(biz) + '<div class="s-jg">' +
+      return '<form class="s-jf" id="s-jf" novalidate><p class="s-jk">' + (biz ? "사업자회원" : "일반회원") + ' <button type="button" class="s-link" data-act="s-jprev">회원 종류 바꾸기</button></p>' + refBox(biz) + '<div class="s-jg">' +
         (biz ? '<label class="s-fl"><span>회사명</span><input class="inp" name="company" value="' + fv("company") + '" autocomplete="organization"></label><label class="s-fl"><span>사업자등록번호</span><input class="inp" name="bizNo" value="' + fv("bizNo") + '" inputmode="numeric" placeholder="000-00-00000"></label><label class="s-fl"><span>담당자 이름</span><input class="inp" name="name" value="' + fv("name") + '" autocomplete="name"></label>' : '<label class="s-fl"><span>이름</span><input class="inp" name="name" value="' + fv("name") + '" autocomplete="name"></label>') +
         '<label class="s-fl"><span>휴대폰</span><input class="inp" name="phone" value="' + fv("phone") + '" inputmode="tel" autocomplete="tel" placeholder="010-0000-0000"></label>' +
         '<label class="s-fl"><span>아이디</span><input class="inp" name="id" value="' + fv("id") + '" autocomplete="username" placeholder="영문·숫자 4자 이상"></label><label class="s-fl"><span>비밀번호</span><input class="inp" type="password" name="pw" autocomplete="new-password" placeholder="8자 이상"></label></div>' +
@@ -763,7 +763,7 @@
   function welcome(u) {
     var rec = recommend(u), names = PURPOSES.filter(function (x) { return u.purposes.indexOf(x[0]) >= 0; }).map(function (x) { return x[1]; });
     app.innerHTML = '<div class="s-pg s-welp">' + head("가입을 환영합니다", (u.company ? u.company + " " : "") + u.name + "님께 맞는 업체·전문가·자재를 골라 두었습니다. 첫 화면에서도 같은 추천을 보실 수 있습니다.", [["회원가입", "#/join"], ["가입 완료"]]) +
-      '<div class="s-wel"><dl class="s-wsum"><div><dt>회원 종류</dt><dd>' + (u.kind === "biz" ? "업체 입점 (사업자)" : "일반회원 (개인)") + "</dd></div><div><dt>가입 목적</dt><dd>" + esc(names.join(", ")) + "</dd></div>" + (u.referrer ? "<div><dt>추천인</dt><dd>" + esc(u.referrer) + " · 추천인에게 포인트가 적립됩니다</dd></div>" : "") + "</dl>" + recHtml(rec) +
+      '<div class="s-wel"><dl class="s-wsum"><div><dt>회원 종류</dt><dd>' + (u.kind === "biz" ? "사업자회원" : "일반회원") + "</dd></div><div><dt>가입 목적</dt><dd>" + esc(names.join(", ")) + "</dd></div>" + (u.referrer ? "<div><dt>추천인</dt><dd>" + esc(u.referrer) + " · 추천인에게 포인트가 적립됩니다</dd></div>" : "") + "</dl>" + recHtml(rec) +
       '<div class="s-btns"><a class="btn" href="#/">첫 화면에서 추천 보기</a><a class="btn line-l" href="#/my">내 정보</a></div></div></div>';
     window.scrollTo(0, 0);
     BG.mo.play(app.querySelectorAll(".s-head h1, .s-head .s-sub, .s-wsum, .s-rec section, .s-btns"), "up", { y: 18, stagger: 80 });
@@ -772,7 +772,7 @@
   function login(r) {
     app.innerHTML = '<div class="s-pg s-loginp">' + head("로그인", "가입한 아이디로 로그인하면 회원가와 내 견적·상담 요청을 볼 수 있습니다.", [["로그인"]]) +
       '<form class="s-login" id="s-lf" novalidate><label class="s-fl"><span>아이디</span><input class="inp" name="id" autocomplete="username"></label><label class="s-fl"><span>비밀번호</span><input class="inp" type="password" name="pw" autocomplete="current-password"></label>' +
-      '<p class="s-err" id="s-lerr" role="alert"></p><button type="submit" class="btn s-wide" data-act="s-login">로그인</button><div class="s-lj"><p>아직 회원이 아니신가요? 가입에는 추천인 아이디가 필요합니다.</p><div><a class="btn line-l" href="#/join?kind=biz">업체 입점 (사업자)</a><a class="btn line-l" href="#/join?kind=person">일반회원 (개인)</a></div></div></form></div>';
+      '<p class="s-err" id="s-lerr" role="alert"></p><button type="submit" class="btn s-wide" data-act="s-login">로그인</button><div class="s-lj"><p>아직 회원이 아니신가요? 가입에는 추천인 아이디가 필요합니다.</p><div><a class="btn line-l" href="#/join?kind=biz">사업자회원</a><a class="btn line-l" href="#/join?kind=person">일반회원</a></div></div></form></div>';
     document.getElementById("s-lf").addEventListener("submit", function (ev) { ev.preventDefault(); doLogin(r); });
   }
   function doLogin(r) {
@@ -794,7 +794,7 @@
     var fname = (FIELDS.filter(function (x) { return x[0] === u.field; })[0] || [])[1];
     var phone = String(u.phone || "").replace(/\D/g, ""), ph = phone.length >= 10 ? phone.slice(0, 3) + "-****-" + phone.slice(-4) : u.phone || "";
     app.innerHTML = '<div class="s-pg s-myp">' + head("내 정보", (u.company ? u.company + " " : "") + u.name + "님", [["내 정보"]]) +
-      '<div class="s-my"><section class="s-hs"><div class="s-hs-h"><h2>가입 정보</h2></div><table class="s-tbl"><tr><th>회원 종류</th><td>' + (u.kind === "biz" ? "업체 입점 (사업자)" : "일반회원 (개인)") + "</td></tr>" + (u.company ? "<tr><th>회사명</th><td>" + esc(u.company) + "</td></tr>" : "") + "<tr><th>" + (u.kind === "biz" ? "담당자" : "이름") + "</th><td>" + esc(u.name) + "</td></tr>" + (fname ? "<tr><th>업종</th><td>" + esc(fname) + "</td></tr>" : "") + "<tr><th>휴대폰</th><td>" + esc(ph) + "</td></tr><tr><th>아이디</th><td>" + esc(u.id || "") + "</td></tr><tr><th>가입 목적</th><td>" + esc(names.join(", ") || "—") + "</td></tr>" + (u.referrer ? "<tr><th>추천인</th><td>" + esc(u.referrer) + "</td></tr>" : "") + "</table></section>" +
+      '<div class="s-my"><section class="s-hs"><div class="s-hs-h"><h2>가입 정보</h2></div><table class="s-tbl"><tr><th>회원 종류</th><td>' + (u.kind === "biz" ? "사업자회원" : "일반회원") + "</td></tr>" + (u.company ? "<tr><th>회사명</th><td>" + esc(u.company) + "</td></tr>" : "") + "<tr><th>" + (u.kind === "biz" ? "담당자" : "이름") + "</th><td>" + esc(u.name) + "</td></tr>" + (fname ? "<tr><th>업종</th><td>" + esc(fname) + "</td></tr>" : "") + "<tr><th>휴대폰</th><td>" + esc(ph) + "</td></tr><tr><th>아이디</th><td>" + esc(u.id || "") + "</td></tr><tr><th>가입 목적</th><td>" + esc(names.join(", ") || "—") + "</td></tr>" + (u.referrer ? "<tr><th>추천인</th><td>" + esc(u.referrer) + "</td></tr>" : "") + "</table></section>" +
       '<section class="s-hs"><div class="s-hs-h"><h2>포인트</h2><p class="s-pt"><b>' + won(total) + "</b>P</p></div>" +
       '<p class="s-pt-n">포인트는 가입 추천 적립과 관리자 지급으로만 쌓입니다. 내 아이디 <b>' + esc(u.id || "") + "</b>를 추천인으로 적고 가입한 회원이 생기면 적립됩니다.</p>" +
       '<table class="s-tbl s-ptt"><thead><tr><th>일자</th><th>내용</th><th>구분</th><th class="n">포인트</th></tr></thead><tbody>' + (pts.length ? pts.slice().sort(function (a, b) { return new Date(b.at) - new Date(a.at); }).map(function (x) { return "<tr><td>" + day(x.at) + "</td><td>" + esc(x.t || "") + "</td><td>" + esc(x.kind === "admin" || /관리자/.test(x.t || "") ? "관리자 지급" : "추천 가입 적립") + '</td><td class="n">' + (x.amt > 0 ? "+" : "") + won(x.amt || 0) + "</td></tr>"; }).join("") : '<tr><td colspan="4" class="s-none">아직 쌓인 포인트가 없습니다.</td></tr>') + "</tbody></table></section>" +

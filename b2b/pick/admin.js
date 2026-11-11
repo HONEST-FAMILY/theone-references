@@ -1,8 +1,15 @@
 (function () {
   var A = window.APP, D = A.D, esc = A.esc, I = A.I, photo = A.photo, app = A.app, BG = window.BG;
-  var TABS = [["consult", "상담 관리"], ["popup", "팝업 관리"], ["portfolio", "포트폴리오 관리"]];
+  var TABS = [["consult", "상담 관리"], ["partner", "입점 문의"], ["popup", "팝업 관리"], ["portfolio", "포트폴리오 관리"]];
+  var PDEMO = [
+    { id: "d3", at: "2026.11.10", company: "한결종합건설", name: "김도윤", phone: "010-2934-5521", fields: ["build"], sido: "경기", memo: "철근콘크리트 골조, 공동주택 12건", status: "서류 확인 중" },
+    { id: "d2", at: "2026.11.07", company: "대성스틸", name: "박서진", phone: "010-7712-0384", fields: ["mat"], sido: "충남", memo: "H형강·철근 현장 직납", status: "입점 완료" },
+    { id: "d1", at: "2026.11.05", company: "이음건축사사무소", name: "최하은", phone: "010-4410-9272", fields: ["design"], sido: "서울", memo: "LH 매입약정 설계 8건", status: "접수" }
+  ];
+  var PST = ["접수", "서류 확인 중", "입점 완료", "보류"];
+  var PFN = { dev: "시행", build: "시공", mat: "자재", design: "설계·인허가", pm: "PM", finance: "금융" };
   var PICS = [["hero_kr", "공동주택"], ["site_aerial", "현장 전경"], ["n_plan", "도면 검토"], ["w_measure", "현장 실측"], ["n_crew", "현장 인력"]];
-  var LINKS = [["#/join", "회원가입"], ["#/join?kind=biz", "업체 입점 가입"], ["#/join?kind=person", "일반회원 가입"], ["#/match", "상담 신청"], ["#/companies", "업체 찾기"], ["#/experts", "전문가 찾기"], ["#/mall", "자재몰"], ["#/pm", "PM"], ["#/finance", "금융"], ["#/about", "회사 소개"], ["#/faq", "FAQ"], ["#/qna", "문의게시판"], ["#/quote", "견적서 받기"]];
+  var LINKS = [["#/join", "회원가입"], ["#/join?kind=biz", "사업자회원 가입"], ["#/join?kind=person", "일반회원 가입"], ["#/partner", "입점 문의"], ["#/match", "상담 신청"], ["#/companies", "업체 찾기"], ["#/experts", "전문가 찾기"], ["#/mall", "자재몰"], ["#/pm", "PM"], ["#/finance", "금융"], ["#/about", "회사 소개"], ["#/faq", "FAQ"], ["#/qna", "문의게시판"], ["#/quote", "견적서 받기"]];
   var VIDS = [["v1459", "실내 마감 영상"], ["v4010", "타워크레인 영상"], ["v1457", "외벽 조적 영상"], ["v1439", "도면 검토 영상"]];
   var FPICS = [["steel_hall", "철골 공사"], ["pf_water", "옥상 방수"], ["frame_work", "골조 공사"], ["site_aerial", "현장 전경"], ["pf_mep", "전기 공사"], ["n_crew", "현장 인력"]];
   var UP = '<svg viewBox="0 0 24 24"><path d="m6 14.5 6-6 6 6"/></svg>', DOWN = '<svg viewBox="0 0 24 24"><path d="m6 9.5 6 6 6-6"/></svg>';
@@ -39,16 +46,33 @@
 
   function view(r) {
     var q = r.query || {}, tab = TABS.some(function (t) { return t[0] === q.tab; }) ? q.tab : "consult";
-    app.innerHTML = '<div class="lp ad"><section class="ad-hd"><h1>BUILDGO 관리자</h1><p>상담 요청, 첫 화면 팝업, 입점 업체 포트폴리오를 관리합니다.</p>' +
+    app.innerHTML = '<div class="lp ad"><section class="ad-hd"><h1>BUILDGO 관리자</h1><p>상담 요청, 입점 문의, 첫 화면 팝업, 입점 업체 포트폴리오를 관리합니다.</p>' +
       '<nav class="ad-tabs" aria-label="관리 메뉴">' + TABS.map(function (t) { return '<a href="#/admin?tab=' + t[0] + '"' + (t[0] === tab ? ' class="on" aria-current="page"' : "") + ">" + esc(t[1]) + "</a>"; }).join("") + "</nav></section>" +
       '<div class="ad-body" id="adBody"></div></div>';
     var el = document.getElementById("adBody");
     if (tab === "popup") popupTab(el);
+    else if (tab === "partner") partnerTab(el);
     else if (tab === "portfolio") folioTab(el);
     else if (typeof A.adminConsult === "function") A.adminConsult(el, q);
     else el.innerHTML = '<p class="ad-wait">상담 관리를 불러오는 중입니다</p>';
   }
 
+  function partnerTab(el) {
+    var mine = A.keep("partner") || [], st = A.keep("partner-st") || {}, rows = mine.concat(PDEMO);
+    el.innerHTML = '<div class="ad-pt"><p class="ad-pt-n">입점 문의 <b>' + rows.length + '</b>건 · 담당 매니저가 연락하고 서류(사업자등록증 · 면허 · 보험)를 확인한 뒤 상태를 바꿉니다.</p><ul class="ad-pt-l">' + rows.map(function (p) {
+      var s = st[p.id] || p.status || "접수", isNew = mine.indexOf(p) >= 0;
+      return '<li class="ad-pt-r"><div class="ad-pt-a"><p class="ad-pt-co"><b>' + esc(p.company) + "</b>" + (isNew ? "<em>새 문의</em>" : "") + (p.bizNo ? "<span>" + esc(p.bizNo) + "</span>" : "") + '</p><p class="ad-pt-m">' + esc(p.name) + " · " + esc(p.phone) + " · " + esc((p.fields || []).map(function (f) { return PFN[f] || f; }).join(", ")) + (p.sido ? " · " + esc(p.sido) : "") + "</p>" + (p.memo ? '<p class="ad-pt-memo">' + esc(p.memo) + "</p>" : "") +
+        '</div><p class="ad-pt-at">' + esc(p.at || "") + '</p><span class="selbox ad-pt-s"><select data-pid="' + esc(String(p.id)) + '" data-co="' + esc(p.company) + '" aria-label="' + esc(p.company) + ' 처리 상태">' + PST.map(function (x) { return "<option" + (x === s ? " selected" : "") + ">" + x + "</option>"; }).join("") + "</select>" + I.down + "</span></li>";
+    }).join("") + "</ul></div>";
+    el.onchange = function (ev) {
+      var t = ev.target;
+      if (!t.dataset || !t.dataset.pid) return;
+      var m = A.keep("partner-st") || {};
+      m[t.dataset.pid] = t.value;
+      A.keep("partner-st", m);
+      BG.toast(t.dataset.co + " — " + t.value);
+    };
+  }
   function pvHtml(c) {
     var src = A.popup.src(c.img);
     return '<div class="h-pp' + (src ? "" : " no-im") + '"><div class="h-pp-card">' + (src ? '<div class="h-pp-im"><img src="' + esc(src) + '" alt=""></div>' : "") +

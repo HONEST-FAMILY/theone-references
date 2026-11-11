@@ -9,12 +9,12 @@
 <title>도아 BUILDGO — 어떤 업무를 진행하시나요? | (주)더원파트너스</title>
 <script>(function(){try{var h=location.hash,home=!h||h==="#"||h==="#/"||/^#\/\?/.test(h),force=/[?&]intro\b/.test(location.search),rm=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;if(home&&!rm&&(force||sessionStorage.getItem("doa-pick-intro1")!=="1"))document.documentElement.className+=" intro-pending"}catch(e){}})()</script>
 <link rel="stylesheet" href="../assets/fonts.css?v=2">
-<link rel="stylesheet" href="style.css?v=3">
-<link rel="stylesheet" href="home.css?v=4">
+<link rel="stylesheet" href="style.css?v=4">
+<link rel="stylesheet" href="home.css?v=5">
 <link rel="stylesheet" href="intro.css?v=1">
 <link rel="stylesheet" href="find.css?v=3">
 <link rel="stylesheet" href="shop.css?v=4">
-<link rel="stylesheet" href="admin.css?v=1">
+<link rel="stylesheet" href="admin.css?v=2">
 </head>
 <body>
 <header class="hd" id="hd">
@@ -31,7 +31,7 @@
   </nav>
   <div class="hd-r">
     <button type="button" class="hd-login" data-act="login" id="loginBtn">로그인</button>
-    <a class="hd-join" href="#/join" id="hJoin">회원가입</a>
+    <span class="hd-pair"><a class="hd-join" href="#/join" id="hJoin">회원가입</a><a class="hd-in" href="#/partner" data-nav="partner">입점 문의</a></span>
     <a class="hd-q" href="#/quote" id="hQ" data-nav="quote"><span>견적서 받기</span><b class="h-qn" hidden>0</b></a>
     <button type="button" class="hd-menu" data-act="menu" aria-label="메뉴 열기">메뉴<i aria-hidden="true"></i></button>
   </div>
@@ -50,7 +50,7 @@
       <a href="#/qna" data-nav="qna">문의게시판</a>
     </nav>
     <a class="h-dr-q" href="#/quote">견적서 받기<b class="h-qn" hidden>0</b></a>
-    <div class="h-dr-act"><button type="button" class="dr-login" data-act="login" id="loginBtn2">로그인</button><a href="#/join">회원가입</a></div>
+    <div class="h-dr-act"><button type="button" class="dr-login" data-act="login" id="loginBtn2">로그인</button><a href="#/join">회원가입</a><a href="#/partner">입점 문의</a></div>
     <p class="h-dr-c">대표번호 1588-9863<br>doadoa-kr@naver.com</p>
   </div>
 </div>
@@ -68,8 +68,8 @@
   <p class="ft-giant" aria-hidden="true">BUILDGO</p>
   <div class="h-ft-info">
     <p class="h-ft-legal"><button type="button" data-act="h-note" data-name="이용약관">이용약관</button><button type="button" data-act="h-note" data-name="개인정보처리방침"><b>개인정보처리방침</b></button><a href="#/faq">FAQ</a><a href="#/qna">문의게시판</a></p>
-    <p class="h-ft-co">(주)더원파트너스 · 대표 권병철 · 사업자등록번호 399-86-03838</p>
-    <p class="h-ft-co">서울 영등포구 국회대로 800 317호 · 대표번호 1588-9863 · doadoa-kr@naver.com</p>
+    <p class="h-ft-co">(주)더원파트너스 · 대표 김철하 · 사업자등록번호 <span class="h-nb">399-86-03838</span></p>
+    <p class="h-ft-co">경상북도 포항시 북구 삼호로 156-14(항구동) · 대표번호 <span class="h-nb">1588-9863</span> · doadoa-kr@naver.com</p>
     <p class="ft-credit" id="ftCredit"></p>
     <p class="h-ft-adm"><a href="#/admin">관리자</a></p>
   </div>
@@ -84,6 +84,7 @@
 <aside class="h-quick" id="hQuick" aria-label="빠른 상담 메뉴">
   <a class="h-qk h-qk-q" href="#/quote"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6.5 3.5h7.5l4 4v13h-11.5z"/><path d="M13.5 3.5v4.5h4.5M9.5 12.5h5M9.5 16h5"/></svg><span>견적서 <br>받기</span><b class="h-qn" hidden>0</b></a>
   <a class="h-qk h-qk-c" href="#/match"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.5 5.5h15v10h-8l-4.5 3.5v-3.5h-2.5z"/><path d="M8.5 10.5h7"/></svg><span>상담 신청</span></a>
+  <a class="h-qk h-qk-p" href="#/partner"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9.5 5.6 4h12.8L20 9.5"/><path d="M4 9.5c0 1.5 1.2 2.5 2.7 2.5s2.6-1 2.6-2.5c0 1.5 1.2 2.5 2.7 2.5s2.7-1 2.7-2.5c0 1.5 1.1 2.5 2.6 2.5S20 11 20 9.5"/><path d="M5.5 12v8.5h13V12M10 20.5v-5h4v5"/></svg><span>입점 문의</span></a>
   <a class="h-qk h-qk-t" href="tel:1588-9863"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5.5 4h3.2l1.6 4-2.1 1.4a10.5 10.5 0 0 0 5.4 5.4l1.4-2.1 4 1.6v3.2A1.6 1.6 0 0 1 17.4 19 13.6 13.6 0 0 1 4 5.6 1.6 1.6 0 0 1 5.5 4z"/></svg><span>전화 상담</span><em>1588-9863</em></a>
   <button type="button" class="h-qk h-qk-up" data-act="h-top"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6 14.5 6-6 6 6"/></svg><span>맨 위로</span></button>
 </aside>
@@ -93,13 +94,13 @@
 <script src="../assets/doa.js?v=1"></script>
 <script src="../assets/opening.js?v=2"></script>
 <script src="app.js?v=2"></script>
-<script src="home.js?v=4"></script>
+<script src="home.js?v=5"></script>
 <script src="find-map.js?v=2"></script>
 <script src="../assets/fill.js?v=1"></script>
 <script src="find.js?v=3"></script>
 <script src="consult-admin.js?v=1"></script>
-<script src="shop.js?v=4"></script>
-<script src="admin.js?v=1"></script>
+<script src="shop.js?v=5"></script>
+<script src="admin.js?v=2"></script>
 <script src="boot.js?v=1"></script>
 </body>
 </html>
