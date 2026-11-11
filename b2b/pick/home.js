@@ -30,13 +30,13 @@
     { t: "금융", s: "PF · 브릿지론 · 에쿼티", d: "상황에 맞는 자금조달 구조를 제안합니다.", href: "#/finance", ph: "city_night" }
   ];
   var WK = [
-    { t: "업체 찾기", s: "시행 · 시공 · 자재", href: "#/companies", ic: '<g class="k"><path d="M9 55V17l17-7v45"/><path d="M26 55V25h19v9"/><path d="M5 55h29"/><path d="M15 21v3M20 19.5v3M15 30v3M20 30v3M15 39v3M20 39v3M32 31h3M38 31h3"/></g><g class="a"><circle class="cv" cx="43.5" cy="45.5" r="9.5"/><path d="m50.5 52.5 7.5 7.5"/></g>' },
-    { t: "전문가 찾기", s: "건축사 · 기술사", href: "#/experts", ic: '<g class="k"><path d="M21 34.5c1 7.5 5.2 12 11 12s10-4.5 11-12"/><path d="M11 58c2.4-7 10-11 21-11s18.6 4 21 11"/><path d="m27 49.5 5 4.5 5-4.5"/></g><g class="a"><path class="af" d="M17 30a15 15 0 0 1 30 0z"/><path d="M13 30.5h38M32 15v6"/></g>' },
-    { t: "자재몰", s: "사업자 회원가", href: "#/mall", ic: '<g class="k"><path d="M5 13h7l6.5 29h30.5l5.5-21H14"/><circle cx="23" cy="51" r="3.6"/><circle cx="45" cy="51" r="3.6"/></g><g class="a"><path class="af" d="M20.5 27h11v7.5h-11zM33.5 27h11v7.5h-11zM27 19.5h11V27H27z"/></g>' },
-    { t: "PM", s: "사업 관리", href: "#/pm", ic: '<g class="k"><path d="M25 11h-8a3 3 0 0 0-3 3v41a3 3 0 0 0 3 3h30a3 3 0 0 0 3-3V14a3 3 0 0 0-3-3h-8"/><path d="M25 8h14v7H25z"/><path d="M35 27h8M35 37h8M35 47h8"/></g><g class="a"><path d="m21 26.5 3 3 5-6M21 36.5l3 3 5-6M21 46.5l3 3 5-6"/></g>' },
-    { t: "금융", s: "PF · 브릿지론", href: "#/finance", ic: '<g class="k"><path d="M8 47v7c0 2.8 6.3 5 14 5s14-2.2 14-5v-7"/><path d="M8 40v7c0 2.8 6.3 5 14 5s14-2.2 14-5v-7"/><path d="M8 33v7c0 2.8 6.3 5 14 5s14-2.2 14-5v-7"/><ellipse class="cv" cx="22" cy="33" rx="14" ry="5"/></g><g class="a"><circle class="cv" cx="45" cy="21" r="13"/><path d="m38.5 15.5 3.2 11.5 3.3-9 3.3 9 3.2-11.5M37.5 21h15"/></g>' }
+    { t: "업체 찾기", s: "시행 · 시공 · 자재", href: "#/companies", vb: "-0.5 3 64 64", ic: '<g class="k"><path d="M9 55V17l17-7v45"/><path d="M26 55V25h19v9"/><path d="M5 55h29"/><path d="M15 21v3M20 19.5v3M15 30v3M20 30v3M15 39v3M20 39v3M32 31h3M38 31h3"/></g><g class="a"><circle class="cv" cx="43.5" cy="45.5" r="9.5"/><path d="m50.5 52.5 7.5 7.5"/></g>' },
+    { t: "전문가 찾기", s: "건축사 · 기술사", href: "#/experts", vb: "0 4.5 64 64", ic: '<g class="k"><path d="M21 34.5c1 7.5 5.2 12 11 12s10-4.5 11-12"/><path d="M11 58c2.4-7 10-11 21-11s18.6 4 21 11"/><path d="m27 49.5 5 4.5 5-4.5"/></g><g class="a"><path class="af" d="M17 30a15 15 0 0 1 30 0z"/><path d="M13 30.5h38M32 15v6"/></g>' },
+    { t: "자재몰", s: "사업자 회원가", href: "#/mall", vb: "-2.25 1.8 64 64", ic: '<g class="k"><path d="M5 13h7l6.5 29h30.5l5.5-21H14"/><circle cx="23" cy="51" r="3.6"/><circle cx="45" cy="51" r="3.6"/></g><g class="a"><path class="af" d="M20.5 27h11v7.5h-11zM33.5 27h11v7.5h-11zM27 19.5h11V27H27z"/></g>' },
+    { t: "PM", s: "사업 관리", href: "#/pm", vb: "0 1 64 64", ic: '<g class="k"><path d="M25 11h-8a3 3 0 0 0-3 3v41a3 3 0 0 0 3 3h30a3 3 0 0 0 3-3V14a3 3 0 0 0-3-3h-8"/><path d="M25 8h14v7H25z"/><path d="M35 27h8M35 37h8M35 47h8"/></g><g class="a"><path d="m21 26.5 3 3 5-6M21 36.5l3 3 5-6M21 46.5l3 3 5-6"/></g>' },
+    { t: "금융", s: "PF · 브릿지론", href: "#/finance", vb: "1 1.5 64 64", ic: '<g class="k"><path d="M8 47v7c0 2.8 6.3 5 14 5s14-2.2 14-5v-7"/><path d="M8 40v7c0 2.8 6.3 5 14 5s14-2.2 14-5v-7"/><path d="M8 33v7c0 2.8 6.3 5 14 5s14-2.2 14-5v-7"/><ellipse class="cv" cx="22" cy="33" rx="14" ry="5"/></g><g class="a"><circle class="cv" cx="45" cy="21" r="13"/><path d="m38.5 15.5 3.2 11.5 3.3-9 3.3 9 3.2-11.5M37.5 21h15"/></g>' }
   ];
-  var RING = "M84 17C66 6 30 9 15 34 1 58 12 96 46 107c32 10 64-6 70-38 5-27-12-52-40-58-11-2-21 0-30 3";
+  var RING = "M86.5 14.1A53 53 0 0 0 33.5 105.9 53 53 0 0 0 86.5 14.1 53 53 0 0 0 71.02 8.16";
   var HV = [
     { v: "1", t: "살짝 떠오르기", d: "버튼이 2~3mm 위로 떠올랐다가 제자리로 내려옵니다. 가볍고 무난합니다." },
     { v: "2", t: "동그라미 치기", d: "그림 둘레에 주황 동그라미가 펜으로 그리듯 쳐집니다. 지금 가리키는 버튼이 가장 잘 보입니다.", rec: true },
@@ -114,7 +114,7 @@
   }
   function wkHtml(hv, id) {
     return '<nav class="h-wk"' + (id ? ' id="' + id + '"' : "") + ' data-hv="' + hv + '" aria-label="업무 고르기">' + WK.map(function (w) {
-      return '<a class="h-wk-i" href="' + w.href + '"><span class="h-wk-m"><svg class="h-wk-ic" viewBox="0 0 64 64" aria-hidden="true">' + w.ic + '</svg><svg class="h-wk-o" viewBox="0 0 120 120" aria-hidden="true"><path pathLength="1" d="' + RING + '"/></svg></span><b class="h-wk-t">' + esc(w.t) + '</b><span class="h-wk-s">' + esc(w.s) + "</span></a>";
+      return '<a class="h-wk-i" href="' + w.href + '"><span class="h-wk-m"><svg class="h-wk-ic" viewBox="' + w.vb + '" aria-hidden="true">' + w.ic + '</svg><svg class="h-wk-o" viewBox="0 0 120 120" aria-hidden="true"><path pathLength="1" d="' + RING + '"/></svg></span><b class="h-wk-t">' + esc(w.t) + '</b><span class="h-wk-s">' + esc(w.s) + "</span></a>";
     }).join("") + "</nav>";
   }
   function wkTap(box, nav) {
